@@ -59,7 +59,7 @@ class Navbar extends StatelessWidget {
     }
     return BottomNavigationBar(
       items: itemList,
-      currentIndex: null,
+      currentIndex: index,
       selectedItemColor: orange,
       unselectedItemColor: black,
       showUnselectedLabels: false,
