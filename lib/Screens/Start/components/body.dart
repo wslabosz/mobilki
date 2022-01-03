@@ -14,6 +14,8 @@ class Body extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Button(
+            height: 0.07 * size.height,
+            width: 0.44 * size.width,
             color: orange,
             text: 'Register',
             onPress: () {
@@ -25,6 +27,8 @@ class Body extends StatelessWidget {
               });
             }),
         Button(
+            height: 0.07 * size.height,
+            width: 0.44 * size.width,
             color: darkOrange,
             text: 'Log in',
             onPress: () {

@@ -4,8 +4,11 @@ class Button extends StatelessWidget {
   final String text;
   final VoidCallback onPress;
   final Color color, textColor;
+  final double width, height;
   const Button({
     Key? key,
+    required this.width,
+    required this.height,
     required this.text,
     required this.onPress,
     required this.color,
@@ -14,10 +17,9 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    return Container(
-      height: size.height * 0.07,
-      width: size.width * 0.44,
+    return SizedBox(
+      height: height,
+      width: width,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(28),
         child: newElevatedButton(),
