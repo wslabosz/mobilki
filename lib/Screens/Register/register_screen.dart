@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mobilki/Screens/Register/components/body.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('ebe'),
-      ),
-    );
+    return const Scaffold(body: Body());
   }
 }

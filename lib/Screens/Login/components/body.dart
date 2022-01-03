@@ -16,27 +16,28 @@ class Body extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
           const Text(
-            "Register",
-            style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+            "Log In",
+            style: TextStyle(fontSize: 36, fontWeight: FontWeight.w600),
           ),
           SizedBox(height: size.height * 0.03),
-          InputField(
-            hintText: "Name",
-            onChanged: (value) {},
-          ),
           InputField(
             hintText: 'Email',
             onChanged: (value) {},
           ),
           PasswordField(onChanged: (value) {}),
-          // TODO: SUBSCRIBING TO NEWSLETTER
           SizedBox(height: size.height * 0.03),
           Button(
               height: 0.07 * size.height,
               width: 0.86 * size.width,
-              text: "Register",
+              text: "Log In",
               onPress: () {},
               color: darkOrange),
+          SizedBox(height: size.height * 0.02),
+          const Text('Forgot your password?',
+              style: TextStyle(
+                  color: lightOrange,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600))
         ])));
   }
 }

@@ -38,6 +38,7 @@ dependencies:
   firebase_auth: ^3.3.4
   cloud_firestore: ^3.1.5
   firebase_messaging: ^11.2.4
+  google_fonts: ^2.2.0
 
 dev_dependencies:
   flutter_test:
@@ -77,16 +78,32 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   # fonts:
-  #   - family: Schyler
+  #   - family: Inter
   #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
+  #       - asset: assets/fonts/Inter-Thin.ttf
+  #         weight: 100
+  #       - assets: assets/fonts/Inter-ExtraLight.ttf
+  #         weight: 200
+  #       - asset: assets/fonts/Inter-Light.ttf
+  #         weight: 300
+  #       - asset: assets/fonts/Inter-Regular.ttf
+  #         weight: 400
+  #       - assets: assets/fonts/Inter-Medium.ttf
+  #         weight: 500
+  #       - assets: assets/fonts/Inter-SemiBold.ttf
+  #         weight: 600
+  #       - assets: assets/fonts/Inter-Bold.ttf 
   #         weight: 700
+  #       - asset: assets/fonts/Inter-ExtraBold.ttf
+  #         weight: 800
+  #       - asset: assets/fonts/Inter-Black.ttf
+  #         weight: 900
+        
+    # - family: Trajan Pro
+    #   fonts:
+    #     - asset: fonts/TrajanPro.ttf
+    #     - asset: fonts/TrajanPro_Bold.ttf
+    #       weight: 700
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
