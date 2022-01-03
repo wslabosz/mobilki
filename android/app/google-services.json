@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1034547196378",
+    "project_id": "basketballmobilki",
+    "storage_bucket": "basketballmobilki.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1034547196378:android:35e16f3e2c9d231ad790e3",
+        "android_client_info": {
+          "package_name": "com.example.mobilki"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1034547196378-f2ba4qrq012a0egb83e0b2255si5err3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwMIy7xkR8EkU0IbqTe8OnuL2OuNdvsXM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1034547196378-f2ba4qrq012a0egb83e0b2255si5err3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
