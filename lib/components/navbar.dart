@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobilki/Screens/Login/login_screen.dart';
 import 'package:mobilki/Screens/Register/register_screen.dart';
+import 'package:mobilki/Screens/Search/search_screen.dart';
 import 'package:mobilki/constants.dart';
 
 // do wywalenia jak zostaną zrobione screeny
@@ -22,7 +23,7 @@ class Navbar extends StatelessWidget {
     const RegisterScreen(), // event
     _UnimplementedScreen(), // add
     _UnimplementedScreen(), // people
-    _UnimplementedScreen(), // search
+    const SearchScreen(), // search
 
   ];
 
