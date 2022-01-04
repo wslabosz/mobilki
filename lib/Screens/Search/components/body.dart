@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mobilki/components/button.dart';
 import 'package:mobilki/components/input_field.dart';
 import 'package:mobilki/constants.dart';
+import 'dart:developer';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -17,7 +18,6 @@ class _BodyState extends State<Body> {
   void initState() {
     super.initState();
     Firebase.initializeApp().whenComplete(() {
-      print("completed");
       setState(() {});
     });
   }
@@ -28,7 +28,7 @@ class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> _usersStream =
-      FirebaseFirestore.instance.collection('users').orderBy('name').startAt([_search_value]).endAt([_search_value+"\uf8ff"]).snapshots();
+      FirebaseFirestore.instance.collection('users').snapshots();
     Size size = MediaQuery.of(context).size;
     return Center(
         child: Column(
@@ -48,7 +48,7 @@ class _BodyState extends State<Body> {
             hintText: "Name",
             onChanged: (value) {
               setState(() {
-                  _search_value = value;
+                  _search_value = value.toLowerCase();
               });
             },
           ),
@@ -68,15 +68,15 @@ class _BodyState extends State<Body> {
                 }
                 if (!snapshot.hasData) return Text("No results found");
                 var data = snapshot.data!.docs;
-                var count = snapshot.data!.docs.length;
-                print(data);
+                data = data.where((x)=>(x['name'] as String).contains(_search_value)).toList();
+                var count = data.length;
                 return Expanded(
                     child: ListView.separated(
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
                         height: 50,
                         color: orange,
-                        child: Text(data[index]['name']));
+                        child: Text(((data[index]['name']) as String).toTitleCase()));
                   },
                   itemCount: count,
                   separatorBuilder: (BuildContext context, int index) =>
