@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mobilki/Screens/Register/components/body.dart';
+import 'package:mobilki/components/navbar.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Body());
+    return const Scaffold(body: Body(),bottomNavigationBar: Navbar(index:0),);
   }
 }
+// jak coś to dodałem tu navbar zeby sobie chodzic po ekranach dopoki nie bedzie logowania
