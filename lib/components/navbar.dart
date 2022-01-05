@@ -27,6 +27,14 @@ class Navbar extends StatelessWidget {
 
   ];
 
+  static final _route_names = [
+    "home",
+    "register",
+    "add",
+    "people",
+    "search",
+  ];
+
   static const _icons = [
   Icon(Icons.home),
   Icon(Icons.event),
@@ -45,10 +53,9 @@ class Navbar extends StatelessWidget {
 
   void _onItemTapped(int index, BuildContext context) {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => _pages[index]));
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    "/"+_route_names[index],
+                    ModalRoute.withName("/"+_route_names[index]));
               });
   }
 

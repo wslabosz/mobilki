@@ -20,10 +20,8 @@ class Body extends StatelessWidget {
             text: 'Register',
             onPress: () {
               WidgetsBinding.instance?.addPostFrameCallback((_) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const RegisterScreen()));
+                Navigator.of(context).pushNamed('/register');
+
               });
             }),
         Button(
@@ -33,10 +31,7 @@ class Body extends StatelessWidget {
             text: 'Log in',
             onPress: () {
               WidgetsBinding.instance?.addPostFrameCallback((_) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const LoginScreen()));
+                Navigator.of(context).pushNamed('/login');
               });
             })
       ],
