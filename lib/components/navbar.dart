@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobilki/Screens/Login/login_screen.dart';
+import 'package:mobilki/Screens/Home/home_screen.dart';
 import 'package:mobilki/Screens/Register/register_screen.dart';
 import 'package:mobilki/Screens/Search/search_screen.dart';
 import 'package:mobilki/constants.dart';
@@ -15,16 +15,14 @@ class _UnimplementedScreen extends StatelessWidget {
 
 class Navbar extends StatelessWidget {
   final int index;
-  const Navbar({Key? key, 
-  required this.index}) : super(key: key);
+  const Navbar({Key? key, required this.index}) : super(key: key);
 
   static final _pages = [
-    const LoginScreen(), // home
+    const HomeScreen(), // home
     const RegisterScreen(), // event
     _UnimplementedScreen(), // add
     _UnimplementedScreen(), // people
     const SearchScreen(), // search
-
   ];
 
   static final _route_names = [
@@ -36,11 +34,11 @@ class Navbar extends StatelessWidget {
   ];
 
   static const _icons = [
-  Icon(Icons.home),
-  Icon(Icons.event),
-  Icon(Icons.add_circle),
-  Icon(Icons.people), 
-  Icon(Icons.search),
+    Icon(Icons.home),
+    Icon(Icons.event),
+    Icon(Icons.add_circle),
+    Icon(Icons.people),
+    Icon(Icons.search),
   ];
 
   static const _names = [
@@ -53,17 +51,16 @@ class Navbar extends StatelessWidget {
 
   void _onItemTapped(int index, BuildContext context) {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    "/"+_route_names[index],
-                    ModalRoute.withName("/"+_route_names[index]));
-              });
+      Navigator.of(context).pushNamedAndRemoveUntil("/" + _route_names[index],
+          ModalRoute.withName("/" + _route_names[index]));
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     List<BottomNavigationBarItem> itemList = [];
-    for(var i = 0 ; i < 5 ; i ++) {
-      itemList.add(BottomNavigationBarItem(icon:_icons[i],label:_names[i]));
+    for (var i = 0; i < 5; i++) {
+      itemList.add(BottomNavigationBarItem(icon: _icons[i], label: _names[i]));
     }
     return BottomNavigationBar(
       items: itemList,
@@ -72,7 +69,7 @@ class Navbar extends StatelessWidget {
       unselectedItemColor: black,
       showUnselectedLabels: false,
       showSelectedLabels: false,
-      onTap: (details) => _onItemTapped(details,context),
+      onTap: (details) => _onItemTapped(details, context),
     );
   }
 }
