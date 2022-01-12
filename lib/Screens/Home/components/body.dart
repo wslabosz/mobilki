@@ -86,7 +86,7 @@ class Body extends StatelessWidget {
 
   Widget _eventListView() {
     return ListView.builder(
-        itemCount: 3,
+        itemCount: 30,
         itemBuilder: (context, index) {
           return _eventView();
         });

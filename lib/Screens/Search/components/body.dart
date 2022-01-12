@@ -19,7 +19,7 @@ class _BodyState extends State<Body> {
       setState(() {});
     });
   }
-
+    final TextEditingController _nameController = TextEditingController();
   String _search_value = "";
 
   @override
@@ -43,6 +43,8 @@ class _BodyState extends State<Body> {
           SizedBox(height: size.height * 0.03),
           InputField(
             hintText: "Name",
+            textEditingController: _nameController,
+            textInputType: TextInputType.name,
             onChanged: (value) {
               setState(() {
                 _search_value = value.toLowerCase();
