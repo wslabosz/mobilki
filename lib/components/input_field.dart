@@ -4,19 +4,23 @@ import 'package:mobilki/constants.dart';
 
 class InputField extends StatelessWidget {
   final String hintText;
-  final IconData icon;
   final ValueChanged<String> onChanged;
+  final TextEditingController textEditingController;
+  final TextInputType textInputType;
   const InputField({
     Key? key,
     required this.hintText,
-    this.icon = Icons.person,
     required this.onChanged,
+    required this.textInputType,
+    required this.textEditingController
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFieldContainer(
       child: TextField(
+        controller: textEditingController,
+        keyboardType: textInputType,
         onChanged: onChanged,
         cursorColor: orange,
         decoration: InputDecoration(

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mobilki/Screens/Login/login_screen.dart';
-import 'package:mobilki/Screens/Register/register_screen.dart';
 import 'package:mobilki/components/button.dart';
 import 'package:mobilki/constants.dart';
 

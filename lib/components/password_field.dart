@@ -3,9 +3,11 @@ import 'package:mobilki/components/text_field_container.dart';
 import 'package:mobilki/constants.dart';
 
 class PasswordField extends StatelessWidget {
+  final TextEditingController textEditingController;
   final ValueChanged<String> onChanged;
   const PasswordField({
     Key? key,
+    required this.textEditingController,
     required this.onChanged,
   }) : super(key: key);
 
@@ -13,6 +15,8 @@ class PasswordField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFieldContainer(
       child: TextField(
+        controller: textEditingController,
+        keyboardType: TextInputType.text,
         obscureText: true,
         onChanged: onChanged,
         cursorColor: orange,
