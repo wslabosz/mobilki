@@ -225,7 +225,7 @@ class _BodyState extends State<Body> {
                                                               invites.where('is_team',isEqualTo:true).where('sender',isEqualTo:teamData[
                                                                             index0]['name']).where('receiver',isEqualTo:data[index]
                                                                             [
-                                                                            'name']).where('status',isEqualTo: 0).get().then((result) {
+                                                                            'uid']).where('status',isEqualTo: 0).get().then((result) {
                                                                               if (result.docs.isEmpty) {
                                                                                                                                               FirebaseFirestore
                                                                   .instance
