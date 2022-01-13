@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobilki/Screens/Home/home_screen.dart';
 import 'package:mobilki/Screens/Login/login_screen.dart';
 import 'package:mobilki/Screens/Register/register_screen.dart';
 import 'package:mobilki/Screens/Search/search_screen.dart';
@@ -19,8 +20,8 @@ class Navbar extends StatelessWidget {
   required this.index}) : super(key: key);
 
   static final _pages = [
-    const LoginScreen(), // home
-    const RegisterScreen(), // event
+    const HomeScreen(), // home
+    _UnimplementedScreen(), // event
     _UnimplementedScreen(), // add
     _UnimplementedScreen(), // people
     const SearchScreen(), // search
@@ -29,7 +30,7 @@ class Navbar extends StatelessWidget {
 
   static final _route_names = [
     "home",
-    "register",
+    "event",
     "add",
     "people",
     "search",
