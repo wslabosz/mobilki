@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobilki/components/button.dart';
+import 'package:mobilki/components/date_input_field.dart';
 import 'package:mobilki/components/input_field.dart';
 import 'package:mobilki/components/password_field.dart';
 import 'package:mobilki/constants.dart';
@@ -9,12 +10,16 @@ class Body extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final void Function() signUp;
+  final Future<void> Function(BuildContext) selectDate;
+  final DateTime? dateOfBirth;
   const Body(
       {Key? key,
       required this.usernameController,
       required this.emailController,
       required this.passwordController,
-      required this.signUp})
+      required this.signUp,
+      required this.selectDate,
+      required this.dateOfBirth})
       : super(key: key);
 
   @override
@@ -42,7 +47,7 @@ class Body extends StatelessWidget {
             textInputType: TextInputType.emailAddress,
             textEditingController: emailController,
           ),
-          //TODO: DatePickerDialog(initialDate: DateTime(2000), firstDate: DateTime(2000), lastDate: DateTime(2022))
+          DateField(date: dateOfBirth, selectDate: selectDate),
           PasswordField(
             onChanged: (value) {},
             textEditingController: passwordController,

@@ -11,18 +11,18 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Games'),
+          title: const Text('Games'),
           leading: IconButton(
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
             onPressed: () => {
               AuthMethods().logout(),
               Navigator.of(context).pushAndRemoveUntil(
-                  new MaterialPageRoute(builder: (context) => LoginScreen()),
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
                   (route) => false)
             },
           ),
         ),
-        body: Body(),
-        bottomNavigationBar: Navbar(index: 0));
+        body: const Body(),
+        bottomNavigationBar: const Navbar(index: 0));
   }
 }

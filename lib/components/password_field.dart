@@ -17,15 +17,15 @@ class PasswordField extends StatefulWidget {
 
 class _PasswordFieldState extends State<PasswordField> {
   bool _showPassword = true;
-  Icon _iconToShow = Icon(Icons.visibility_off);
+  Icon _iconToShow = const Icon(Icons.visibility_off);
 
   void setPasswordVisible() {
     setState(() {
       _showPassword = !_showPassword;
       if (_showPassword) {
-        _iconToShow = Icon(Icons.visibility_off);
+        _iconToShow = const Icon(Icons.visibility_off);
       } else {
-        _iconToShow = Icon(Icons.visibility);
+        _iconToShow = const Icon(Icons.visibility);
       }
     });
   }

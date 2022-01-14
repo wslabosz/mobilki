@@ -15,6 +15,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  DateTime? _dateOfBirth;
   // TODO: do zaimplementowania cos z ladowaniem
   bool _isLoading = false;
 
@@ -26,7 +27,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _passwordController.dispose();
   }
 
-  void signUpUser() async {
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime(2000),
+        firstDate: DateTime(1920),
+        lastDate: DateTime.now());
+    if (picked != null) {
+      setState(() {
+        _dateOfBirth = picked;
+      });
+    }
+  }
+
+  void _signUpUser() async {
     setState(() {
       _isLoading = true;
     });
@@ -35,8 +49,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         email: _emailController.text,
         password: _passwordController.text,
         username: _usernameController.text,
-        //TODO: dodac
-        dateOfBirth: "00");
+        dateOfBirth: _dateOfBirth.toString());
     // TODO: TO TRZEBA ZMIENIC
     if (res == "success") {
       setState(() {
@@ -62,7 +75,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         usernameController: _usernameController,
         emailController: _emailController,
         passwordController: _passwordController,
-        signUp: signUpUser,
+        signUp: _signUpUser,
+        selectDate: _selectDate,
+        dateOfBirth: _dateOfBirth,
       ),
       bottomNavigationBar: const Navbar(index: 1),
     );

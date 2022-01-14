@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mobilki/components/button.dart';
 import 'package:mobilki/components/input_field.dart';
 import 'package:mobilki/components/password_field.dart';
@@ -50,7 +51,22 @@ class Body extends StatelessWidget {
               style: TextStyle(
                   color: lightOrange,
                   fontSize: 18,
-                  fontWeight: FontWeight.w600))
+                  fontWeight: FontWeight.w600)),
+          Padding(
+              padding: EdgeInsets.only(top: size.height * 0.03),
+              child: FloatingActionButton.extended(
+                onPressed: () {
+                  GoogleSignIn().signIn();
+                },
+                icon: Image.asset(
+                  'assets/images/google_logo.png',
+                  height: size.height * 0.12,
+                  width: size.width * 0.12,
+                ),
+                label: const Text('Sign in with Google'),
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+              ))
         ])));
   }
 }
