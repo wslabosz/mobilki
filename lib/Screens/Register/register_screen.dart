@@ -35,7 +35,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         email: _emailController.text,
         password: _passwordController.text,
         username: _usernameController.text,
-        //TODO: dodac 
+        //TODO: dodac
         dateOfBirth: "00");
     // TODO: TO TRZEBA ZMIENIC
     if (res == "success") {
