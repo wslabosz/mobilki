@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mobilki/screens/Home/home_screen.dart';
 import 'package:mobilki/screens/Start/start_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'screens/Home/home_screen.dart';
 import 'screens/Login/login_screen.dart';
@@ -20,14 +21,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    User? _user = FirebaseAuth.instance.currentUser;
+    Widget firstScreen;
+    if (_user != null) {
+      firstScreen = const HomeScreen();
+    } else {
+      firstScreen = const StartScreen();
+    }
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'StartScreen',
+        title: 'BasketballAppka',
         theme: ThemeData(
             textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme)),
         initialRoute: '/',
         routes: {
-          '/': (context) => const StartScreen(),
+          '/': (context) => firstScreen,
           '/register': (context) => const RegisterScreen(),
           '/login': (context) => const LoginScreen(),
           '/search': (context) => const SearchScreen(),
