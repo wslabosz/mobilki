@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mobilki/Screens/Home/home_screen.dart';
-import 'package:mobilki/Screens/Register/components/body.dart';
+import 'package:mobilki/screens/Home/home_screen.dart';
+import 'package:mobilki/screens/Register/components/body.dart';
 import 'package:mobilki/components/navbar.dart';
 import 'package:mobilki/resources/auth_methods.dart';
 
@@ -42,7 +42,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setState(() {
         _isLoading = false;
       });
-      // TODO: tutaj nawigacja do home
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (context) => const HomeScreen(),

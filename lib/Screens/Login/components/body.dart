@@ -5,12 +5,18 @@ import 'package:mobilki/components/password_field.dart';
 import 'package:mobilki/constants.dart';
 
 class Body extends StatelessWidget {
-  Body({Key? key}) : super(key: key);
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final void Function() login;
+  const Body(
+      {Key? key,
+      required this.emailController,
+      required this.passwordController,
+      required this.login})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _emailController = TextEditingController();
-    final TextEditingController _passwordController = TextEditingController();
     Size size = MediaQuery.of(context).size;
     return Center(
         child: SingleChildScrollView(
@@ -26,18 +32,18 @@ class Body extends StatelessWidget {
             hintText: 'Email',
             onChanged: (value) {},
             textInputType: TextInputType.emailAddress,
-            textEditingController: _emailController,
+            textEditingController: emailController,
           ),
           PasswordField(
             onChanged: (value) {},
-            textEditingController: _passwordController,
+            textEditingController: passwordController,
           ),
           SizedBox(height: size.height * 0.03),
           Button(
               height: 0.07 * size.height,
               width: 0.86 * size.width,
               text: "Log In",
-              onPress: () {},
+              onPress: login,
               color: darkOrange),
           SizedBox(height: size.height * 0.02),
           const Text('Forgot your password?',

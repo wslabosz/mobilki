@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobilki/Screens/Home/components/body.dart';
+import 'package:mobilki/screens/Home/components/body.dart';
 import 'package:mobilki/components/navbar.dart';
 
 class HomeScreen extends StatelessWidget {

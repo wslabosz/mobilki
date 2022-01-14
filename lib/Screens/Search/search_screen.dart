@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobilki/Screens/Search/components/body.dart';
+import 'package:mobilki/screens/Search/components/body.dart';
 import 'package:mobilki/components/navbar.dart';
 
 class SearchScreen extends StatelessWidget {
