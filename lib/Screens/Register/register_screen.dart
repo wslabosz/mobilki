@@ -1,8 +1,9 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobilki/screens/Home/home_screen.dart';
 import 'package:mobilki/screens/Register/components/body.dart';
-import 'package:mobilki/components/navbar.dart';
 import 'package:mobilki/resources/auth_methods.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -15,9 +16,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final RoundedLoadingButtonController _buttonController =
+      RoundedLoadingButtonController();
   DateTime? _dateOfBirth;
-  // TODO: do zaimplementowania cos z ladowaniem
-  bool _isLoading = false;
+  Map<String, String>? _errors;
 
   @override
   void dispose() {
@@ -40,46 +42,66 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
+  Future<void> _validateForm() async {
+    Map<String, String> listOfErrors = {};
+    if (!_emailController.text.contains('@')) {
+      listOfErrors['email'] = 'given email is invalid';
+    }
+    if (_passwordController.text.length < 6) {
+      listOfErrors['password'] = 'password must be longer than 6 characters';
+    }
+    setState(() {
+      _errors = listOfErrors;
+    });
+  }
+
   void _signUpUser() async {
     setState(() {
-      _isLoading = true;
+      _buttonController.start();
     });
-
-    String res = await AuthMethods().signUpUser(
-        email: _emailController.text,
-        password: _passwordController.text,
-        username: _usernameController.text,
-        dateOfBirth: _dateOfBirth.toString());
-    // TODO: RESPONSE NA STRINGU DO ZMIANY
-    if (res == "success") {
-      setState(() {
-        _isLoading = false;
-      });
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
-          ),
-          (route) => false);
+    await _validateForm();
+    if (_errors == null) {
+      String res = await AuthMethods().signUpUser(
+          email: _emailController.text,
+          password: _passwordController.text,
+          username: _usernameController.text,
+          dateOfBirth: (_dateOfBirth?.toString() != null)
+              ? _dateOfBirth.toString()
+              : "");
+      // TODO: RESPONSE NA STRINGU DO ZMIANY
+      if (res == "success") {
+        setState(() {
+          _buttonController.success();
+        });
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => const HomeScreen(),
+            ),
+            (route) => false);
+      }
+      // TODO: blad firebase'a
     } else {
       setState(() {
-        _isLoading = false;
+        _buttonController.error();
+        Timer(const Duration(seconds: 2), () {
+          _buttonController.stop();
+        });
       });
-      // TODO: INFORMACJA ZWROTNA DLA USERA
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Body(
-        usernameController: _usernameController,
-        emailController: _emailController,
-        passwordController: _passwordController,
-        signUp: _signUpUser,
-        selectDate: _selectDate,
-        dateOfBirth: _dateOfBirth,
-      ),
-      bottomNavigationBar: const Navbar(index: 1),
-    );
+        body: Body(
+      usernameController: _usernameController,
+      emailController: _emailController,
+      passwordController: _passwordController,
+      signUp: _signUpUser,
+      selectDate: _selectDate,
+      dateOfBirth: _dateOfBirth,
+      buttonController: _buttonController,
+      validationErrors: _errors,
+    ));
   }
 }

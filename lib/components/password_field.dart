@@ -5,10 +5,12 @@ import 'package:mobilki/constants.dart';
 class PasswordField extends StatefulWidget {
   final TextEditingController textEditingController;
   final ValueChanged<String> onChanged;
+  final String? errorText;
   const PasswordField({
     Key? key,
     required this.textEditingController,
     required this.onChanged,
+    this.errorText,
   }) : super(key: key);
 
   @override
@@ -33,6 +35,7 @@ class _PasswordFieldState extends State<PasswordField> {
   @override
   Widget build(BuildContext context) {
     return TextFieldContainer(
+      error: widget.errorText,
       child: TextField(
         controller: widget.textEditingController,
         keyboardType: TextInputType.text,
@@ -41,6 +44,8 @@ class _PasswordFieldState extends State<PasswordField> {
         cursorColor: orange,
         decoration: InputDecoration(
             hintText: "Password",
+            errorText: widget.errorText,
+            errorStyle: const TextStyle(fontSize: 13),
             border: OutlineInputBorder(
                 borderSide: BorderSide.none,
                 borderRadius: BorderRadius.circular(12.0)),

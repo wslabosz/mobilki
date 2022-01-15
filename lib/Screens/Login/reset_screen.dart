@@ -41,6 +41,8 @@ class _ResetScreenState extends State<ResetScreen> {
           SizedBox(height: size.height * 0.03),
           InputField(
             hintText: 'Email',
+            //TODO: tutaj
+            errorText: "",
             onChanged: (value) {},
             textInputType: TextInputType.emailAddress,
             textEditingController: _emailController,
