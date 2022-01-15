@@ -51,7 +51,6 @@ class _LoginScreenState extends State<LoginScreen> {
           _buttonController.stop();
         });
       });
-      // TODO: INFORMACJA ZWROTNA DLA USERA
     }
   }
 

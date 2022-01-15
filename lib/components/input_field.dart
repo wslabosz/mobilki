@@ -29,7 +29,6 @@ class InputField extends StatelessWidget {
         decoration: InputDecoration(
             hintText: hintText,
             errorText: errorText,
-            //TODO: stylizacja erorra
             border: OutlineInputBorder(
                 borderSide: BorderSide.none,
                 borderRadius: BorderRadius.circular(12.0)),

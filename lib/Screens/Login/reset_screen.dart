@@ -41,16 +41,15 @@ class _ResetScreenState extends State<ResetScreen> {
           SizedBox(height: size.height * 0.03),
           InputField(
             hintText: 'Email',
-            //TODO: tutaj
-            errorText: "",
             onChanged: (value) {},
             textInputType: TextInputType.emailAddress,
             textEditingController: _emailController,
           ),
+          SizedBox(height: size.height * 0.02),
           Button(
               height: 0.07 * size.height,
               width: 0.86 * size.width,
-              text: "Send reset link",
+              text: "Send link on email",
               onPress: resetPassword,
               color: darkOrange)
         ]))));
