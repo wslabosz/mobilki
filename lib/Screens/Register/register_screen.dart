@@ -43,12 +43,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Future<void> _validateForm() async {
-    Map<String, String> listOfErrors = {};
+    Map<String, String>? listOfErrors;
     if (!_emailController.text.contains('@')) {
-      listOfErrors['email'] = 'given email is invalid';
+      listOfErrors?['email'] = 'given email is invalid';
     }
     if (_passwordController.text.length < 6) {
-      listOfErrors['password'] = 'password must be longer than 6 characters';
+      listOfErrors?['password'] = 'password must be longer than 6 characters';
     }
     setState(() {
       _errors = listOfErrors;
@@ -80,6 +80,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             (route) => false);
       }
       // TODO: blad firebase'a
+      
     } else {
       setState(() {
         _buttonController.error();
