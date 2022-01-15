@@ -50,7 +50,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         password: _passwordController.text,
         username: _usernameController.text,
         dateOfBirth: _dateOfBirth.toString());
-    // TODO: TO TRZEBA ZMIENIC
+    // TODO: RESPONSE NA STRINGU DO ZMIANY
     if (res == "success") {
       setState(() {
         _isLoading = false;
@@ -64,7 +64,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setState(() {
         _isLoading = false;
       });
-      // TODO: pokaz blad
+      // TODO: INFORMACJA ZWROTNA DLA USERA
     }
   }
 

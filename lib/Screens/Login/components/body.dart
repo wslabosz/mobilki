@@ -4,6 +4,7 @@ import 'package:mobilki/components/button.dart';
 import 'package:mobilki/components/input_field.dart';
 import 'package:mobilki/components/password_field.dart';
 import 'package:mobilki/constants.dart';
+import 'package:mobilki/screens/Login/reset_screen.dart';
 
 class Body extends StatelessWidget {
   final TextEditingController emailController;
@@ -47,11 +48,16 @@ class Body extends StatelessWidget {
               onPress: login,
               color: darkOrange),
           SizedBox(height: size.height * 0.02),
-          const Text('Forgot your password?',
-              style: TextStyle(
-                  color: lightOrange,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600)),
+          
+          TextButton(
+              onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const ResetScreen())),
+              child: const Text('Forgot your password?',
+                  style: TextStyle(
+                      color: lightOrange,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600))),
+          //TODO: link do rejestracji
           Padding(
               padding: EdgeInsets.only(top: size.height * 0.03),
               child: FloatingActionButton.extended(

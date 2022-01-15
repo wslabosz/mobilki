@@ -31,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           (route) => false);
     } else {
-      // TODO: pokaz blad
+      // TODO: INFORMACJA ZWROTNA DLA USERA
     }
   }
 
