@@ -6,15 +6,19 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _eventListView();
+    return _eventListView(context);
   }
 
-  Widget _eventRowView() {
-    const double avatarDiameter = 50;
+  Widget _eventRowView(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    double avatarDiameter = size.width * 0.13;
     return Row(
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 32.0, top: 10.0, bottom: 10.0),
+          padding: EdgeInsets.only(
+              left: size.width * 0.08,
+              top: size.height * 0.012,
+              bottom: size.height * 0.012),
           child: Container(
             width: avatarDiameter,
             height: avatarDiameter,
@@ -26,69 +30,94 @@ class Body extends StatelessWidget {
                     'https://bi.im-g.pl/im/fd/2f/16/z23263741IER,Marcin-Najman.jpg')),
           ),
         ),
-        _eventPlaceView(),
-        _eventDateView(),
+        _eventPlaceView(context),
+        _eventDateView(context),
       ],
     );
   }
 
-  Widget _eventPlaceView() {
+  Widget _eventPlaceView(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Padding(
-        padding: const EdgeInsets.only(left: 20.0, top: 4.0),
+        padding:
+            EdgeInsets.only(left: size.width * 0.05, top: size.height * 0.002),
         child: Row(
-          children: [Text('Boisko przy 4', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),)],
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.only(left: 20.0, top: 4.0),
-        child: Row(
-          children: [Text('al. Politechniki 128', style: TextStyle(color: lightGrey, fontSize: 16, fontWeight: FontWeight.w500),)],
-        ),
-      ),
-    ]);
-  }
-
-  Widget _eventDateView() {
-    return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-      Padding(
-        padding: const EdgeInsets.only(left: 26.0, top: 4.0),
-        child: Row(
-          children: [
+          children: const [
             Text(
-              '18:00',
-              style: TextStyle(color: orange, fontWeight: FontWeight.w900, fontSize: 16),
+              'Boisko przy 4',
+              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
             )
           ],
         ),
       ),
       Padding(
-        padding: const EdgeInsets.only(left: 26.0, top: 4.0),
+        padding:
+            EdgeInsets.only(left: size.width * 0.05, top: size.height * 0.002),
         child: Row(
-          children: [Text('21-12-2021', style: TextStyle(color: lightGrey, fontSize: 16, fontWeight: FontWeight.w900))],
+          children: const [
+            Text(
+              'al. Politechniki 128',
+              style: TextStyle(
+                  color: lightGrey, fontSize: 16, fontWeight: FontWeight.w500),
+            )
+          ],
         ),
       ),
     ]);
   }
 
-  Widget _eventView() {
+  Widget _eventDateView(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+      Padding(
+        padding:
+            EdgeInsets.only(left: size.width * 0.085, top: size.height * 0.002),
+        child: Row(
+          children: const [
+            Text(
+              '18:00',
+              style: TextStyle(
+                  color: orange, fontWeight: FontWeight.w900, fontSize: 16),
+            )
+          ],
+        ),
+      ),
+      Padding(
+        padding:
+            EdgeInsets.only(left: size.width * 0.085, top: size.height * 0.002),
+        child: Row(
+          children: const [
+            Text('21-12-2021',
+                style: TextStyle(
+                    color: lightGrey,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900))
+          ],
+        ),
+      ),
+    ]);
+  }
+
+  Widget _eventView(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      _eventRowView(),
-      const Divider(
-        height: 18,
+      _eventRowView(context),
+      Divider(
+        height: size.height * 0.025,
         thickness: 2,
-        indent: 28,
-        endIndent: 24,
+        indent: size.width * 0.08,
+        endIndent: size.width * 0.08,
         color: grey,
       )
     ]);
   }
 
-  Widget _eventListView() {
+  Widget _eventListView(BuildContext context) {
     return ListView.builder(
         itemCount: 30,
         itemBuilder: (context, index) {
-          return _eventView();
+          return _eventView(context);
         });
   }
 }

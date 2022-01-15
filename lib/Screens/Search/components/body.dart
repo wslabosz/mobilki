@@ -164,38 +164,39 @@ class _BodyState extends State<Body> {
     final FirebaseAuth auth = FirebaseAuth.instance;
     Size size = MediaQuery.of(context).size;
     return Center(
-        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: <
-            Widget>[
-      const Align(
-          alignment: Alignment.topCenter,
-          child: Padding(
-            padding: EdgeInsets.only(top: 48),
-            child: Text(
-              "Look for friends",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-          )),
-      SizedBox(height: size.height * 0.03),
-      InputField(
-        hintText: "Name",
-        textEditingController: _nameController,
-        textInputType: TextInputType.name,
-        onChanged: (value) {
-          setState(() {
-            _search_value = value.toLowerCase();
-          });
-        },
-      ),
-      StreamBuilder<QuerySnapshot>(
-          stream: _usersStream,
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (_search_value.length < 3) {
-              return const SizedBox.shrink();
-            }
-            if (snapshot.hasError) {
-              return const Text('Something went wrong');
-            }
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+          const Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: EdgeInsets.only(top: 48),
+                child: Text(
+                  "Look for friends",
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+              )),
+          SizedBox(height: size.height * 0.03),
+          InputField(
+            hintText: "Name",
+            textEditingController: _nameController,
+            textInputType: TextInputType.name,
+            onChanged: (value) {
+              setState(() {
+                _search_value = value.toLowerCase();
+              });
+            },
+          ),
+          StreamBuilder<QuerySnapshot>(
+              stream: _usersStream,
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (_search_value.length < 3) {
+                  return const SizedBox.shrink();
+                }
+                if (snapshot.hasError) {
+                  return const Text('Something went wrong');
+                }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();

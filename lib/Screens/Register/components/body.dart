@@ -1,20 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:mobilki/components/button.dart';
+import 'package:mobilki/components/date_input_field.dart';
 import 'package:mobilki/components/input_field.dart';
+import 'package:mobilki/components/loading_button.dart';
 import 'package:mobilki/components/password_field.dart';
 import 'package:mobilki/constants.dart';
+import 'package:mobilki/screens/Login/login_screen.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 class Body extends StatelessWidget {
   final TextEditingController usernameController;
   final TextEditingController emailController;
   final TextEditingController passwordController;
+  final RoundedLoadingButtonController buttonController;
   final void Function() signUp;
+  final Future<void> Function(BuildContext) selectDate;
+  final DateTime? dateOfBirth;
+  final Map<String, String>? validationErrors;
   const Body(
       {Key? key,
       required this.usernameController,
       required this.emailController,
       required this.passwordController,
-      required this.signUp})
+      required this.signUp,
+      required this.selectDate,
+      required this.dateOfBirth,
+      required this.buttonController,
+      required this.validationErrors})
       : super(key: key);
 
   @override
@@ -26,7 +37,7 @@ class Body extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
           const Text(
-            "Register",
+            "Sign in",
             style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: size.height * 0.03),
@@ -39,22 +50,33 @@ class Body extends StatelessWidget {
           InputField(
             hintText: 'Email',
             onChanged: (value) {},
+            errorText: validationErrors?['email'],
             textInputType: TextInputType.emailAddress,
             textEditingController: emailController,
           ),
-          //TODO: DatePickerDialog(initialDate: DateTime(2000), firstDate: DateTime(2000), lastDate: DateTime(2022))
+          DateField(date: dateOfBirth, selectDate: selectDate),
           PasswordField(
             onChanged: (value) {},
+            errorText: validationErrors?['password'],
             textEditingController: passwordController,
           ),
           // TODO: SUBSCRIBING TO NEWSLETTER
           SizedBox(height: size.height * 0.03),
-          Button(
+          LoadingButton(
+              buttonController: buttonController,
+              color: darkOrange,
               height: 0.07 * size.height,
               width: 0.86 * size.width,
-              text: "Register",
               onPress: signUp,
-              color: darkOrange),
+              text: 'Sign in'),
+          TextButton(
+              child: const Text("Already have an account? Log in!",
+                  style: TextStyle(
+                      color: orange,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600)),
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const LoginScreen()))),
         ])));
   }
 }
