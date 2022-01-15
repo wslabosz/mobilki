@@ -8,7 +8,8 @@ import 'package:mobilki/screens/Login/login_screen.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 class Body extends StatelessWidget {
-  final TextEditingController usernameController;
+  final TextEditingController firstnameController;
+  final TextEditingController lastnameController;
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final RoundedLoadingButtonController buttonController;
@@ -18,7 +19,8 @@ class Body extends StatelessWidget {
   final Map<String, String>? validationErrors;
   const Body(
       {Key? key,
-      required this.usernameController,
+      required this.firstnameController,
+      required this.lastnameController,
       required this.emailController,
       required this.passwordController,
       required this.signUp,
@@ -42,10 +44,16 @@ class Body extends StatelessWidget {
           ),
           SizedBox(height: size.height * 0.03),
           InputField(
-            hintText: "Name",
+            hintText: "First name",
             onChanged: (value) {},
             textInputType: TextInputType.name,
-            textEditingController: usernameController,
+            textEditingController: firstnameController,
+          ),
+          InputField(
+            hintText: "Last name",
+            onChanged: (value) {},
+            textInputType: TextInputType.name,
+            textEditingController: lastnameController,
           ),
           InputField(
             hintText: 'Email',

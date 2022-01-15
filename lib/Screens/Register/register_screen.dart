@@ -13,7 +13,8 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _firstnameController = TextEditingController();
+  final TextEditingController _lastnameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final RoundedLoadingButtonController _buttonController =
@@ -24,7 +25,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   void dispose() {
     super.dispose();
-    _usernameController.dispose();
+    _firstnameController.dispose();
+    _lastnameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
   }
@@ -64,7 +66,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       String res = await AuthMethods().signUpUser(
           email: _emailController.text,
           password: _passwordController.text,
-          username: _usernameController.text,
+          username: _firstnameController.text.trim() +
+              ' ' +
+              _lastnameController.text.trim(),
           dateOfBirth: (_dateOfBirth?.toString() != null)
               ? _dateOfBirth.toString()
               : "");
@@ -80,7 +84,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             (route) => false);
       }
       // TODO: blad firebase'a
-      
+
     } else {
       setState(() {
         _buttonController.error();
@@ -95,7 +99,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Body(
-      usernameController: _usernameController,
+      firstnameController: _firstnameController,
+      lastnameController: _lastnameController,
       emailController: _emailController,
       passwordController: _passwordController,
       signUp: _signUpUser,
