@@ -33,6 +33,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: const ColorScheme.light(
+                primary: Colors.orange, // header background color
+                onPrimary: Colors.black, // header text color
+                onSurface: Colors.black, // body text color
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  primary: Colors.red, // button text color
+                ),
+              ),
+            ),
+            child: child!,
+          );
+        },
         context: context,
         initialDate: DateTime(2000),
         firstDate: DateTime(1920),
@@ -47,10 +64,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> _validateForm() async {
     Map<String, String>? listOfErrors;
     if (!_emailController.text.contains('@')) {
-      listOfErrors?['email'] = 'given email is invalid';
+      listOfErrors?['email'] = 'please provide valid email';
     }
     if (_passwordController.text.length < 6) {
       listOfErrors?['password'] = 'password must be longer than 6 characters';
+    }
+    if (_firstnameController.text.isEmpty) {
+      listOfErrors?['firstname'] = 'please provide firstname';
+    }
+    if (_lastnameController.text.isEmpty) {
+      listOfErrors?['lastname'] = 'please provide lastname';
     }
     setState(() {
       _errors = listOfErrors;

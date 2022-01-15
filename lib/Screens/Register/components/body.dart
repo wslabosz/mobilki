@@ -46,12 +46,14 @@ class Body extends StatelessWidget {
           InputField(
             hintText: "First name",
             onChanged: (value) {},
+            errorText: validationErrors?['firstname'],
             textInputType: TextInputType.name,
             textEditingController: firstnameController,
           ),
           InputField(
             hintText: "Last name",
             onChanged: (value) {},
+            errorText: validationErrors?['lastname'],
             textInputType: TextInputType.name,
             textEditingController: lastnameController,
           ),
