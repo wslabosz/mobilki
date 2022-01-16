@@ -89,7 +89,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       String res = await AuthMethods().signUpUser(
           email: _emailController.text,
           password: _passwordController.text,
-          username: _firstnameController.text.trim() +
+          name: _firstnameController.text.trim() +
               ' ' +
               _lastnameController.text.trim(),
           dateOfBirth: (_dateOfBirth?.toString() != null)

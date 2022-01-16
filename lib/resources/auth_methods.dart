@@ -16,20 +16,20 @@ class AuthMethods {
   Future<String> signUpUser(
       {required String email,
       required String password,
-      required String username,
+      required String name,
       required String dateOfBirth}) async {
     String res = "error occurred";
     try {
       if (email.isNotEmpty ||
           password.isNotEmpty ||
-          username.isNotEmpty ||
+          name.isNotEmpty ||
           dateOfBirth.isNotEmpty) {
         UserCredential credential = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
 
         model.User _user = model.User(
             uid: credential.user!.uid,
-            username: username,
+            name: name,
             email: email,
             dateOfBirth: dateOfBirth,
             avatarUrl: "",
