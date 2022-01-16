@@ -5,11 +5,11 @@ import 'package:mobilki/resources/storage_methods.dart';
 class FireStoreMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<String> uploadAvatar(Uint8List file, String uid) async {
+  Future<String> uploadAvatar(Uint8List file, String uid, {String collection='users'}) async {
     String res = "error occurred";
     try {
       String avatarUrl = await StorageMethods().uploadImageToStorage('avatars', file, true);
-      _firestore.collection('users').doc(uid).update({"avatarUrl": avatarUrl});
+      _firestore.collection(collection).doc(uid).update({"avatarUrl": avatarUrl});
       res = "success";
     } catch (err) {
       res = err.toString();
