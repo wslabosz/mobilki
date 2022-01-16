@@ -1,31 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:mobilki/Screens/Home/home_screen.dart';
-import 'package:mobilki/Screens/Register/register_screen.dart';
-import 'package:mobilki/Screens/Search/search_screen.dart';
+
 import 'package:mobilki/constants.dart';
 
 // do wywalenia jak zostaną zrobione screeny
-class _UnimplementedScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
-}
 
 class Navbar extends StatelessWidget {
   final int index;
   const Navbar({Key? key, required this.index}) : super(key: key);
 
-  static final _pages = [
-    const HomeScreen(), // home
-    _UnimplementedScreen(), // event
-    _UnimplementedScreen(), // add
-    _UnimplementedScreen(), // people
-    const SearchScreen(), // search
-  ];
-
-  static final _route_names = [
+  static final _routeNames = [
     "home",
     "event",
     "add",
@@ -51,8 +34,8 @@ class Navbar extends StatelessWidget {
 
   void _onItemTapped(int index, BuildContext context) {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      Navigator.of(context).pushNamedAndRemoveUntil("/" + _route_names[index],
-          ModalRoute.withName("/" + _route_names[index]));
+      Navigator.of(context).pushNamedAndRemoveUntil("/" + _routeNames[index],
+          ModalRoute.withName("/" + _routeNames[index]));
     });
   }
 

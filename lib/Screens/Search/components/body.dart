@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobilki/components/input_field.dart';
-import 'package:mobilki/constants.dart';
-import 'dart:developer';
+import 'package:mobilki/components/member_list.dart';
+
+import 'package:mobilki/resources/auth_methods.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -22,20 +22,22 @@ class PopupMenuOptions {
     firstItem,
     secondItem,
   ];
+  
+
 }
 
 class _BodyState extends State<Body> {
   static List<QueryDocumentSnapshot<Object?>> searchData = [];
   static List<QueryDocumentSnapshot<Object?>> teamData = [];
 
-  void choiceAction(String choice, int searchIndex) {
-    if (choice == PopupMenuOptions.firstItem) {
+
+  void sendFriendRequest(int searchIndex) {
+      String uid = AuthMethods().getUserUID();
       FirebaseFirestore.instance
           .collection('users')
-          .doc('KzWy3q03aJCjVTH52st1')
+          .doc(uid)
           .get()
           .then((result) {
-        print(result['friends']);
         if ((result['friends'] as List)
             .contains(searchData[searchIndex]['uid'])) {
           Fluttertoast.showToast(msg: "User is already your friend");
@@ -43,7 +45,7 @@ class _BodyState extends State<Body> {
           FirebaseFirestore.instance
               .collection('invite_requests')
               .where('is_team', isEqualTo: false)
-              .where('sender', isEqualTo: 'Sa2129lixvOZ1h7cl3iJe88ZLvF2')
+              .where('sender', isEqualTo: uid)
               .where('receiver', isEqualTo: searchData[searchIndex]['uid'])
               .where('status', isEqualTo: 0)
               .get()
@@ -51,10 +53,11 @@ class _BodyState extends State<Body> {
             if (result.docs.isEmpty) {
               FirebaseFirestore.instance.collection("invite_requests").add({
                 'is_team': false,
-                'sender': 'Sa2129lixvOZ1h7cl3iJe88ZLvF2',
+                'sender': uid,
                 'receiver': searchData[searchIndex]['uid'],
                 'status': 0,
               });
+              Fluttertoast.showToast(msg:"Invitation sent succesfully!");
             } else {
               Fluttertoast.showToast(
                   msg: "User has pending invitation already");
@@ -62,7 +65,58 @@ class _BodyState extends State<Body> {
           });
         }
       });
-      print('I First Item');
+  }
+
+  void sendTeamRequest(int index0, int searchIndex) {
+    CollectionReference invites =
+        FirebaseFirestore.instance.collection("invite_requests");
+    invites
+        .where('is_team', isEqualTo: true)
+        .where('sender', isEqualTo: teamData[index0]['name'])
+        .where('receiver', isEqualTo: searchData[searchIndex]['uid'])
+        .where('status', isEqualTo: 0)
+        .get()
+        .then((result) {
+      if (result.docs.isEmpty) {
+        FirebaseFirestore.instance
+            .collection("invite_requests")
+            .add({
+              'is_team': true,
+              'sender': teamData[index0]['name'],
+              'receiver': searchData[searchIndex]['uid'],
+              'status': 0,
+            })
+            .then((value) =>
+                Navigator.of(context, rootNavigator: true).pop('dialog'))
+            .catchError((error) => Fluttertoast.showToast(msg:"Something went wrong"));
+            Fluttertoast.showToast(msg:"Invitation sent succesfully!");
+            
+      } else {
+        Fluttertoast.showToast(msg: "User has pending invitation already");
+      }
+    });
+  }
+
+  Expanded popupMenu (int index) {
+      return Expanded(
+              flex: 3,
+              child: PopupMenuButton(
+                  itemBuilder: (BuildContext context) {
+                    return PopupMenuOptions.choices.map((String choice) {
+                      return PopupMenuItem<String>(
+                          value: choice, child: Text(choice));
+                    }).toList();
+                  },
+                  icon: const Icon(Icons.add),
+                  onSelected: (String choice) {
+                    choiceAction(choice, index);
+                  }));
+  }
+
+  void choiceAction(String choice, int searchIndex) {
+    String uid = AuthMethods().getUserUID();
+    if (choice == PopupMenuOptions.firstItem) {
+
     } else if (choice == PopupMenuOptions.secondItem) {
       CollectionReference teams =
           FirebaseFirestore.instance.collection('teams');
@@ -70,12 +124,9 @@ class _BodyState extends State<Body> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) => AlertDialog(
-              title: Text("Choose a team"),
+              title: const Text("Choose a team"),
               content: FutureBuilder<QuerySnapshot>(
-                future: teams
-                    .where('admin_uid',
-                        isEqualTo: 'Sa2129lixvOZ1h7cl3iJe88ZLvF2')
-                    .get(),
+                future: teams.where('admin_uid', isEqualTo: uid).get(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
@@ -86,7 +137,6 @@ class _BodyState extends State<Body> {
                         .where((y) => !(y['members'] as List)
                             .contains(searchData[searchIndex]['uid']))
                         .toList();
-                    inspect(teamData);
 
                     if (teamData.isEmpty) {
                       return const Text("No teams found");
@@ -101,40 +151,7 @@ class _BodyState extends State<Body> {
                                 title:
                                     Text((teamData[index0]['name'] as String)),
                                 onTap: () {
-                                  CollectionReference invites =
-                                      FirebaseFirestore.instance
-                                          .collection("invite_requests");
-                                  invites
-                                      .where('is_team', isEqualTo: true)
-                                      .where('sender',
-                                          isEqualTo: teamData[index0]['name'])
-                                      .where('receiver',
-                                          isEqualTo: searchData[searchIndex]
-                                              ['uid'])
-                                      .where('status', isEqualTo: 0)
-                                      .get()
-                                      .then((result) {
-                                    if (result.docs.isEmpty) {
-                                      FirebaseFirestore.instance
-                                          .collection("invite_requests")
-                                          .add({
-                                            'is_team': true,
-                                            'sender': teamData[index0]['name'],
-                                            'receiver': searchData[searchIndex]
-                                                ['uid'],
-                                            'status': 0,
-                                          })
-                                          .then((value) => Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .pop('dialog'))
-                                          .catchError((error) =>
-                                              print("Something went wrong"));
-                                    } else {
-                                      Fluttertoast.showToast(
-                                          msg:
-                                              "User has pending invitation already");
-                                    }
-                                  });
+                                  sendTeamRequest(index0, searchIndex);
                                 });
                           },
                         ));
@@ -155,48 +172,46 @@ class _BodyState extends State<Body> {
   }
 
   final TextEditingController _nameController = TextEditingController();
-  String _search_value = "";
+  String _searchValue = "";
 
   @override
   Widget build(BuildContext context) {
     final Stream<QuerySnapshot> _usersStream =
-        FirebaseFirestore.instance.collection('users').snapshots();
-    final FirebaseAuth auth = FirebaseAuth.instance;
+        FirebaseFirestore.instance.collection('users').where('uid',isNotEqualTo:AuthMethods().getUserUID()).snapshots();
     Size size = MediaQuery.of(context).size;
     return Center(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-          const Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding: EdgeInsets.only(top: 48),
-                child: Text(
-                  "Look for friends",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-              )),
-          SizedBox(height: size.height * 0.03),
-          InputField(
-            hintText: "Name",
-            textEditingController: _nameController,
-            textInputType: TextInputType.name,
-            onChanged: (value) {
-              setState(() {
-                _search_value = value.toLowerCase();
-              });
-            },
-          ),
-          StreamBuilder<QuerySnapshot>(
-              stream: _usersStream,
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (_search_value.length < 3) {
-                  return const SizedBox.shrink();
-                }
-                if (snapshot.hasError) {
-                  return const Text('Something went wrong');
-                }
+        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: <
+            Widget>[
+      const Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: EdgeInsets.only(top: 48),
+            child: Text(
+              "Look for friends",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+          )),
+      SizedBox(height: size.height * 0.03),
+      InputField(
+        hintText: "Name",
+        textEditingController: _nameController,
+        textInputType: TextInputType.name,
+        onChanged: (value) {
+          setState(() {
+            _searchValue = value.toLowerCase();
+          });
+        },
+      ),
+      StreamBuilder<QuerySnapshot>(
+          stream: _usersStream,
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (_searchValue.length < 3) {
+              return const SizedBox.shrink();
+            }
+            if (snapshot.hasError) {
+              return const Text('Something went wrong');
+            }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
@@ -204,7 +219,7 @@ class _BodyState extends State<Body> {
             if (!snapshot.hasData) return const Text("No results found");
             searchData = snapshot.data!.docs;
             searchData = searchData
-                .where((x) => (x['name'] as String).contains(_search_value))
+                .where((x) => (x['name'] as String).contains(_searchValue))
                 .toList();
             var count = searchData.length;
             return Expanded(
@@ -214,55 +229,7 @@ class _BodyState extends State<Body> {
                   const Divider(),
               padding: const EdgeInsets.all(8),
               itemBuilder: (BuildContext context, int index) {
-                return SizedBox(
-                    height: 50,
-                    child: Row(children: <Widget>[
-                      Expanded(
-                          flex: 4,
-                          child: Container(
-                              width: 40,
-                              height: 40,
-                              decoration: const BoxDecoration(
-                                  shape: BoxShape.circle, color: orange),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                        (searchData[index]['name'][0] +
-                                                searchData[index]['name'][(searchData[index]
-                                                            ['name'] as String)
-                                                        .indexOf(' ') +
-                                                    1] as String)
-                                            .toUpperCase(),
-                                        style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w300,
-                                            fontSize: 18))
-                                  ]))),
-                      Expanded(
-                          flex: 13,
-                          child: Text(
-                              ((searchData[index]['name']) as String).toTitleCase(),
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 18))),
-                      Expanded(
-                          flex: 3,
-                          child: PopupMenuButton(
-                              itemBuilder: (BuildContext context) {
-                                return PopupMenuOptions.choices
-                                    .map((String choice) {
-                                  return PopupMenuItem<String>(
-                                      value: choice, child: Text(choice));
-                                }).toList();
-                              },
-                              icon: Icon(Icons.add),
-                              onSelected: (String choice) {
-                                choiceAction(choice, index);
-                              }))
-                    ]));
+                return MemberList(name: searchData[index]['name'], rightIcon: popupMenu(index));
               },
             ));
           }),
