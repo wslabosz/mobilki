@@ -13,6 +13,10 @@ class AuthMethods {
     return model.User.fromSnap(documentSnapshot);
   }
 
+  String getUserUID() {
+    return _auth.currentUser!.uid;
+  }
+
   Future<String> signUpUser(
       {required String email,
       required String password,
