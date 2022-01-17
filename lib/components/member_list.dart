@@ -4,9 +4,10 @@ import 'package:mobilki/constants.dart';
 class MemberList extends StatelessWidget {
   final String name;
   final Expanded rightIcon;
+  final Expanded? text;
   final NetworkImage? image;
   const MemberList(
-      {Key? key, required this.name, required this.rightIcon, this.image})
+      {Key? key, required this.name, required this.rightIcon, this.image, this.text})
       : super(key: key);
 
   @override
@@ -25,7 +26,7 @@ class MemberList extends StatelessWidget {
                           color: Colors.white,
                           fontWeight: FontWeight.w300,
                           fontSize: 18)):null)),
-          Expanded(
+          text ?? Expanded(
               flex: 13,
               child: Text(name.toTitleCase(),
                   style: const TextStyle(

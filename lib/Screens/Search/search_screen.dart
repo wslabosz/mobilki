@@ -9,7 +9,7 @@ class SearchScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Body(),
-      bottomNavigationBar: Navbar(index:4),
+      bottomNavigationBar: Navbar(index:3),
     );
   }
 }

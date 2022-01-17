@@ -30,7 +30,7 @@ class HomeScreen extends StatelessWidget {
             );
             compressedImage.then((result) {
               result?.readAsBytes().then((result) {
-                FireStoreMethods().uploadAvatar(result,AuthMethods().getUserUID(),'users');
+                FireStoreMethods().uploadAvatar(result,AuthMethods().getUserUID());
               });
             }); 
           })],

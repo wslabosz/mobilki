@@ -12,40 +12,62 @@ class Navbar extends StatelessWidget {
     "home",
     "event",
     "add",
-    "people",
     "search",
+    "people",
+    "invites",
   ];
 
   static const _icons = [
     Icon(Icons.home),
     Icon(Icons.event),
     Icon(Icons.add_circle),
-    Icon(Icons.people),
     Icon(Icons.search),
+    Icon(Icons.people),
+    Icon(Icons.mark_email_unread),
   ];
 
   static const _names = [
-    "Ekran główny",
-    "Spotkania",
-    "Dodaj spotkanie",
-    "Drużyny i znajomi",
-    "Szukaj znajomych",
+    "Home",
+    "Events",
+    "Add event",
+    "Search",
+    "Teams and friends",
+    "Invites",
+  ];
+
+  static const _visited = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
   ];
 
   void _onItemTapped(int index, BuildContext context) {
+    
     WidgetsBinding.instance?.addPostFrameCallback((_) {
+      if(_visited[index]) {
       Navigator.of(context).pushNamedAndRemoveUntil("/" + _routeNames[index],
           ModalRoute.withName("/" + _routeNames[index]));
+      }
+      else {
+        Navigator.of(context).pushNamed('/'+_routeNames[index]);
+      }
+
     });
+    print(1);
+    _visited[index]=true;
   }
 
   @override
   Widget build(BuildContext context) {
     List<BottomNavigationBarItem> itemList = [];
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < 6; i++) {
       itemList.add(BottomNavigationBarItem(icon: _icons[i], label: _names[i]));
     }
     return BottomNavigationBar(
+      type:BottomNavigationBarType.shifting,
       items: itemList,
       currentIndex: index,
       selectedItemColor: orange,
