@@ -11,10 +11,10 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope (onWillPop: () async {return Navbar.navbarOnBack();}, child:Scaffold(
         appBar: AppBar(
           title: const Text('Games'),
-          leading: Row(children: <Widget>[IconButton(
+          leading: IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () => {
               AuthMethods().logout(),
@@ -22,20 +22,22 @@ class HomeScreen extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const LoginScreen()),
                   (route) => false)
             },
-          ),IconButton(icon: const Icon(Icons.add),onPressed: ()  {
-            ImagePicker imagePicker = ImagePicker();
-            Future<XFile?> compressedImage = imagePicker.pickImage(
-              source: ImageSource.gallery,
-              imageQuality:66
-            );
-            compressedImage.then((result) {
-              result?.readAsBytes().then((result) {
-                FireStoreMethods().uploadAvatar(result,AuthMethods().getUserUID());
-              });
-            }); 
-          })],
-        )),
+          )),
         body: const Body(),
-        bottomNavigationBar: const Navbar(index: 0));
+        bottomNavigationBar: const Navbar(index: 0)));
   }
 }
+
+
+// IconButton(icon: const Icon(Icons.add),onPressed: ()  {
+//             ImagePicker imagePicker = ImagePicker();
+//             Future<XFile?> compressedImage = imagePicker.pickImage(
+//               source: ImageSource.gallery,
+//               imageQuality:66
+//             );
+//             compressedImage.then((result) {
+//               result?.readAsBytes().then((result) {
+//                 FireStoreMethods().uploadAvatar(result,AuthMethods().getUserUID());
+//               });
+//             }); 
+//           })

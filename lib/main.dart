@@ -1,11 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mobilki/Screens/Invites/invites_screen.dart';
 import 'package:mobilki/screens/Home/home_screen.dart';
 import 'package:mobilki/screens/Start/start_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'Screens/Social/social_screen.dart';
+import 'components/navbar.dart';
 import 'screens/Home/home_screen.dart';
 import 'screens/Login/login_screen.dart';
 import 'screens/Register/register_screen.dart';
@@ -26,8 +28,9 @@ class MyApp extends StatelessWidget {
     String firstScreen;
     if (_user != null) {
       firstScreen = '/home';
+      Navbar.init();
     } else {
-      firstScreen = '/';
+      firstScreen = '/start';
     }
     return MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -36,12 +39,11 @@ class MyApp extends StatelessWidget {
             textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme)),
         initialRoute: firstScreen,
         routes: {
-          '/': (context) => const StartScreen(),
+          '/start': (context) => const StartScreen(),
           '/register': (context) => const RegisterScreen(),
           '/login': (context) => const LoginScreen(),
           '/search': (context) => const SearchScreen(),
           '/home': (context) => const HomeScreen(),
-          '/people': (context) => const SocialScreen(),
         });
   }
 }

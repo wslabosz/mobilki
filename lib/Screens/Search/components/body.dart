@@ -258,7 +258,6 @@ class _BodyState extends State<Body> {
                   },
                 ));
               }),
-          SizedBox(height: size.height * 0.03),
         ]));
   }
 }
