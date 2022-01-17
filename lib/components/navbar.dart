@@ -36,11 +36,13 @@ class Navbar extends StatelessWidget {
     "Teams and friends",
     "Invites",
   ];
-    static final _visited = List.filled(6,false);
+  static final _visited = List.filled(6,false);
+  static int _lastVisited=-1;
 
   static void init() {
     _visitedQueue.add(0);
     _visited[0]=true;
+    _lastVisited=0;
   }
 
   static Future<bool> navbarOnBack() async {
@@ -66,10 +68,11 @@ class Navbar extends StatelessWidget {
           ModalRoute.withName("/" + _routeNames[index]));
       }
       else {
-        Navigator.of(context).pushNamed('/'+_routeNames[index]);
+        Navigator.of(context).pushNamedAndRemoveUntil('/'+_routeNames[_lastVisited],ModalRoute.withName("/" + _routeNames[index]));
         _visitedQueue.add(index);
       }
       _visited[index]=true;
+      _lastVisited=index;
 
     });
 
