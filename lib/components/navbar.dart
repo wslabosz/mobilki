@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 
 import 'package:mobilki/constants.dart';
@@ -43,20 +45,25 @@ class Navbar extends StatelessWidget {
     false,
     false,
   ];
+  static Queue<int> _visitedQueue = Queue<int>();
 
   void _onItemTapped(int index, BuildContext context) {
     
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       if(_visited[index]) {
+      while(_visitedQueue.last!=index) {
+        _visited[_visitedQueue.last]=false;
+        _visitedQueue.removeLast();
+      }
       Navigator.of(context).pushNamedAndRemoveUntil("/" + _routeNames[index],
           ModalRoute.withName("/" + _routeNames[index]));
       }
       else {
         Navigator.of(context).pushNamed('/'+_routeNames[index]);
+        _visitedQueue.add(index);
       }
 
     });
-    print(1);
     _visited[index]=true;
   }
 
