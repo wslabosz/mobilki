@@ -100,10 +100,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         setState(() {
           _buttonController.success();
         });
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => const HomeScreen(),
-            ),
+        Navigator.of(context).pushNamedAndRemoveUntil('/home',
             (route) => false);
       }
       // TODO: blad firebase'a

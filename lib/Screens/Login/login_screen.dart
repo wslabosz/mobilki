@@ -38,10 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         _buttonController.success();
       });
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
-          ),
+      Navigator.of(context).pushNamedAndRemoveUntil('/home',
           (route) => false);
     } else {
       setState(() {
