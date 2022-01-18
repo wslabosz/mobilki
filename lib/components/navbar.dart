@@ -49,6 +49,7 @@ class Navbar extends StatelessWidget {
     final lastItem = _visitedQueue.last;
     _visitedQueue.removeLast();
     _visited[lastItem]=false;
+    _lastVisited=_visitedQueue.last;
     return true;
   }
 
@@ -64,11 +65,13 @@ class Navbar extends StatelessWidget {
 
         _visitedQueue.removeLast();
       }
-      Navigator.of(context).pushNamedAndRemoveUntil("/" + _routeNames[index],
-          ModalRoute.withName("/" + _routeNames[index]));
+
+      Navigator.of(context).popUntil(
+          ModalRoute.withName(_routeNames[index]));
+
       }
       else {
-        Navigator.of(context).pushNamedAndRemoveUntil('/'+_routeNames[_lastVisited],ModalRoute.withName("/" + _routeNames[index]));
+         Navigator.of(context).pushNamedAndRemoveUntil(_routeNames[index],ModalRoute.withName(_routeNames[_lastVisited]));
         _visitedQueue.add(index);
       }
       _visited[index]=true;

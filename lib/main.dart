@@ -27,10 +27,10 @@ class MyApp extends StatelessWidget {
     User? _user = FirebaseAuth.instance.currentUser;
     String firstScreen;
     if (_user != null) {
-      firstScreen = '/home';
+      firstScreen = 'home';
       Navbar.init();
     } else {
-      firstScreen = '/start';
+      firstScreen = 'start';
     }
     return MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -39,11 +39,13 @@ class MyApp extends StatelessWidget {
             textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme)),
         initialRoute: firstScreen,
         routes: {
-          '/start': (context) => const StartScreen(),
-          '/register': (context) => const RegisterScreen(),
-          '/login': (context) => const LoginScreen(),
-          '/search': (context) => const SearchScreen(),
-          '/home': (context) => const HomeScreen(),
+          'start': (context) => const StartScreen(),
+          'register': (context) => const RegisterScreen(),
+          'login': (context) => const LoginScreen(),
+          'search': (context) => const SearchScreen(),
+          'home': (context) => const HomeScreen(),
+          'people': (context) => const SocialScreen(),
+          'invites': (context) => const InvitesScreen(),
         });
   }
 }
