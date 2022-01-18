@@ -1,7 +1,5 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:mobilki/screens/Home/home_screen.dart';
 import 'package:mobilki/screens/Login/components/body.dart';
 import 'package:mobilki/resources/auth_methods.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
