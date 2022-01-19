@@ -28,7 +28,11 @@ class _SideBarWidgetState extends State<SideBarWidget> {
             .get(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          User userData = User.fromSnap(snapshot.data!);
+          if (snapshot.connectionState == ConnectionState.waiting ||
+              !snapshot.hasData) {
+            return const Drawer(child:Material(color:Colors.orange));
+          }
+                    User userData = User.fromSnap(snapshot.data!);
           urlImage = userData.avatarUrl;
           return Drawer(
             child: Material(
@@ -45,12 +49,14 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                             source: ImageSource.gallery, imageQuality: 66);
                         compressedImage.then((result) {
                           result?.readAsBytes().then((result) {
-                            FireStoreMethods().uploadAvatar(
-                                result, AuthMethods().getUserUID()).then((value) {
-                                  setState(() {
-                                    urlImage=value;
-                                  });
-                                });
+                            FireStoreMethods()
+                                .uploadAvatar(
+                                    result, AuthMethods().getUserUID())
+                                .then((value) {
+                              setState(() {
+                                urlImage = value;
+                              });
+                            });
                           });
                         });
                       }),
@@ -99,7 +105,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
               .add(const EdgeInsets.symmetric(vertical: 50, horizontal: 5)),
           child: Row(
             children: [
-              Avatar(radius: 40, image: NetworkImage(urlImage),name:name),
+              Avatar(radius: 40, image: NetworkImage(urlImage), name: name),
               const SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
