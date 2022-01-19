@@ -69,6 +69,9 @@ class _BodyState extends State<Body> {
                 if (snapshot.hasError) {
                   return const Text("Something went wrong");
                 }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                }
                 if (snapshot.hasData) {
                   List<Team> teamData = snapshot.data!.docs
                       .where((y) => !(y['members'] as List)
