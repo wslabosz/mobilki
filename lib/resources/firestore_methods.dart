@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobilki/models/invite_request.dart';
 import 'package:mobilki/resources/auth_methods.dart';
+import 'package:mobilki/resources/http_methods.dart';
 import 'package:mobilki/resources/storage_methods.dart';
 
 class FireStoreMethods {
@@ -46,6 +47,9 @@ class FireStoreMethods {
         FirebaseFirestore.instance.collection("invite_requests").add(
             {'isTeam': false, 'sender': senderUid, 'receiver': receiverUid});
         returnData = ["Invitation sent succesfully!", true];
+        FirebaseFirestore.instance.collection("users").doc(receiverUid).get().then((value) {
+          HttpMethods.sendFCMMessage(value['token'],"A new invite request","Friend request from PK");
+        });
       } else {
         returnData = ["User has pending invitation already", false];
       }
