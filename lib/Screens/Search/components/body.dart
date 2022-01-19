@@ -30,10 +30,7 @@ class PopupMenuOptions {
 }
 
 class _BodyState extends State<Body> {
-  static List<Team> teamData = [];
-  static List<User> userData = [];
-
-  Expanded popupMenu(int index) {
+  Expanded popupMenu(String receiverUid) {
     return Expanded(
         flex: 3,
         child: PopupMenuButton(
@@ -45,11 +42,11 @@ class _BodyState extends State<Body> {
             },
             icon: const Icon(Icons.add),
             onSelected: (String choice) {
-              choiceAction(choice, index);
+              choiceAction(choice, receiverUid);
             }));
   }
 
-  void teamDialog(int searchIndex) {
+  void teamDialog(String receiverUid) {
     String uid = AuthMethods().getUserUID();
     CollectionReference teams = FirebaseFirestore.instance.collection('teams');
     showDialog<void>(
@@ -73,9 +70,9 @@ class _BodyState extends State<Body> {
                   return const Text("Something went wrong");
                 }
                 if (snapshot.hasData) {
-                  teamData = snapshot.data!.docs
+                  List<Team> teamData = snapshot.data!.docs
                       .where((y) => !(y['members'] as List)
-                          .contains(userData[searchIndex].uid))
+                          .contains(receiverUid))
                       .map((y) => (Team.fromSnap(y)))
                       .toList();
 
@@ -90,15 +87,15 @@ class _BodyState extends State<Body> {
                         itemCount: teamData.length,
                         separatorBuilder: (BuildContext context, int index) =>
                             const Divider(indent: 8, endIndent: 8),
-                        itemBuilder: (context, index0) {
+                        itemBuilder: (context, teamIndex) {
                           return ListTile(
                               tileColor: darkOrange,
-                              title: Text(teamData[index0].name,
+                              title: Text(teamData[teamIndex].name,
                                   style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w500)),
                               onTap: () {
-                                FireStoreMethods.sendTeamRequest(teamData[index0].name, userData[searchIndex].uid).then((result) {
+                                FireStoreMethods.sendTeamRequest(teamData[teamIndex].name, receiverUid).then((result) {
                                   Snackbars.defaultSnackbar(context,result[0],positive:result[1]);
                                   if(result[1]) {
                                     Navigator.of(context, rootNavigator: true).pop('dialog');
@@ -114,16 +111,16 @@ class _BodyState extends State<Body> {
             )));
   }
 
-  void choiceAction(String choice, int searchIndex) {
+  void choiceAction(String choice, String receiverUid) {
     if (choice == PopupMenuOptions.firstItem) { 
-      FireStoreMethods.sendFriendRequest(AuthMethods().getUserUID(),userData[searchIndex].uid).then((value) => 
+      FireStoreMethods.sendFriendRequest(AuthMethods().getUserUID(),receiverUid).then((value) => 
                Snackbars.defaultSnackbar(
             context, value[0],
             positive: value[1])
       
       );
     } else if (choice == PopupMenuOptions.secondItem) {
-      teamDialog(searchIndex);
+      teamDialog(receiverUid);
     }
   }
 
@@ -186,7 +183,7 @@ class _BodyState extends State<Body> {
                 if (!snapshot.hasData) return const Text("No results found");
                 List<QueryDocumentSnapshot<Object?>> searchData =
                     snapshot.data!.docs;
-                userData = searchData
+                List<User> userData = searchData
                     .where((x) => (x['name'] as String).contains(_searchValue))
                     .map((x) => (User.fromSnap(x)))
                     .toList();
@@ -203,7 +200,7 @@ class _BodyState extends State<Body> {
                         image: userData[index].avatarUrl != ""
                             ? NetworkImage(userData[index].avatarUrl)
                             : null,
-                        rightIcon: popupMenu(index));
+                        rightIcon: popupMenu(userData[index].uid));
                   },
                 ));
               }),
