@@ -69,7 +69,7 @@ class _BodyState extends State<Body> {
       const Align(
           alignment: Alignment.topCenter,
           child: Padding(
-            padding: EdgeInsets.only(top: 48),
+            padding: EdgeInsets.only(top: 48,bottom:16),
             child: Text(
               "Invite requests",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -79,7 +79,8 @@ class _BodyState extends State<Body> {
           child: SegControl(
               nameLeft: 'Friends',
               nameRight: 'Teams',
-              notifyParent: (bool right) => _switchSegment(right)),
+              notifyParent: (bool right) => _switchSegment(right),
+              rightActive:_rightSegment),
           padding: const EdgeInsets.only(bottom: 24)),
       FutureBuilder<dynamic>(
         future: FireStoreMethods.getCurrentUserRequests(

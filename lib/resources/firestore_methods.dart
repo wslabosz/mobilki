@@ -100,7 +100,6 @@ class FireStoreMethods {
               .collection(team ? 'teams' : 'users')
               .where(team ? "name" : "uid", whereIn: senderData)
               .get();
-      print(senderSnapshot.docs);
       List<dynamic> returnData = [true, inviteData, senderSnapshot];
       if(team) {
         List<String> adminNames = [];
