@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mobilki/Screens/Invites/invites_screen.dart';
+import 'package:mobilki/resources/firestore_methods.dart';
 import 'package:mobilki/screens/Home/home_screen.dart';
 import 'package:mobilki/screens/Start/start_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,6 +30,7 @@ class MyApp extends StatelessWidget {
     String firstScreen;
     if (_user != null) {
       firstScreen = 'home';
+      FirebaseMessaging.instance.onTokenRefresh.listen(FireStoreMethods.saveTokenToDatabase);    
       Navbar.init();
     } else {
       firstScreen = 'start';

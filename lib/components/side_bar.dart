@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobilki/Screens/Login/login_screen.dart';
-import 'package:mobilki/Screens/Settings/user_settings.dart';
 import 'package:mobilki/components/circle_avatar.dart';
 import 'package:mobilki/constants.dart';
 import 'package:mobilki/models/user.dart';

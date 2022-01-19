@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobilki/models/invite_request.dart';
+import 'package:mobilki/resources/auth_methods.dart';
 import 'package:mobilki/resources/storage_methods.dart';
 
 class FireStoreMethods {
@@ -148,5 +149,18 @@ class FireStoreMethods {
       }
     }
   }
+
+  static Future<void> saveTokenToDatabase(String token) async {
+  // Assume user is logged in for this example
+  String userId = AuthMethods().getUserUID();
+  if(userId!=null) {
+    await FirebaseFirestore.instance
+      .collection('users')
+      .doc(userId)
+      .update({
+        'token': token,
+      });
+  }
+}
   //TODO: dodwanie do drużyny, dodawanie do przyjaciół, dodawanie do eventu (manipulacja stanem)
 }

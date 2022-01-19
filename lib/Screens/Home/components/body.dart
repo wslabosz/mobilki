@@ -1,11 +1,15 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mobilki/constants.dart';
+import 'package:mobilki/resources/firestore_methods.dart';
 
 class Body extends StatelessWidget {
   const Body({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    FirebaseMessaging.instance.getToken().then((value)=>FireStoreMethods.saveTokenToDatabase(value!));
+
     return _eventListView(context);
   }
 
