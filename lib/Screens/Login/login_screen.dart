@@ -36,9 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         _buttonController.success();
       });
-      Navigator.of(context).pushNamedAndRemoveUntil('home',
-          (route) => false);
-
+      Navigator.of(context).pushNamedAndRemoveUntil('home', (route) => false);
     } else {
       setState(() {
         _error = "invalid email or password";

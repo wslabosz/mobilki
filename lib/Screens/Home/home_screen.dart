@@ -20,6 +20,7 @@ class HomeScreen extends StatelessWidget {
             drawer: SideBarWidget(),
             appBar: AppBar(
               title: const Text('Games'),
+              backgroundColor: Colors.orange,
               /*leading: IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () => {
