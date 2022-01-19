@@ -88,9 +88,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       String res = await AuthMethods().signUpUser(
           email: _emailController.text,
           password: _passwordController.text,
-          name: _firstnameController.text.trim() +
+          name: (_firstnameController.text.trim() +
               ' ' +
-              _lastnameController.text.trim(),
+              _lastnameController.text.trim()).toLowerCase(),
           dateOfBirth: (_dateOfBirth?.toString() != null)
               ? _dateOfBirth.toString()
               : "");
@@ -99,7 +99,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         setState(() {
           _buttonController.success();
         });
-        Navigator.of(context).pushNamedAndRemoveUntil('/home',
+        Navigator.of(context).pushNamedAndRemoveUntil('home',
             (route) => false);
       }
       // TODO: blad firebase'a
