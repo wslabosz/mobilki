@@ -28,10 +28,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     User? _user = FirebaseAuth.instance.currentUser;
     String firstScreen;
+    Navbar.init();
     if (_user != null) {
       firstScreen = 'home';
       FirebaseMessaging.instance.onTokenRefresh.listen(FireStoreMethods.saveTokenToDatabase);    
-      Navbar.init();
     } else {
       firstScreen = 'start';
     }
