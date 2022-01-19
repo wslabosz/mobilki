@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobilki/components/input_field.dart';
 import 'package:mobilki/components/member_list.dart';
+import 'package:mobilki/models/team.dart';
+import 'package:mobilki/models/user.dart';
 
 import 'package:mobilki/resources/auth_methods.dart';
 import 'package:mobilki/resources/default_snackbar.dart';
+import 'package:mobilki/resources/firestore_methods.dart';
 
 import '../../../constants.dart';
 
@@ -28,77 +30,7 @@ class PopupMenuOptions {
 }
 
 class _BodyState extends State<Body> {
-  static List<QueryDocumentSnapshot<Object?>> searchData = [];
-  static List<QueryDocumentSnapshot<Object?>> teamData = [];
-
-  void sendFriendRequest(int searchIndex) {
-    String uid = AuthMethods().getUserUID();
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .get()
-        .then((result) {
-      if ((result['friends'] as List)
-          .contains(searchData[searchIndex]['uid'])) {
-        Snackbars.defaultSnackbar(context, "User is already your friend",
-            negative: true);
-      } else {
-        FirebaseFirestore.instance
-            .collection('invite_requests')
-            .where('is_team', isEqualTo: false)
-            .where('sender', isEqualTo: uid)
-            .where('receiver', isEqualTo: searchData[searchIndex]['uid'])
-            .get()
-            .then((result) {
-          if (result.docs.isEmpty) {
-            FirebaseFirestore.instance.collection("invite_requests").add({
-              'is_team': false,
-              'sender': uid,
-              'receiver': searchData[searchIndex]['uid'],
-            });
-            Snackbars.defaultSnackbar(context, "Invitation sent succesfully!");
-          } else {
-            Snackbars.defaultSnackbar(
-                context, "User has pending invitation already",
-                negative: true);
-          }
-        });
-      }
-    });
-  }
-
-  void sendTeamRequest(int index0, int searchIndex) {
-    CollectionReference invites =
-        FirebaseFirestore.instance.collection("invite_requests");
-    invites
-        .where('is_team', isEqualTo: true)
-        .where('sender', isEqualTo: teamData[index0]['name'])
-        .where('receiver', isEqualTo: searchData[searchIndex]['uid'])
-        .get()
-        .then((result) {
-      if (result.docs.isEmpty) {
-        FirebaseFirestore.instance
-            .collection("invite_requests")
-            .add({
-              'is_team': true,
-              'sender': teamData[index0]['name'],
-              'receiver': searchData[searchIndex]['uid'],
-            })
-            .then((value) =>
-                Navigator.of(context, rootNavigator: true).pop('dialog'))
-            .catchError((error) => Snackbars.defaultSnackbar(
-                context, "Something went wrong",
-                negative: true));
-        Snackbars.defaultSnackbar(context, "Invitation sent succesfully!");
-      } else {
-        Snackbars.defaultSnackbar(
-            context, "User has pending invitation already",
-            negative: true);
-      }
-    });
-  }
-
-  Expanded popupMenu(int index) {
+  Expanded popupMenu(String receiverUid) {
     return Expanded(
         flex: 3,
         child: PopupMenuButton(
@@ -110,73 +42,85 @@ class _BodyState extends State<Body> {
             },
             icon: const Icon(Icons.add),
             onSelected: (String choice) {
-              choiceAction(choice, index);
+              choiceAction(choice, receiverUid);
             }));
   }
 
-  void choiceAction(String choice, int searchIndex) {
+  void teamDialog(String receiverUid) {
     String uid = AuthMethods().getUserUID();
-    if (choice == PopupMenuOptions.firstItem) {
-      sendFriendRequest(searchIndex);
-    } else if (choice == PopupMenuOptions.secondItem) {
-      CollectionReference teams =
-          FirebaseFirestore.instance.collection('teams');
-      showDialog<void>(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) => AlertDialog(
-              title: const Text("Choose a team"),
-              actions: [
-                TextButton(
-                    child: const Text("Cancel",
-                        style: TextStyle(color: Colors.red)),
-                    onPressed: () => {
-                          Navigator.of(context, rootNavigator: true)
-                              .pop('dialog')
-                        })
-              ],
-              content: FutureBuilder<QuerySnapshot>(
-                future: teams.where('admin_uid', isEqualTo: uid).get(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.hasError) {
-                    return const Text("Something went wrong");
-                  }
-                  if (snapshot.hasData) {
-                    var teamData = snapshot.data!.docs
-                        .where((y) => !(y['members'] as List)
-                            .contains(searchData[searchIndex]['uid']))
-                        .toList();
+    CollectionReference teams = FirebaseFirestore.instance.collection('teams');
+    showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => AlertDialog(
+            title: const Text("Choose a team"),
+            actions: [
+              TextButton(
+                  child:
+                      const Text("Cancel", style: TextStyle(color: Colors.red)),
+                  onPressed: () => {
+                        Navigator.of(context, rootNavigator: true).pop('dialog')
+                      })
+            ],
+            content: FutureBuilder<QuerySnapshot>(
+              future: teams.where('adminUid', isEqualTo: uid).get(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return const Text("Something went wrong");
+                }
+                if (snapshot.hasData) {
+                  List<Team> teamData = snapshot.data!.docs
+                      .where((y) => !(y['members'] as List)
+                          .contains(receiverUid))
+                      .map((y) => (Team.fromSnap(y)))
+                      .toList();
 
-                    if (teamData.isEmpty) {
-                      return const Text("No teams found");
-                    }
-                    return Container(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        height: MediaQuery.of(context).size.height * 0.4,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: ListView.separated(
-                          itemCount: teamData.length,
-                          separatorBuilder: (BuildContext context, int index) =>
-                              const Divider(indent: 8, endIndent: 8),
-                          itemBuilder: (context, index0) {
-                            return ListTile(
-                                tileColor: darkOrange,
-                                title: Text(
-                                    (teamData[index0]['name'] as String),
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500)),
-                                onTap: () {
-                                  sendTeamRequest(index0, searchIndex);
-                                });
-                          },
-                        ));
-                  } else {
-                    return const CircularProgressIndicator();
+                  if (teamData.isEmpty) {
+                    return const Text("No teams found");
                   }
-                },
-              )));
+                  return Container(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.4,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: ListView.separated(
+                        itemCount: teamData.length,
+                        separatorBuilder: (BuildContext context, int index) =>
+                            const Divider(indent: 8, endIndent: 8),
+                        itemBuilder: (context, teamIndex) {
+                          return ListTile(
+                              tileColor: darkOrange,
+                              title: Text(teamData[teamIndex].name,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500)),
+                              onTap: () {
+                                FireStoreMethods.sendTeamRequest(teamData[teamIndex].name, receiverUid).then((result) {
+                                  Snackbars.defaultSnackbar(context,result[0],positive:result[1]);
+                                  if(result[1]) {
+                                    Navigator.of(context, rootNavigator: true).pop('dialog');
+                                  }
+                                });
+                              });
+                        },
+                      ));
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              },
+            )));
+  }
+
+  void choiceAction(String choice, String receiverUid) {
+    if (choice == PopupMenuOptions.firstItem) { 
+      FireStoreMethods.sendFriendRequest(AuthMethods().getUserUID(),receiverUid).then((value) => 
+               Snackbars.defaultSnackbar(
+            context, value[0],
+            positive: value[1])
+      
+      );
+    } else if (choice == PopupMenuOptions.secondItem) {
+      teamDialog(receiverUid);
     }
   }
 
@@ -237,11 +181,13 @@ class _BodyState extends State<Body> {
                   return const CircularProgressIndicator();
                 }
                 if (!snapshot.hasData) return const Text("No results found");
-                searchData = snapshot.data!.docs;
-                searchData = searchData
+                List<QueryDocumentSnapshot<Object?>> searchData =
+                    snapshot.data!.docs;
+                List<User> userData = searchData
                     .where((x) => (x['name'] as String).contains(_searchValue))
+                    .map((x) => (User.fromSnap(x)))
                     .toList();
-                var count = searchData.length;
+                int count = userData.length;
                 return Expanded(
                     child: ListView.separated(
                   itemCount: count,
@@ -250,11 +196,11 @@ class _BodyState extends State<Body> {
                   padding: const EdgeInsets.all(8),
                   itemBuilder: (BuildContext context, int index) {
                     return MemberList(
-                        name: searchData[index]['name'],
-                        image: searchData[index]['avatarUrl'] != ""
-                            ? NetworkImage(searchData[index]['avatarUrl'])
+                        name: userData[index].name,
+                        image: userData[index].avatarUrl != ""
+                            ? NetworkImage(userData[index].avatarUrl)
                             : null,
-                        rightIcon: popupMenu(index));
+                        rightIcon: popupMenu(userData[index].uid));
                   },
                 ));
               }),
