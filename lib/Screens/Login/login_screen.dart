@@ -38,6 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
       });
       Navigator.of(context).pushNamedAndRemoveUntil('home',
           (route) => false);
+
     } else {
       setState(() {
         _error = "invalid email or password";

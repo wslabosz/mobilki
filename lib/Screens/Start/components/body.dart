@@ -19,7 +19,6 @@ class Body extends StatelessWidget {
             onPress: () {
               WidgetsBinding.instance?.addPostFrameCallback((_) {
                 Navigator.of(context).pushNamed('register');
-
               });
             }),
         Button(
