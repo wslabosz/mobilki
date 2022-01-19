@@ -5,7 +5,7 @@ import 'package:mobilki/resources/firestore_methods.dart';
 import 'package:mobilki/screens/Home/components/body.dart';
 import 'package:mobilki/components/navbar.dart';
 import 'package:mobilki/resources/auth_methods.dart';
-import 'package:mobilki/widgets/side_bar.dart';
+import 'package:mobilki/components/side_bar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -35,17 +35,3 @@ class HomeScreen extends StatelessWidget {
             bottomNavigationBar: const Navbar(index: 0)));
   }
 }
-
-
-// IconButton(icon: const Icon(Icons.add),onPressed: ()  {
-//             ImagePicker imagePicker = ImagePicker();
-//             Future<XFile?> compressedImage = imagePicker.pickImage(
-//               source: ImageSource.gallery,
-//               imageQuality:66
-//             );
-//             compressedImage.then((result) {
-//               result?.readAsBytes().then((result) {
-//                 FireStoreMethods().uploadAvatar(result,AuthMethods().getUserUID());
-//               });
-//             }); 
-//           })
