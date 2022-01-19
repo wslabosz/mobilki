@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mobilki/Screens/Login/login_screen.dart';
 import 'package:mobilki/Screens/Settings/user_settings.dart';
 import 'package:mobilki/components/circle_avatar.dart';
+import 'package:mobilki/constants.dart';
 import 'package:mobilki/models/user.dart';
 import 'package:mobilki/resources/auth_methods.dart';
 import 'package:mobilki/resources/firestore_methods.dart';
@@ -36,7 +37,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                 children: <Widget>[
                   buildHeader(
                       urlImage: urlImage,
-                      name: userData.name,
+                      name: userData.name.toTitleCase(),
                       email: userData.email,
                       onClicked: () {
                         ImagePicker imagePicker = ImagePicker();
