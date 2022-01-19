@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-//import 'package:mobilki/screens/Invites/invites_screen.dart';
+import 'package:mobilki/Screens/Invites/invites_screen.dart';
 import 'package:mobilki/screens/Home/home_screen.dart';
 import 'package:mobilki/screens/Start/start_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
           'search': (context) => const SearchScreen(),
           'home': (context) => const HomeScreen(),
           //'people': (context) => const SocialScreen(),
-          //'invites': (context) => const InvitesScreen(),
+          'invites': (context) => const InvitesScreen(),
         });
   }
 }
