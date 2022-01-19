@@ -5,16 +5,22 @@ import 'package:mobilki/resources/firestore_methods.dart';
 import 'package:mobilki/screens/Home/components/body.dart';
 import 'package:mobilki/components/navbar.dart';
 import 'package:mobilki/resources/auth_methods.dart';
+import 'package:mobilki/widgets/side_bar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope (onWillPop: () async {return Navbar.navbarOnBack();}, child:Scaffold(
-        appBar: AppBar(
-          title: const Text('Games'),
-          leading: IconButton(
+    return WillPopScope(
+        onWillPop: () async {
+          return Navbar.navbarOnBack();
+        },
+        child: Scaffold(
+            drawer: SideBarWidget(),
+            appBar: AppBar(
+              title: const Text('Games'),
+              /*leading: IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () => {
               AuthMethods().logout(),
@@ -22,9 +28,10 @@ class HomeScreen extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const LoginScreen()),
                   (route) => false)
             },
-          )),
-        body: const Body(),
-        bottomNavigationBar: const Navbar(index: 0)));
+          )*/
+            ),
+            body: const Body(),
+            bottomNavigationBar: const Navbar(index: 0)));
   }
 }
 

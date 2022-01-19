@@ -18,8 +18,7 @@ class Body extends StatelessWidget {
             text: 'Register',
             onPress: () {
               WidgetsBinding.instance?.addPostFrameCallback((_) {
-                Navigator.of(context).pushNamed('/register');
-
+                Navigator.of(context).pushNamed('register');
               });
             }),
         Button(
@@ -29,7 +28,7 @@ class Body extends StatelessWidget {
             text: 'Log in',
             onPress: () {
               WidgetsBinding.instance?.addPostFrameCallback((_) {
-                Navigator.of(context).pushNamed('/login');
+                Navigator.of(context).pushNamed('login');
               });
             })
       ],
