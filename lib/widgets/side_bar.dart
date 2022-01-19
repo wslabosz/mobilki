@@ -4,12 +4,13 @@ import 'package:mobilki/Screens/Settings/user_settings.dart';
 import 'package:mobilki/resources/auth_methods.dart';
 
 class SideBarWidget extends StatelessWidget {
-  final padding = EdgeInsets.symmetric(horizontal: 20);
+  final padding = const EdgeInsets.symmetric(horizontal: 20);
   @override
   Widget build(BuildContext context) {
-    final name = 'Alicja Forysiak';
-    final email = 'alicja.forysiak@gmail.com';
-    final urlImage =
+    //TODO: zczytywanie danych o użytkowniku z firebase
+    const name = 'Alicja Forysiak';
+    const email = 'alicja.forysiak@gmail.com';
+    const urlImage =
         'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80';
 
     return Drawer(
@@ -22,8 +23,8 @@ class SideBarWidget extends StatelessWidget {
               name: name,
               email: email,
               onClicked: () => Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => SettingsPage(
-                  name: 'Sarah Abs',
+                builder: (context) => const SettingsPage(
+                  name: name,
                   urlImage: urlImage,
                 ),
               )),
@@ -34,7 +35,7 @@ class SideBarWidget extends StatelessWidget {
                 children: [
                   const SizedBox(height: 16),
                   buildMenuItem(
-                      text: 'Wyloguj',
+                      text: 'Log out',
                       icon: Icons.logout,
                       onClicked: () => {
                             AuthMethods().logout(),
