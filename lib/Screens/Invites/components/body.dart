@@ -69,7 +69,7 @@ class _BodyState extends State<Body> {
       const Align(
           alignment: Alignment.topCenter,
           child: Padding(
-            padding: EdgeInsets.only(top: 48,bottom:16),
+            padding: EdgeInsets.only(top: 48, bottom: 16),
             child: Text(
               "Invite requests",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -80,7 +80,7 @@ class _BodyState extends State<Body> {
               nameLeft: 'Friends',
               nameRight: 'Teams',
               notifyParent: (bool right) => _switchSegment(right),
-              rightActive:_rightSegment),
+              rightActive: _rightSegment),
           padding: const EdgeInsets.only(bottom: 24)),
       FutureBuilder<dynamic>(
         future: FireStoreMethods.getCurrentUserRequests(
@@ -100,7 +100,10 @@ class _BodyState extends State<Body> {
               List<InviteRequest> unorderedInviteData = snapshot.data[1];
               QuerySnapshot<Map<String, dynamic>> senderSnapshot =
                   snapshot.data[2];
-              List<String> adminNames = snapshot.data[3];
+              List<String> adminNames = [];
+              if (_rightSegment) {
+                List<String> adminNames = snapshot.data[3];
+              }
               List<QueryDocumentSnapshot<Map<String, dynamic>>> senderDocs =
                   senderSnapshot.docs;
               int count = senderDocs.length;
@@ -142,7 +145,12 @@ class _BodyState extends State<Body> {
                       image: senderData[index].avatarUrl != ""
                           ? NetworkImage(senderData[index].avatarUrl)
                           : null,
-                      subtext: _rightSegment?TextSpan(text:"\n"+adminNames[index].toTitleCase(),style:const TextStyle(fontWeight: FontWeight.w300,fontSize:16)):null,
+                      subtext: _rightSegment
+                          ? TextSpan(
+                              text: "\n" + adminNames[index].toTitleCase(),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w300, fontSize: 16))
+                          : null,
                       rightIcon:
                           requestIcon(senderDocs[index].id, inviteData[index]));
                 },
