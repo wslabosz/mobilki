@@ -104,7 +104,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
               .add(const EdgeInsets.symmetric(vertical: 50, horizontal: 5)),
           child: Row(
             children: [
-              Avatar(radius: 40, image: NetworkImage(urlImage), name: name),
+              Avatar(radius: 40, image: urlImage==""?null:NetworkImage(urlImage), name: name),
               const SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

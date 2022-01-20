@@ -62,9 +62,10 @@ class FireStoreMethods {
     QuerySnapshot<Map<String, dynamic>> teamData = await FirebaseFirestore
         .instance
         .collection("teams")
+        .where('name',isEqualTo:teamName)
         .where("members", arrayContains: receiverUid)
         .get();
-    if (teamData.docs[0]["members"].contains(receiverUid)) {
+    if (teamData.docs.isNotEmpty) {
       return ["User is already in a team", true];
     } else {
       QuerySnapshot<Map<String, dynamic>> sameInviteRequests =
