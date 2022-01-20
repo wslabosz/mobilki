@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:mobilki/Screens/Calendar/calendar_page.dart';
 import 'package:mobilki/Screens/Invites/invites_screen.dart';
 import 'package:mobilki/resources/firestore_methods.dart';
 import 'package:mobilki/screens/Home/home_screen.dart';
@@ -31,7 +32,8 @@ class MyApp extends StatelessWidget {
     Navbar.init();
     if (_user != null) {
       firstScreen = 'home';
-      FirebaseMessaging.instance.onTokenRefresh.listen(FireStoreMethods.saveTokenToDatabase);    
+      FirebaseMessaging.instance.onTokenRefresh
+          .listen(FireStoreMethods.saveTokenToDatabase);
     } else {
       firstScreen = 'start';
     }
@@ -49,6 +51,7 @@ class MyApp extends StatelessWidget {
           'home': (context) => const HomeScreen(),
           //'people': (context) => const SocialScreen(),
           'invites': (context) => const InvitesScreen(),
+          'event': (context) => const CalendarScreen(),
         });
   }
 }
