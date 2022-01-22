@@ -55,24 +55,44 @@ class _RegisterScreenState extends State<RegisterScreen> {
         lastDate: DateTime.now());
     if (picked != null) {
       setState(() {
+        _errors?.clear();
         _dateOfBirth = picked;
       });
     }
   }
 
   Future<void> _validateForm() async {
-    Map<String, String>? listOfErrors;
+    Map<String, String> listOfErrors = <String, String>{};
     if (!_emailController.text.contains('@')) {
-      listOfErrors?['email'] = 'please provide valid email';
+      listOfErrors['email'] = 'Please provide valid email';
     }
     if (_passwordController.text.length < 6) {
-      listOfErrors?['password'] = 'password must be longer than 6 characters';
+      listOfErrors['password'] = 'Password must be longer than 6 characters';
     }
     if (_firstnameController.text.isEmpty) {
-      listOfErrors?['firstname'] = 'please provide firstname';
+      listOfErrors['firstname'] = 'Please provide your firstname';
     }
     if (_lastnameController.text.isEmpty) {
-      listOfErrors?['lastname'] = 'please provide lastname';
+      listOfErrors['lastname'] = 'Please provide your lastname';
+    }
+    if (_dateOfBirth == null) {
+      listOfErrors['dateOfBirth'] = 'Click to provide your birthday';
+    }
+    setState(() {
+      _errors = listOfErrors;
+    });
+  }
+
+  Future<void> _checkServerErrors(String response) async {
+    Map<String, String> listOfErrors = <String, String>{};
+    if (response.contains('invalid-email')) {
+      listOfErrors['email'] = 'Please provide valid email';
+    }
+    if (response.contains('email-already-in-use')) {
+      listOfErrors['email'] = 'The email address is already in use';
+    }
+    if (response.contains('password')) {
+      listOfErrors['password'] = response;
     }
     setState(() {
       _errors = listOfErrors;
@@ -84,13 +104,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _buttonController.start();
     });
     await _validateForm();
-    if (_errors == null) {
+    if (_errors == null || _errors!.isEmpty) {
       String res = await AuthMethods().signUpUser(
           email: _emailController.text,
           password: _passwordController.text,
           name: (_firstnameController.text.trim() +
-              ' ' +
-              _lastnameController.text.trim()).toLowerCase(),
+                  ' ' +
+                  _lastnameController.text.trim())
+              .toLowerCase(),
           dateOfBirth: (_dateOfBirth?.toString() != null)
               ? _dateOfBirth.toString()
               : "");
@@ -99,11 +120,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
         setState(() {
           _buttonController.success();
         });
-        Navigator.of(context).pushNamedAndRemoveUntil('home',
-            (route) => false);
+        Navigator.of(context).pushNamedAndRemoveUntil('home', (route) => false);
+      } else {
+        await _checkServerErrors(res);
+        setState(() {
+          _buttonController.error();
+          Timer(const Duration(seconds: 2), () {
+            _buttonController.stop();
+          });
+        });
       }
-      // TODO: blad firebase'a
-
     } else {
       setState(() {
         _buttonController.error();

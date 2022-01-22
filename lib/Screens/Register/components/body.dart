@@ -64,7 +64,11 @@ class Body extends StatelessWidget {
             textInputType: TextInputType.emailAddress,
             textEditingController: emailController,
           ),
-          DateField(date: dateOfBirth, selectDate: selectDate),
+          DateField(
+            date: dateOfBirth,
+            selectDate: selectDate,
+            errorText: validationErrors?['dateOfBirth'],
+          ),
           PasswordField(
             onChanged: (value) {},
             errorText: validationErrors?['password'],

@@ -5,11 +5,15 @@ import 'package:mobilki/constants.dart';
 class DateField extends StatelessWidget {
   final DateTime? date;
   final Future<void> Function(BuildContext) selectDate;
-  const DateField({Key? key, required this.date, required this.selectDate})
+  final String? errorText;
+  const DateField(
+      {Key? key, required this.date, required this.selectDate, this.errorText})
       : super(key: key);
 
   String showDateOfBirth(DateTime? date) {
-    if (date == null) {
+    if (errorText != null) {
+      return errorText!;
+    } else if (date == null) {
       return "Date of birth";
     } else {
       return "${date.toLocal()}".split(' ')[0];

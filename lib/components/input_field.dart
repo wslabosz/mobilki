@@ -29,6 +29,7 @@ class InputField extends StatelessWidget {
         decoration: InputDecoration(
             hintText: hintText,
             errorText: errorText,
+            errorStyle: const TextStyle(fontSize: 13),
             border: OutlineInputBorder(
                 borderSide: BorderSide.none,
                 borderRadius: BorderRadius.circular(12.0)),
