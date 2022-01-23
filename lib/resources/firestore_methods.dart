@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:mobilki/constants.dart';
 import 'package:mobilki/models/invite_request.dart';
 import 'package:mobilki/models/team.dart';
 import 'package:mobilki/models/user.dart';
@@ -58,7 +59,7 @@ class FireStoreMethods {
               User sender = User.fromSnap(userReference);
               User receiver = User.fromSnap(value);
           HttpMethods.sendFCMMessage(
-              receiver.token, "A new invite request", "Friend request from "+sender.name);
+              receiver.token, "A new invite request", "Friend request from "+sender.name.toTitleCase());
         });
       } else {
         returnData = ["User has pending invitation already", false];
@@ -97,7 +98,7 @@ class FireStoreMethods {
               Team sender = Team.fromSnap(teamData.docs[0]);
               User receiver = User.fromSnap(value);
           HttpMethods.sendFCMMessage(
-              receiver.token, "A new team invite request", "You have been invited to "+sender.name);
+              receiver.token, "A new team invite request", "You have been invited to "+sender.name.toTitleCase());
         });
         return ["Invitation sent succesfully!", true];
       } else {
@@ -169,7 +170,7 @@ class FireStoreMethods {
         DocumentSnapshot<Map<String, dynamic>> receiverData = await FirebaseFirestore.instance.collection('users').doc(request.receiver).get();
         User receiverInstance = User.fromSnap(receiverData);
                   HttpMethods.sendFCMMessage(
-              adminInstance.token, "A new member joined your team!", receiverInstance.name+" has accepted your invitation.");
+              adminInstance.token, "A new member joined your team!", receiverInstance.name.toTitleCase()+" has accepted your invitation.");
         }
       } else {
         FirebaseFirestore.instance.collection('users').doc(senderDocId).update({
@@ -186,7 +187,7 @@ class FireStoreMethods {
         DocumentSnapshot<Map<String, dynamic>> receiverData = await FirebaseFirestore.instance.collection('users').doc(request.receiver).get();
         User receiverInstance = User.fromSnap(receiverData);
         HttpMethods.sendFCMMessage(
-              senderInstance.token, "You have a new friend!", receiverInstance.name+" has accepted your friend request.");
+              senderInstance.token, "You have a new friend!", receiverInstance.name.toTitleCase()+" has accepted your friend request.");
       }
     }
 
