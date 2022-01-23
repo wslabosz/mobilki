@@ -164,7 +164,7 @@ class FireStoreMethods {
           'teams': FieldValue.arrayUnion([request.sender])});
         DocumentSnapshot<Map<String, dynamic>> teamData = await FirebaseFirestore.instance.collection('teams').doc(senderDocId).get();
         Team teamInstance = Team.fromSnap(teamData);
-        DocumentSnapshot<Map<String, dynamic>> adminData = await FirebaseFirestore.instance.collection('users').doc(teamData.id).get();
+        DocumentSnapshot<Map<String, dynamic>> adminData = await FirebaseFirestore.instance.collection('users').doc(teamInstance.adminUid).get();
         User adminInstance = User.fromSnap(adminData);
         DocumentSnapshot<Map<String, dynamic>> receiverData = await FirebaseFirestore.instance.collection('users').doc(request.receiver).get();
         User receiverInstance = User.fromSnap(receiverData);

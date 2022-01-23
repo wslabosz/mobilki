@@ -99,8 +99,9 @@ class _BodyState extends State<Body> {
                   snapshot.data[2];
               List<String> adminNames = [];
               if (_rightSegment) {
-                List<String> adminNames = snapshot.data[3];
+                adminNames = snapshot.data[3];
               }
+              print(adminNames);
               List<QueryDocumentSnapshot<Map<String, dynamic>>> senderDocs =
                   senderSnapshot.docs;
               int count = senderDocs.length;
