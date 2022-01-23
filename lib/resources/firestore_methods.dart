@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobilki/models/invite_request.dart';
+import 'package:mobilki/models/team.dart';
 import 'package:mobilki/resources/auth_methods.dart';
 import 'package:mobilki/resources/http_methods.dart';
 import 'package:mobilki/resources/storage_methods.dart';
@@ -47,8 +48,13 @@ class FireStoreMethods {
         FirebaseFirestore.instance.collection("invite_requests").add(
             {'isTeam': false, 'sender': senderUid, 'receiver': receiverUid});
         returnData = ["Invitation sent succesfully!", true];
-        FirebaseFirestore.instance.collection("users").doc(receiverUid).get().then((value) {
-          HttpMethods.sendFCMMessage(value['token'],"A new invite request","Friend request from PK");
+        FirebaseFirestore.instance
+            .collection("users")
+            .doc(receiverUid)
+            .get()
+            .then((value) {
+          HttpMethods.sendFCMMessage(
+              value['token'], "A new invite request", "Friend request from PK");
         });
       } else {
         returnData = ["User has pending invitation already", false];
@@ -62,7 +68,7 @@ class FireStoreMethods {
     QuerySnapshot<Map<String, dynamic>> teamData = await FirebaseFirestore
         .instance
         .collection("teams")
-        .where('name',isEqualTo:teamName)
+        .where('name', isEqualTo: teamName)
         .where("members", arrayContains: receiverUid)
         .get();
     if (teamData.docs.isNotEmpty) {
@@ -107,19 +113,21 @@ class FireStoreMethods {
               .where(team ? "name" : "uid", whereIn: senderData)
               .get();
       List<dynamic> returnData = [true, inviteData, senderSnapshot];
-      if(team) {
+      if (team) {
         List<String> adminNames = [];
-        QuerySnapshot<Map<String, dynamic>> adminData = await FirebaseFirestore.instance.collection('users').get();
-        for(var i=0;i<senderSnapshot.docs.length;i++) {
-          for(var j=0;j<adminData.docs.length;j++) {
-            if(senderSnapshot.docs[i]['adminUid']==adminData.docs[j]['uid']) {
+        QuerySnapshot<Map<String, dynamic>> adminData =
+            await FirebaseFirestore.instance.collection('users').get();
+        for (var i = 0; i < senderSnapshot.docs.length; i++) {
+          for (var j = 0; j < adminData.docs.length; j++) {
+            if (senderSnapshot.docs[i]['adminUid'] ==
+                adminData.docs[j]['uid']) {
               adminNames.add(adminData.docs[j]['name']);
               break;
-            } 
+            }
           }
         }
         returnData.add(adminNames);
-      } 
+      }
       return returnData;
     }
   }
@@ -156,16 +164,40 @@ class FireStoreMethods {
   }
 
   static Future<void> saveTokenToDatabase(String token) async {
-  // Assume user is logged in for this example
-  String userId = AuthMethods().getUserUID();
-  if(userId!=null) {
-    await FirebaseFirestore.instance
-      .collection('users')
-      .doc(userId)
-      .update({
+    // Assume user is logged in for this example
+    String userId = AuthMethods().getUserUID();
+    if (userId != null) {
+      await FirebaseFirestore.instance.collection('users').doc(userId).update({
         'token': token,
       });
+    }
   }
-}
+
+  static Future<void> deleteFriend(String uid1, String uid2) async {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid1)
+        .update({"friends":FieldValue.arrayRemove([uid2])});
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid2)
+        .update({"friends":FieldValue.arrayRemove([uid1])});
+  }
+
+  static Future<dynamic> addTeam(String name) async {
+    if(name.length<5) {
+      return ["Team name is too short!",false];
+    }
+    if(name.length>30) {
+      return ['Team name is too long',false];
+    }
+    QuerySnapshot<Map<String, dynamic>> teamsWithSameName = await FirebaseFirestore.instance.collection('teams').where('name',isEqualTo:name).get();
+    if(teamsWithSameName.docs.isNotEmpty) {
+      return ['Team with that name already exists',false];
+    }
+    FirebaseFirestore.instance.collection('teams').add(Team(name:name,adminUid:AuthMethods().getUserUID(),avatarUrl:"",members:[AuthMethods().getUserUID()],events:[]).toJson());
+    return ['Successfuly added the team!',true];
+  }
+
   //TODO: dodwanie do drużyny, dodawanie do przyjaciół, dodawanie do eventu (manipulacja stanem)
 }

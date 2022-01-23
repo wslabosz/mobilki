@@ -5,7 +5,8 @@ import 'package:mobilki/components/navbar.dart';
 class SearchScreen extends StatelessWidget {
   const SearchScreen({Key? key}) : super(key: key);
 
-Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return WillPopScope (onWillPop: () async {return Navbar.navbarOnBack();}, child:const Scaffold(
       body: Body(),
       bottomNavigationBar: Navbar(index:3),

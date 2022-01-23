@@ -18,7 +18,6 @@ class HttpMethods {
               "notification": {"title": title, "body": body}
             }))
         .then((value) {
-      print(value.body);
     });
   }
 }

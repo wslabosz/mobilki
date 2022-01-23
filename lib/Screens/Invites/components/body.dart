@@ -60,9 +60,6 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    CollectionReference requests =
-        FirebaseFirestore.instance.collection('invite_requests');
     return Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.start, children: <
             Widget>[
@@ -124,10 +121,10 @@ class _BodyState extends State<Body> {
               }
               List<InviteRequest> inviteData = [];
               for (var i = 0; i < count; i++) {
-                String searched_value =
+                String searchedValue =
                     _rightSegment ? senderData[i].name : senderData[i].uid;
                 for (var j = 0; j < unorderedInviteData.length; j++) {
-                  if (unorderedInviteData[j].sender == searched_value) {
+                  if (unorderedInviteData[j].sender == searchedValue) {
                     inviteData.add(unorderedInviteData[j]);
                     break;
                   }
