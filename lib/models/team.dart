@@ -6,6 +6,7 @@ class Team {
   final String avatarUrl;
   final List members;
   final List events;
+  final String? uid;
 
   const Team({
     required this.name,
@@ -13,6 +14,7 @@ class Team {
     required this.avatarUrl,
     required this.members,
     required this.events,
+    this.uid
   });
 
   static Team fromSnap(DocumentSnapshot snap) {
@@ -23,7 +25,9 @@ class Team {
         adminUid: snapshot["adminUid"],
         avatarUrl: snapshot["avatarUrl"],
         members: snapshot["members"],
-        events: snapshot["events"]);
+        events: snapshot["events"],
+        uid: snap.id);
+        
   }
 
   Map<String, dynamic> toJson() => {

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mobilki/Screens/Team/team_screen.dart';
 import 'package:mobilki/components/circle_avatar.dart';
 import 'package:mobilki/components/member_list.dart';
 import 'package:mobilki/components/segmeneted_control.dart';
@@ -63,8 +64,8 @@ class _BodyState extends State<Body> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => AlertDialog(
-              title:
-                  const Text("Are you sure that you want to remove that friend"),
+              title: const Text(
+                  "Are you sure that you want to remove that friend?"),
               actions: [
                 TextButton(
                     child: const Text("Cancel",
@@ -145,8 +146,14 @@ class _BodyState extends State<Body> {
             return const SizedBox(height: 16);
           },
           itemBuilder: (BuildContext context, int index) {
-            return TeamTile(
-                teamName: teamList[index]!.name, avatars: avatars[index]);
+            return InkWell(
+                onTap: () => (Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            TeamScreen(team: teamList[index]!)))),
+                child: TeamTile(
+                    teamName: teamList[index]!.name, avatars: avatars[index]));
           }),
     );
   }

@@ -9,6 +9,7 @@ class User {
   final List friends;
   final List events;
   final List teams;
+  final String token;
 
   const User({
     required this.uid,
@@ -19,6 +20,7 @@ class User {
     required this.friends,
     required this.events,
     required this.teams,
+    required this.token
   });
 
   static User fromSnap(DocumentSnapshot snap) {
@@ -32,7 +34,8 @@ class User {
         dateOfBirth: snapshot["dateOfBirth"],
         friends: snapshot["friends"],
         events: snapshot["events"],
-        teams: snapshot["teams"]);
+        teams: snapshot["teams"],
+        token: snapshot['token']);
   }
 
   Map<String, dynamic> toJson() => {

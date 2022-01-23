@@ -45,7 +45,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                       onClicked: () {
                         ImagePicker imagePicker = ImagePicker();
                         Future<XFile?> compressedImage = imagePicker.pickImage(
-                            source: ImageSource.gallery, imageQuality: 66);
+                            source: ImageSource.gallery, maxWidth:200, maxHeight:200);
                         compressedImage.then((result) {
                           result?.readAsBytes().then((result) {
                             FireStoreMethods()
