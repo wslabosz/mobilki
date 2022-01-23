@@ -39,7 +39,8 @@ class AuthMethods {
             avatarUrl: "",
             friends: [],
             events: [],
-            teams: []);
+            teams: [],
+            token: "");
         await _firestore
             .collection('users')
             .doc(credential.user!.uid)
