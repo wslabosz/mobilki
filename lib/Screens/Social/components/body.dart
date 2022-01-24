@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mobilki/Screens/Profile/profile_screen.dart';
 import 'package:mobilki/Screens/Team/team_screen.dart';
 import 'package:mobilki/components/circle_avatar.dart';
 import 'package:mobilki/components/member_list.dart';
@@ -177,6 +178,11 @@ class _BodyState extends State<Body> {
             image: friendList[index]!.avatarUrl != ""
                 ? NetworkImage(friendList[index]!.avatarUrl)
                 : null,
+            inkWell: () => (Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        ProfileScreen(profile: friendList[index]!)))),
             rightIcon: removeIcon(friendList[index]!.uid));
       },
     ));

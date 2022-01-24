@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mobilki/Screens/Profile/profile_screen.dart';
 import 'package:mobilki/components/input_field.dart';
 import 'package:mobilki/components/member_list.dart';
 import 'package:mobilki/models/team.dart';
@@ -74,8 +75,8 @@ class _BodyState extends State<Body> {
                 }
                 if (snapshot.hasData) {
                   List<Team> teamData = snapshot.data!.docs
-                      .where((y) => !(y['members'] as List)
-                          .contains(receiverUid))
+                      .where(
+                          (y) => !(y['members'] as List).contains(receiverUid))
                       .map((y) => (Team.fromSnap(y)))
                       .toList();
 
@@ -98,10 +99,14 @@ class _BodyState extends State<Body> {
                                       color: Colors.white,
                                       fontWeight: FontWeight.w500)),
                               onTap: () {
-                                FireStoreMethods.sendTeamRequest(teamData[teamIndex].name, receiverUid).then((result) {
-                                  Snackbars.defaultSnackbar(context,result[0],positive:result[1]);
-                                  if(result[1]) {
-                                    Navigator.of(context, rootNavigator: true).pop('dialog');
+                                FireStoreMethods.sendTeamRequest(
+                                        teamData[teamIndex].name, receiverUid)
+                                    .then((result) {
+                                  Snackbars.defaultSnackbar(context, result[0],
+                                      positive: result[1]);
+                                  if (result[1]) {
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop('dialog');
                                   }
                                 });
                               });
@@ -115,13 +120,11 @@ class _BodyState extends State<Body> {
   }
 
   void choiceAction(String choice, String receiverUid) {
-    if (choice == PopupMenuOptions.firstItem) { 
-      FireStoreMethods.sendFriendRequest(AuthMethods().getUserUID(),receiverUid).then((value) => 
-               Snackbars.defaultSnackbar(
-            context, value[0],
-            positive: value[1])
-      
-      );
+    if (choice == PopupMenuOptions.firstItem) {
+      FireStoreMethods.sendFriendRequest(
+              AuthMethods().getUserUID(), receiverUid)
+          .then((value) =>
+              Snackbars.defaultSnackbar(context, value[0], positive: value[1]));
     } else if (choice == PopupMenuOptions.secondItem) {
       teamDialog(receiverUid);
     }
@@ -203,6 +206,11 @@ class _BodyState extends State<Body> {
                         image: userData[index].avatarUrl != ""
                             ? NetworkImage(userData[index].avatarUrl)
                             : null,
+                        inkWell: () => (Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    ProfileScreen(profile: userData[index])))),
                         rightIcon: popupMenu(userData[index].uid));
                   },
                 ));
