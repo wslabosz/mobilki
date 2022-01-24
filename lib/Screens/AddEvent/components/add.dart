@@ -14,7 +14,8 @@ class _NewEventFormState extends State<NewEventForm> {
   final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   late DateTime dateFrom;
-  late DateTime dateTo;
+  late String level;
+  List levels = [1, 2, 3];
 
   @override
   void dispose() {
@@ -27,7 +28,6 @@ class _NewEventFormState extends State<NewEventForm> {
     super.initState();
     if (widget.event == null) {
       dateFrom = DateTime.now();
-      dateTo = DateTime.now();
     }
   }
 
@@ -45,8 +45,9 @@ class _NewEventFormState extends State<NewEventForm> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   buildName(),
-                  SizedBox(height: 12),
+                  SizedBox(height: 20),
                   buildDateTimePickers(),
+                  SizedBox(height: 12),
                 ],
               ))));
 
@@ -75,14 +76,11 @@ class _NewEventFormState extends State<NewEventForm> {
       );
 
   Widget buildDateTimePickers() => Column(
-        children: [
-          buildFrom(),
-          buildTo(),
-        ],
+        children: [buildFrom()],
       );
 
   Widget buildFrom() => buildHeader(
-      header: 'FROM',
+      header: 'DATE',
       child: Row(
         children: [
           Expanded(
@@ -101,41 +99,10 @@ class _NewEventFormState extends State<NewEventForm> {
         ],
       ));
 
-  Widget buildTo() => buildHeader(
-      header: 'TO',
-      child: Row(
-        children: [
-          Expanded(
-            flex: 2,
-            child: buildDropdownField(
-              text: Utils.toDate(dateTo),
-              onClicked: () => pickToDateTime(pickDate: true),
-            ),
-          ),
-          Expanded(
-            child: buildDropdownField(
-              text: Utils.toTime(dateTo),
-              onClicked: () => pickToDateTime(pickDate: false),
-            ),
-          )
-        ],
-      ));
-
   Future pickFromDateTime({required bool pickDate}) async {
     final date = await pickDateTime(dateFrom, pickDate: pickDate);
     if (date == null) return;
-    if (date.isAfter(dateTo)) {
-      dateTo =
-          DateTime(date.year, date.month, date.day, dateTo.hour, dateTo.minute);
-    }
     setState(() => dateFrom = date);
-  }
-
-  Future pickToDateTime({required bool pickDate}) async {
-    final date = await pickDateTime(dateTo,
-        pickDate: pickDate, firstDate: pickDate ? dateFrom : null);
-    if (date == null) return;
-    setState(() => dateTo = date);
   }
 
   Future<DateTime?> pickDateTime(
