@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:mobilki/constants.dart';
 import 'package:mobilki/models/invite_request.dart';
 import 'package:mobilki/models/team.dart';
@@ -329,6 +330,16 @@ class FireStoreMethods {
         'teams': FieldValue.arrayRemove([teamName])
       });
     }
+  }
+
+  static Future<List<String>> getEventFutureData(String adminUid, GeoPoint geopoint) async {
+    List<String> returnData = [];
+    List<Placemark> placemarkList = await placemarkFromCoordinates(geopoint.latitude, geopoint.longitude);
+    returnData.add(placemarkList[0].street!);
+    DocumentSnapshot<Map<String, dynamic>> adminData = await FirebaseFirestore.instance.collection('users').doc(adminUid).get();
+    User admin = User.fromSnap(adminData);
+    returnData.add(admin.avatarUrl);
+    return returnData;
   }
 
   //TODO: dodwanie do drużyny, dodawanie do przyjaciół, dodawanie do eventu (manipulacja stanem)

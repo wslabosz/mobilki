@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:mobilki/components/event_tile.dart';
 import 'package:mobilki/constants.dart';
+import 'package:mobilki/models/event.dart';
 import 'package:mobilki/resources/firestore_methods.dart';
 
 class Body extends StatelessWidget {
@@ -118,10 +121,14 @@ class Body extends StatelessWidget {
   }
 
   Widget _eventListView(BuildContext context) {
-    return ListView.builder(
+    Event testEvent=const Event(creator: "pqnZu9AaZqggyNBCBatP8FhLhfu2",title:"kocham mobilki",location:GeoPoint(51.72142,19.41621),eventDate:'24-01-2022',eventStartTime: '18:00',participants:['XD'],level:2);
+    return ListView.separated(
+                        separatorBuilder: (BuildContext context, int index) =>
+                      const Divider(),
+                  padding: const EdgeInsets.all(8),
         itemCount: 30,
         itemBuilder: (context, index) {
-          return _eventView(context);
+          return EventTile(event:testEvent);
         });
   }
 }
