@@ -5,6 +5,7 @@ import 'package:mobilki/constants.dart';
 import 'package:mobilki/models/invite_request.dart';
 import 'package:mobilki/models/team.dart';
 import 'package:mobilki/models/user.dart';
+import 'package:mobilki/models/event.dart';
 import 'package:mobilki/resources/auth_methods.dart';
 import 'package:mobilki/resources/http_methods.dart';
 import 'package:mobilki/resources/storage_methods.dart';
@@ -23,6 +24,43 @@ class FireStoreMethods {
           .doc(uid)
           .update({"avatarUrl": avatarUrl});
       res = avatarUrl;
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+
+  Future<String> createEvent(
+      {required String title,
+      required GeoPoint location,
+      required String eventStartTime,
+      required String eventDate,
+      required int level,
+      required String creator,
+      String? team}) async {
+    String res = "error occurred";
+    try {
+      if (title.isNotEmpty ||
+          eventStartTime.isNotEmpty ||
+          eventDate.isNotEmpty ||
+          creator.isNotEmpty) {
+        Event _event = Event(
+            title: title,
+            location: location,
+            eventStartTime: eventStartTime,
+            eventDate: eventDate,
+            level: level,
+            participants: [creator],
+            creator: creator,
+            team: team);
+        await _firestore
+            .collection('events')
+            .doc()
+            .set(_event.toJson());
+        res = "success";
+      } else {
+        res = "Please enter all the needed fields";
+      }
     } catch (err) {
       res = err.toString();
     }
@@ -56,10 +94,10 @@ class FireStoreMethods {
             .doc(receiverUid)
             .get()
             .then((value) {
-              User sender = User.fromSnap(userReference);
-              User receiver = User.fromSnap(value);
-          HttpMethods.sendFCMMessage(
-              receiver.token, "A new invite request", "Friend request from "+sender.name.toTitleCase());
+          User sender = User.fromSnap(userReference);
+          User receiver = User.fromSnap(value);
+          HttpMethods.sendFCMMessage(receiver.token, "A new invite request",
+              "Friend request from " + sender.name.toTitleCase());
         });
       } else {
         returnData = ["User has pending invitation already", false];
@@ -95,10 +133,12 @@ class FireStoreMethods {
             .doc(receiverUid)
             .get()
             .then((value) {
-              Team sender = Team.fromSnap(teamData.docs[0]);
-              User receiver = User.fromSnap(value);
+          Team sender = Team.fromSnap(teamData.docs[0]);
+          User receiver = User.fromSnap(value);
           HttpMethods.sendFCMMessage(
-              receiver.token, "A new team invite request", "You have been invited to "+sender.name.toTitleCase());
+              receiver.token,
+              "A new team invite request",
+              "You have been invited to " + sender.name.toTitleCase());
         });
         return ["Invitation sent succesfully!", true];
       } else {
@@ -162,34 +202,61 @@ class FireStoreMethods {
             .collection('users')
             .doc(request.receiver)
             .update({
-          'teams': FieldValue.arrayUnion([request.sender])});
-        DocumentSnapshot<Map<String, dynamic>> teamData = await FirebaseFirestore.instance.collection('teams').doc(senderDocId).get();
+          'teams': FieldValue.arrayUnion([request.sender])
+        });
+        DocumentSnapshot<Map<String, dynamic>> teamData =
+            await FirebaseFirestore.instance
+                .collection('teams')
+                .doc(senderDocId)
+                .get();
         Team teamInstance = Team.fromSnap(teamData);
-        DocumentSnapshot<Map<String, dynamic>> adminData = await FirebaseFirestore.instance.collection('users').doc(teamInstance.adminUid).get();
+        DocumentSnapshot<Map<String, dynamic>> adminData =
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(teamInstance.adminUid)
+                .get();
         User adminInstance = User.fromSnap(adminData);
-        DocumentSnapshot<Map<String, dynamic>> receiverData = await FirebaseFirestore.instance.collection('users').doc(request.receiver).get();
-        User receiverInstance = User.fromSnap(receiverData);
-                  HttpMethods.sendFCMMessage(
-              adminInstance.token, "A new member joined your team!", receiverInstance.name.toTitleCase()+" has accepted your invitation.");
-        }
-      } else {
-        FirebaseFirestore.instance.collection('users').doc(senderDocId).update({
-          'friends': FieldValue.arrayUnion([request.receiver])
-        });
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(request.receiver)
-            .update({
-          'friends': FieldValue.arrayUnion([request.sender])
-        });
-        DocumentSnapshot<Map<String, dynamic>> senderData = await FirebaseFirestore.instance.collection('users').doc(request.sender).get();
-        User senderInstance = User.fromSnap(senderData);
-        DocumentSnapshot<Map<String, dynamic>> receiverData = await FirebaseFirestore.instance.collection('users').doc(request.receiver).get();
+        DocumentSnapshot<Map<String, dynamic>> receiverData =
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(request.receiver)
+                .get();
         User receiverInstance = User.fromSnap(receiverData);
         HttpMethods.sendFCMMessage(
-              senderInstance.token, "You have a new friend!", receiverInstance.name.toTitleCase()+" has accepted your friend request.");
+            adminInstance.token,
+            "A new member joined your team!",
+            receiverInstance.name.toTitleCase() +
+                " has accepted your invitation.");
       }
+    } else {
+      FirebaseFirestore.instance.collection('users').doc(senderDocId).update({
+        'friends': FieldValue.arrayUnion([request.receiver])
+      });
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(request.receiver)
+          .update({
+        'friends': FieldValue.arrayUnion([request.sender])
+      });
+      DocumentSnapshot<Map<String, dynamic>> senderData =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(request.sender)
+              .get();
+      User senderInstance = User.fromSnap(senderData);
+      DocumentSnapshot<Map<String, dynamic>> receiverData =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(request.receiver)
+              .get();
+      User receiverInstance = User.fromSnap(receiverData);
+      HttpMethods.sendFCMMessage(
+          senderInstance.token,
+          "You have a new friend!",
+          receiverInstance.name.toTitleCase() +
+              " has accepted your friend request.");
     }
+  }
 
   static Future<void> saveTokenToDatabase(String token) async {
     // Assume user is logged in for this example
@@ -202,42 +269,65 @@ class FireStoreMethods {
   }
 
   static Future<void> deleteFriend(String uid1, String uid2) async {
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid1)
-        .update({"friends":FieldValue.arrayRemove([uid2])});
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid2)
-        .update({"friends":FieldValue.arrayRemove([uid1])});
+    FirebaseFirestore.instance.collection('users').doc(uid1).update({
+      "friends": FieldValue.arrayRemove([uid2])
+    });
+    FirebaseFirestore.instance.collection('users').doc(uid2).update({
+      "friends": FieldValue.arrayRemove([uid1])
+    });
   }
 
   static Future<dynamic> addTeam(String name) async {
-    if(name.length<5) {
-      return ["Team name is too short!",false];
+    if (name.length < 5) {
+      return ["Team name is too short!", false];
     }
-    if(name.length>30) {
-      return ['Team name is too long',false];
+    if (name.length > 30) {
+      return ['Team name is too long', false];
     }
-    QuerySnapshot<Map<String, dynamic>> teamsWithSameName = await FirebaseFirestore.instance.collection('teams').where('name',isEqualTo:name).get();
-    if(teamsWithSameName.docs.isNotEmpty) {
-      return ['Team with that name already exists',false];
+    QuerySnapshot<Map<String, dynamic>> teamsWithSameName =
+        await FirebaseFirestore.instance
+            .collection('teams')
+            .where('name', isEqualTo: name)
+            .get();
+    if (teamsWithSameName.docs.isNotEmpty) {
+      return ['Team with that name already exists', false];
     }
-    FirebaseFirestore.instance.collection('teams').add(Team(name:name,adminUid:AuthMethods().getUserUID(),avatarUrl:"",members:[AuthMethods().getUserUID()],events:[""]).toJson());
-    FirebaseFirestore.instance.collection('users').doc(AuthMethods().getUserUID()).update({'teams':FieldValue.arrayUnion([name])});
-    return ['Successfuly added the team!',true];
+    FirebaseFirestore.instance.collection('teams').add(Team(
+        name: name,
+        adminUid: AuthMethods().getUserUID(),
+        avatarUrl: "",
+        members: [AuthMethods().getUserUID()],
+        events: [""]).toJson());
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(AuthMethods().getUserUID())
+        .update({
+      'teams': FieldValue.arrayUnion([name])
+    });
+    return ['Successfuly added the team!', true];
   }
 
   static Future<void> deleteMember(String teamName, String memberUid) async {
-      QuerySnapshot<Map<String, dynamic>> teamToUpdate = await FirebaseFirestore.instance.collection('teams').where('name',isEqualTo: teamName).get();
-      await teamToUpdate.docs[0].reference.update({'members':FieldValue.arrayRemove([memberUid])});
-      await FirebaseFirestore.instance.collection('users').doc(memberUid).update({'teams':FieldValue.arrayRemove([teamName])});
+    QuerySnapshot<Map<String, dynamic>> teamToUpdate = await FirebaseFirestore
+        .instance
+        .collection('teams')
+        .where('name', isEqualTo: teamName)
+        .get();
+    await teamToUpdate.docs[0].reference.update({
+      'members': FieldValue.arrayRemove([memberUid])
+    });
+    await FirebaseFirestore.instance.collection('users').doc(memberUid).update({
+      'teams': FieldValue.arrayRemove([teamName])
+    });
   }
 
-  static Future<void> deleteTeam(String teamUid, String teamName, List<String> members) async {
+  static Future<void> deleteTeam(
+      String teamUid, String teamName, List<String> members) async {
     await FirebaseFirestore.instance.collection('teams').doc(teamUid).delete();
-    for(var member in members) {
-      FirebaseFirestore.instance.collection('users').doc(member).update({'teams':FieldValue.arrayRemove([teamName])});
+    for (var member in members) {
+      FirebaseFirestore.instance.collection('users').doc(member).update({
+        'teams': FieldValue.arrayRemove([teamName])
+      });
     }
   }
 
