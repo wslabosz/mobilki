@@ -163,7 +163,7 @@ class _BodyState extends State<Body> {
   InkWell teamAvatar() {
     return InkWell(
       child:Avatar(name:widget.team.name,image:avatarUrl==""?null:NetworkImage(avatarUrl),radius:60,textSize:50),
-      onTap: () {
+      onTap: (AuthMethods().getUserUID() != widget.team.adminUid)?(){}:() {
       ImagePicker imagePicker = ImagePicker();
       Future<XFile?> compressedImage = imagePicker.pickImage(
           source: ImageSource.gallery, maxWidth: 200, maxHeight: 200);
