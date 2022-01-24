@@ -30,10 +30,10 @@ class _BodyState extends State<Body> {
     });
   }
 
-  InkWell profileAvatar() {
-    return InkWell(
-      child:Avatar(name:widget.profile.name,image:avatarUrl==""?null:NetworkImage(avatarUrl),radius:60,textSize:50),
-      onTap: (AuthMethods().getUserUID() != widget.profile.uid)?(){}:() {
+  Widget profileAvatar() {
+    Widget avatar = Avatar(name:widget.profile.name,image:avatarUrl==""?null:NetworkImage(avatarUrl),radius:60,textSize:50);
+    if(AuthMethods().getUserUID() == widget.profile.uid) {
+      avatar = InkWell(child:avatar, onTap:() {
       ImagePicker imagePicker = ImagePicker();
       Future<XFile?> compressedImage = imagePicker.pickImage(
           source: ImageSource.gallery, maxWidth: 200, maxHeight: 200);
@@ -50,6 +50,8 @@ class _BodyState extends State<Body> {
         });
       });
     });
+    }
+    return avatar;
   }
 
   @override
