@@ -16,6 +16,7 @@ class _NewEventFormState extends State<NewEventForm> {
   late DateTime dateFrom;
   late String level;
   List levels = [1, 2, 3];
+  //List<DropdownMenuItem>
 
   @override
   void dispose() {
@@ -48,6 +49,7 @@ class _NewEventFormState extends State<NewEventForm> {
                   SizedBox(height: 20),
                   buildDateTimePickers(),
                   SizedBox(height: 12),
+                  //DropdownButtonFormField<int>(items: , onChanged: (value) {  },),
                 ],
               ))));
 
@@ -112,6 +114,23 @@ class _NewEventFormState extends State<NewEventForm> {
   }) async {
     if (pickDate) {
       final date = await showDatePicker(
+          builder: (context, child) {
+            return Theme(
+              data: Theme.of(context).copyWith(
+                colorScheme: const ColorScheme.light(
+                  primary: Colors.orange, // header background color
+                  onPrimary: Colors.black, // header text color
+                  onSurface: Colors.black, // body text color
+                ),
+                textButtonTheme: TextButtonThemeData(
+                  style: TextButton.styleFrom(
+                    primary: Colors.red, // button text color
+                  ),
+                ),
+              ),
+              child: child!,
+            );
+          },
           context: context,
           initialDate: initialDate,
           firstDate: firstDate ?? DateTime(2020, 12),
@@ -122,6 +141,23 @@ class _NewEventFormState extends State<NewEventForm> {
       return date.add(time);
     } else {
       final timeOfDay = await showTimePicker(
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: const ColorScheme.light(
+                primary: Colors.orange, // header background color
+                onPrimary: Colors.black, // header text color
+                onSurface: Colors.black, // body text color
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  primary: Colors.red, // button text color
+                ),
+              ),
+            ),
+            child: child!,
+          );
+        },
         context: context,
         initialTime: TimeOfDay.fromDateTime(initialDate),
       );
