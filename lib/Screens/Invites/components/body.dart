@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mobilki/Screens/Profile/profile_screen.dart';
 import 'package:mobilki/components/member_list.dart';
 import 'package:mobilki/components/segmeneted_control.dart';
 import 'package:mobilki/constants.dart';
@@ -143,6 +144,11 @@ class _BodyState extends State<Body> {
                       image: senderData[index].avatarUrl != ""
                           ? NetworkImage(senderData[index].avatarUrl)
                           : null,
+                                  inkWell:_rightSegment?null:() => (Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            ProfileScreen(profile: senderData[index]!)))),
                       subtext: _rightSegment
                           ? TextSpan(
                               text: "\n" + adminNames[index].toTitleCase(),

@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mobilki/Screens/Profile/profile_screen.dart';
 import 'package:mobilki/components/circle_avatar.dart';
 import 'package:mobilki/components/member_list.dart';
 import 'package:mobilki/components/segmeneted_control.dart';
-import 'package:mobilki/components/team_tile.dart';
 import 'package:mobilki/models/team.dart';
 import 'package:mobilki/models/user.dart';
 import 'package:mobilki/resources/auth_methods.dart';
@@ -150,6 +150,11 @@ class _BodyState extends State<Body> {
       itemBuilder: (BuildContext context, int index) {
         return MemberList(
             name: memberList[index]!.name,
+            inkWell: () => (Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        ProfileScreen(profile: memberList[index]!)))),
             image: memberList[index]!.avatarUrl != ""
                 ? NetworkImage(memberList[index]!.avatarUrl)
                 : null,
@@ -160,54 +165,58 @@ class _BodyState extends State<Body> {
     ));
   }
 
-  InkWell teamAvatar() {
-    return InkWell(
-      child:Avatar(name:widget.team.name,image:avatarUrl==""?null:NetworkImage(avatarUrl),radius:60,textSize:50),
-      onTap: (AuthMethods().getUserUID() != widget.team.adminUid)?(){}:() {
-      ImagePicker imagePicker = ImagePicker();
-      Future<XFile?> compressedImage = imagePicker.pickImage(
-          source: ImageSource.gallery, maxWidth: 200, maxHeight: 200);
-      compressedImage.then((result) {
-        result?.readAsBytes().then((result) {
-          FireStoreMethods()
-              .uploadAvatar(result, widget.team.uid!,
-                  collection: 'teams')
-              .then((value) {
-            setState(() {
-              print(value);
-              avatarUrl=value;
-            });
-          });
-        });
-      });
-    });
+  Widget teamAvatar() {
+    Widget avatar = Avatar(
+            name: widget.team.name,
+            image: avatarUrl == "" ? null : NetworkImage(avatarUrl),
+            radius: 60,
+            textSize: 50);
+    if(AuthMethods().getUserUID() == widget.team.adminUid) {
+      avatar = InkWell(child:avatar, onTap:() {
+                ImagePicker imagePicker = ImagePicker();
+                Future<XFile?> compressedImage = imagePicker.pickImage(
+                    source: ImageSource.gallery, maxWidth: 200, maxHeight: 200);
+                compressedImage.then((result) {
+                  result?.readAsBytes().then((result) {
+                    FireStoreMethods()
+                        .uploadAvatar(result, widget.team.uid!,
+                            collection: 'teams')
+                        .then((value) {
+                      setState(() {
+                        print(value);
+                        avatarUrl = value;
+                      });
+                    });
+                  });
+                });
+              });
+    }
+    return avatar;
   }
 
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-          Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 48, bottom: 16),
-                child: Text(
-                  widget.team.name,
-                  style: const TextStyle(
-                      fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-              )),
-              Padding(padding:const EdgeInsets.only(bottom:16),child:teamAvatar()),
-          Padding(
-              child: SegControl(
-                  nameLeft: 'Friends',
-                  nameRight: 'Teams',
-                  notifyParent: (bool right) => _switchSegment(right),
-                  rightActive: _rightSegment),
-              padding: const EdgeInsets.only(bottom: 24)),
-          _rightSegment ? const CircularProgressIndicator() : _friendList()
-        ]));
+        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: <
+            Widget>[
+      Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 48, bottom: 16),
+            child: Text(
+              widget.team.name,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+          )),
+      Padding(padding: const EdgeInsets.only(bottom: 16), child: teamAvatar()),
+      Padding(
+          child: SegControl(
+              nameLeft: 'Friends',
+              nameRight: 'Teams',
+              notifyParent: (bool right) => _switchSegment(right),
+              rightActive: _rightSegment),
+          padding: const EdgeInsets.only(bottom: 24)),
+      _rightSegment ? const CircularProgressIndicator() : _friendList()
+    ]));
   }
 }
