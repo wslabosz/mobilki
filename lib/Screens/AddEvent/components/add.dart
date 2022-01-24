@@ -14,14 +14,12 @@ class NewEventForm extends StatefulWidget {
 }
 
 class _NewEventFormState extends State<NewEventForm> {
-  List<Team?> teamsList = [null];
+  List<Team> teamsList = [];
   final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   late DateTime dateFrom;
   late String level;
-  late List<DropdownMenuItem<Team?>> dropDownMenuTeams;
-
-  //List<DropdownMenuItem>
+  //late List<DropdownMenuItem<Team?>> dropDownMenuTeams;
 
   @override
   void dispose() {
@@ -34,7 +32,6 @@ class _NewEventFormState extends State<NewEventForm> {
     super.initState();
     if (widget.event == null) {
       dateFrom = DateTime.now();
-      var userUID = AuthMethods().getUserUID();
       FirebaseFirestore.instance
           .collection('teams')
           .where('members', arrayContains: AuthMethods().getUserUID())
@@ -221,8 +218,9 @@ class _NewEventFormState extends State<NewEventForm> {
   List<DropdownMenuItem<String?>> getDropDownTeams() {
     List<DropdownMenuItem<String?>> items = [];
     items.add(const DropdownMenuItem(value: '', child: Text('Public')));
-    for (Team? team in teamsList) {
-      items.add(DropdownMenuItem(value: team?.uid, child: Text(team!.name)));
+    for (Team team in teamsList) {
+      items.add(DropdownMenuItem(value: team.uid, child: Text(team.name)));
+      //TODO: error Null check operator used on a null value
     }
     return items;
   }
