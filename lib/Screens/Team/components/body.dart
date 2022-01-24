@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobilki/Screens/Profile/profile_screen.dart';
 import 'package:mobilki/components/circle_avatar.dart';
+import 'package:mobilki/components/event_tile.dart';
 import 'package:mobilki/components/member_list.dart';
 import 'package:mobilki/components/segmeneted_control.dart';
+import 'package:mobilki/models/event.dart';
 import 'package:mobilki/models/team.dart';
 import 'package:mobilki/models/user.dart';
 import 'package:mobilki/resources/auth_methods.dart';
@@ -25,6 +27,7 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   List<User?> memberList = [null];
+  List<Event?> eventList = [null];
   String avatarUrl = "";
 
   @override
@@ -37,6 +40,14 @@ class _BodyState extends State<Body> {
         .snapshots()
         .listen((snapshot) {
       memberList = snapshot.docs.map((doc) => (User.fromSnap(doc))).toList();
+      setState(() {});
+    });
+      FirebaseFirestore.instance
+        .collection('events')
+        .where('team', isEqualTo: widget.team.name)
+        .snapshots()
+        .listen((snapshot) {
+      eventList = snapshot.docs.map((doc) => (Event.fromSnap(doc))).toList();
       setState(() {});
     });
 
@@ -165,6 +176,25 @@ class _BodyState extends State<Body> {
     ));
   }
 
+    Widget _eventList() {
+    if (eventList.isEmpty) {
+      return const Text("No members found",
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold));
+    }
+    if (eventList[0] == null) {
+      return const CircularProgressIndicator();
+    }
+    return Expanded(
+        child: ListView.separated(
+      itemCount: eventList.length,
+      separatorBuilder: (BuildContext context, int index) => const Divider(),
+      padding: const EdgeInsets.all(8),
+      itemBuilder: (BuildContext context, int index) {
+        return EventTile(event: eventList[index]!);
+      },
+    ));
+  }
+
   Widget teamAvatar() {
     Widget avatar = Avatar(
             name: widget.team.name,
@@ -211,12 +241,12 @@ class _BodyState extends State<Body> {
       Padding(padding: const EdgeInsets.only(bottom: 16), child: teamAvatar()),
       Padding(
           child: SegControl(
-              nameLeft: 'Friends',
-              nameRight: 'Teams',
+              nameLeft: 'Members',
+              nameRight: 'Events',
               notifyParent: (bool right) => _switchSegment(right),
               rightActive: _rightSegment),
           padding: const EdgeInsets.only(bottom: 24)),
-      _rightSegment ? const CircularProgressIndicator() : _friendList()
+      _rightSegment ? _eventList() : _friendList()
     ]));
   }
 }

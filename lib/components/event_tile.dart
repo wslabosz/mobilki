@@ -63,14 +63,14 @@ class EventTile extends StatelessWidget {
                               child: RichText(
                                   textAlign: TextAlign.right,
                                   text: TextSpan(
-                                      text: '18:00',
+                                      text: event.eventDate.substring(11,16),
                                       style: const TextStyle(
                                           color: orange,
                                           fontWeight: FontWeight.w600,
                                           fontSize: 18),
                                       children: [
                                     TextSpan(
-                                        text: "\n" + event.eventDate,
+                                        text: "\n"+event.eventDate.substring(0,10),
                                         style: TextStyle(
                                             fontWeight: FontWeight.w300,
                                             fontSize: 16,

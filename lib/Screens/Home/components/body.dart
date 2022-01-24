@@ -121,7 +121,7 @@ class Body extends StatelessWidget {
   }
 
   Widget _eventListView(BuildContext context) {
-    Event testEvent=const Event(creator: "pqnZu9AaZqggyNBCBatP8FhLhfu2",title:"kocham mobilki mocno",location:GeoPoint(51.72142,19.41621),eventDate:'24-01-2022',participants:['XD'],level:2);
+    Event testEvent=const Event(creator: "pqnZu9AaZqggyNBCBatP8FhLhfu2",title:"kocham mobilki mocno",location:GeoPoint(51.72142,19.41621),eventDate:'2000-16-03 18:30:00.000',participants:['XD'],level:2);
     return ListView.separated(
                         separatorBuilder: (BuildContext context, int index) =>
                       const Divider(),
