@@ -45,6 +45,8 @@ class _BodyState extends State<Body> {
       FirebaseFirestore.instance
         .collection('events')
         .where('team', isEqualTo: widget.team.name)
+        .where('eventDate',isGreaterThanOrEqualTo:DateTime.now().toString())
+        .orderBy('eventDate')
         .snapshots()
         .listen((snapshot) {
       eventList = snapshot.docs.map((doc) => (Event.fromSnap(doc))).toList();
