@@ -45,6 +45,8 @@ class _BodyState extends State<Body> {
       FirebaseFirestore.instance
         .collection('events')
         .where('team', isEqualTo: widget.team.name)
+        .where('eventDate',isGreaterThanOrEqualTo:DateTime.now().toString())
+        .orderBy('eventDate')
         .snapshots()
         .listen((snapshot) {
       eventList = snapshot.docs.map((doc) => (Event.fromSnap(doc))).toList();
@@ -178,8 +180,8 @@ class _BodyState extends State<Body> {
 
     Widget _eventList() {
     if (eventList.isEmpty) {
-      return const Text("No members found",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold));
+    return const Padding(padding:EdgeInsets.only(top:16), child: Text("No events found",
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)));
     }
     if (eventList[0] == null) {
       return const CircularProgressIndicator();
