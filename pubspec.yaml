@@ -49,6 +49,8 @@ dependencies:
   http: ^0.13.3
   table_calendar: ^3.0.3
   geocoding: ^2.0.2
+  intl: ^0.17.0
+  provider: ^5.0.0
 
 dev_dependencies:
   flutter_test:
