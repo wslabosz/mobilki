@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:mobilki/Screens/AddEvent/add_screen.dart';
 import 'package:mobilki/Screens/Calendar/calendar_page.dart';
 import 'package:mobilki/Screens/Invites/invites_screen.dart';
 import 'package:mobilki/Screens/Social/social_screen.dart';
@@ -52,6 +53,7 @@ class MyApp extends StatelessWidget {
           'people': (context) => const SocialScreen(),
           'invites': (context) => const InvitesScreen(),
           'event': (context) => const CalendarScreen(),
+          'add': (context) => const AddScreen(),
         });
   }
 }
