@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mobilki/Screens/AddEvent/components/utils.dart';
 import 'package:mobilki/models/event.dart';
+import 'package:mobilki/models/team.dart';
+import 'package:mobilki/resources/auth_methods.dart';
 
 class NewEventForm extends StatefulWidget {
   final Event? event;
@@ -11,11 +14,13 @@ class NewEventForm extends StatefulWidget {
 }
 
 class _NewEventFormState extends State<NewEventForm> {
+  List<Team?> teamsList = [null];
   final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   late DateTime dateFrom;
   late String level;
-  List levels = [1, 2, 3];
+  late List<DropdownMenuItem<Team?>> dropDownMenuTeams;
+
   //List<DropdownMenuItem>
 
   @override
@@ -29,6 +34,15 @@ class _NewEventFormState extends State<NewEventForm> {
     super.initState();
     if (widget.event == null) {
       dateFrom = DateTime.now();
+      var userUID = AuthMethods().getUserUID();
+      FirebaseFirestore.instance
+          .collection('teams')
+          .where('members', arrayContains: AuthMethods().getUserUID())
+          .snapshots()
+          .listen((snapshot) {
+        teamsList = snapshot.docs.map((doc) => (Team.fromSnap(doc))).toList();
+        setState(() {});
+      });
     }
   }
 
@@ -49,7 +63,17 @@ class _NewEventFormState extends State<NewEventForm> {
                   SizedBox(height: 20),
                   buildDateTimePickers(),
                   SizedBox(height: 12),
-                  //DropdownButtonFormField<int>(items: , onChanged: (value) {  },),
+                  DropdownButtonFormField<int>(
+                    items: <int>[1, 2, 3].map((int value) {
+                      return DropdownMenuItem(
+                          value: value, child: Text('$value'));
+                    }).toList(),
+                    onChanged: (value) {},
+                  ),
+                  DropdownButtonFormField<String?>(
+                    items: getDropDownTeams(),
+                    onChanged: (value) {},
+                  ),
                 ],
               ))));
 
@@ -193,4 +217,13 @@ class _NewEventFormState extends State<NewEventForm> {
           child,
         ],
       );
+
+  List<DropdownMenuItem<String?>> getDropDownTeams() {
+    List<DropdownMenuItem<String?>> items = [];
+    items.add(const DropdownMenuItem(value: '', child: Text('Public')));
+    for (Team? team in teamsList) {
+      items.add(DropdownMenuItem(value: team?.uid, child: Text(team!.name)));
+    }
+    return items;
+  }
 }
