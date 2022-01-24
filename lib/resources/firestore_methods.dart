@@ -34,7 +34,6 @@ class FireStoreMethods {
   Future<String> createEvent(
       {required String title,
       required GeoPoint location,
-      required String eventStartTime,
       required String eventDate,
       required int level,
       required String creator,
@@ -42,13 +41,11 @@ class FireStoreMethods {
     String res = "error occurred";
     try {
       if (title.isNotEmpty ||
-          eventStartTime.isNotEmpty ||
           eventDate.isNotEmpty ||
           creator.isNotEmpty) {
         Event _event = Event(
             title: title,
             location: location,
-            eventStartTime: eventStartTime,
             eventDate: eventDate,
             level: level,
             participants: [creator],
