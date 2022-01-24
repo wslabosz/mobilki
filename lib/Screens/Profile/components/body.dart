@@ -30,7 +30,7 @@ class _BodyState extends State<Body> {
     avatarUrl = widget.profile.avatarUrl;
     FirebaseFirestore.instance
         .collection('events')
-        .where('participatns', arrayContains: widget.profile.uid)
+        .where('participants', arrayContains: widget.profile.uid)
         .where('eventDate', isLessThanOrEqualTo: DateTime.now().toString())
         .orderBy('eventDate', descending: true)
         .limit(3)
@@ -76,8 +76,8 @@ class _BodyState extends State<Body> {
 
     Widget _eventList() {
     if (eventList.isEmpty) {
-      return const Text("No members found",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold));
+    return const Padding(padding:EdgeInsets.only(top:16), child: Text("No event history found",
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)));
     }
     if (eventList[0] == null) {
       return const CircularProgressIndicator();

@@ -22,7 +22,7 @@ class EventTile extends StatelessWidget {
             );
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return const LinearProgressIndicator();
           }
           List<String> snapshotData = snapshot.data!;
           String resolvedLocation = snapshotData[0];
