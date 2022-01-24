@@ -88,7 +88,7 @@ class Navbar extends StatelessWidget {
       itemList.add(BottomNavigationBarItem(icon: _icons[i], label: _names[i]));
     }
     return BottomNavigationBar(
-      type:BottomNavigationBarType.shifting,
+      type:BottomNavigationBarType.fixed,
       items: itemList,
       currentIndex: index,
       selectedItemColor: orange,

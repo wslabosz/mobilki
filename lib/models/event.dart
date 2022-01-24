@@ -8,6 +8,7 @@ class Event {
   final List participants;
   final String creator;
   final String? team;
+  final String? docId;
 
   const Event(
       {required this.title,
@@ -16,7 +17,8 @@ class Event {
       required this.level,
       required this.participants,
       required this.creator,
-      this.team});
+      this.team,
+      this.docId});
 
   static Event fromSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
@@ -28,7 +30,8 @@ class Event {
         level: snapshot["level"],
         participants: snapshot["participants"],
         creator: snapshot["creator"],
-        team: snapshot["team"]);
+        team: snapshot["team"],
+        docId: snap.id);
   }
 
   Map<String, dynamic> toJson() => {

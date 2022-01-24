@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobilki/Screens/Event/event_screen.dart';
 import 'package:mobilki/components/circle_avatar.dart';
 import 'package:mobilki/constants.dart';
 import 'package:mobilki/models/event.dart';
@@ -28,7 +29,11 @@ class EventTile extends StatelessWidget {
           String resolvedLocation = snapshotData[0];
           String avatarUrl = snapshotData[1];
           return InkWell(
-              onTap: () {},
+              onTap: () => (Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        EventScreen(event:event,locationName:resolvedLocation)))),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,

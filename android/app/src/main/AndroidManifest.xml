@@ -5,6 +5,8 @@
         android:name="${applicationName}"
         android:label="mobilki"
         android:icon="@mipmap/ic_launcher">
+                        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyD5KryHK1WgkC9putl-ZOmUpHYUC4g7f8A"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -29,6 +31,8 @@
               android:name="io.flutter.embedding.android.SplashScreenDrawable"
               android:resource="@drawable/launch_background"
               />
+                              <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyD5KryHK1WgkC9putl-ZOmUpHYUC4g7f8A"/>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
