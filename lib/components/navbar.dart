@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +15,13 @@ import 'package:mobilki/resources/default_snackbar.dart';
 
 class Navbar extends StatefulWidget {
   final int index;
-  bool invitesPending = false;
-  Navbar({Key? key, required this.index}) : super(key: key);
+  static bool invitesPending = false;
+  static final Stream inviteStream = FirebaseFirestore.instance
+      .collection('invite_requests')
+      .where('receiver', isEqualTo: AuthMethods().getUserUID())
+      .limit(1)
+      .snapshots();
+  const Navbar({Key? key, required this.index}) : super(key: key);
 
   static final _routeNames = [
     "home",
@@ -53,34 +60,30 @@ class Navbar extends StatefulWidget {
 }
 
 class _NavbarState extends State<Navbar> {
-  static final Stream inviteStream = FirebaseFirestore.instance
-      .collection('invite_requests')
-      .where('receiver', isEqualTo: AuthMethods().getUserUID())
-      .limit(1)
-      .snapshots();
   static late StreamSubscription inviteListener;
+  static final Random gen = Random();
+  late bool localInvitesPending;
+
   @override
   void initState() {
-    super.initState();
-    inviteListener = inviteStream.listen((snapshot) {
+    inviteListener = Navbar.inviteStream.listen((snapshot) {
       if (snapshot.docs.isEmpty) {
-        print(1);
-        print(widget.invitesPending);
+        Navbar.invitesPending = false;
         setState(() {
-          widget.invitesPending = false;
+          localInvitesPending = false;
         });
       } else {
-        print(2);
-        print(widget.invitesPending);
-        if(widget.invitesPending==false) {
-          setState(() {
-            widget.invitesPending = true;
-          });
+        setState(() {
+          localInvitesPending = true;
+        });
+        if (Navbar.invitesPending == false) {
+          Navbar.invitesPending = true;
           Snackbars.defaultSnackbar(context, "You have a new invitation!");
         }
-
       }
     });
+    localInvitesPending=Navbar.invitesPending;
+    super.initState();
     setState(() {});
   }
 
@@ -107,12 +110,11 @@ class _NavbarState extends State<Navbar> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.invitesPending);
     List<Widget> _icons = [
       const Icon(Icons.home),
       const Icon(Icons.search),
       const Icon(Icons.people),
-      widget.invitesPending
+      localInvitesPending
           ? Stack(children: const <Widget>[
               Icon(Icons.email),
               Positioned(

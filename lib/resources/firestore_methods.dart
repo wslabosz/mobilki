@@ -214,8 +214,7 @@ class FireStoreMethods {
             "A new member joined your team!",
             receiverInstance.name.toTitleCase() +
                 " has accepted your invitation.");
-      }
-    } else {
+      } else {
       _firestore.collection('users').doc(senderDocId).update({
         'friends': FieldValue.arrayUnion([request.receiver])
       });
@@ -242,6 +241,7 @@ class FireStoreMethods {
           "You have a new friend!",
           receiverInstance.name.toTitleCase() +
               " has accepted your friend request.");
+    }
     }
   }
 
