@@ -3,8 +3,15 @@ import 'package:mobilki/screens/Home/components/body.dart';
 import 'package:mobilki/components/navbar.dart';
 import 'package:mobilki/components/side_bar.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  
 
   @override
   Widget build(BuildContext context) {
@@ -13,19 +20,10 @@ class HomeScreen extends StatelessWidget {
           return Navbar.navbarOnBack();
         },
         child: Scaffold(
-            drawer: SideBarWidget(),
+            drawer: const SideBarWidget(),
             appBar: AppBar(
               title: const Text('Games'),
               backgroundColor: Colors.orange,
-              /*leading: IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () => {
-              AuthMethods().logout(),
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
-                  (route) => false)
-            },
-          )*/
             ),
             body: const Body(),
             bottomNavigationBar: const Navbar(index: 0)));
