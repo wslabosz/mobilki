@@ -39,7 +39,7 @@ class EventTile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
-                        height: 50,
+                        height: 80,
                         child: Row(children: <Widget>[
                           Expanded(
                               flex: 4,

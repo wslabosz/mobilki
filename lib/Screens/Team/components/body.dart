@@ -53,9 +53,7 @@ class _BodyState extends State<Body> {
       setState(() {});
     });
 
-    Firebase.initializeApp().whenComplete(() {
-      setState(() {});
-    });
+
   }
 
   bool _rightSegment = false;

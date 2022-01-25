@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.orange,
       ),
       body: const Body(),
-      bottomNavigationBar: const Navbar(index: 0),
+      bottomNavigationBar: Navbar(index: 0),
       floatingActionButton: FloatingActionButton(
         onPressed: () => (Navigator.pushNamed(context, 'add')),
         backgroundColor: orange,

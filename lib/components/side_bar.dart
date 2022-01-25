@@ -29,9 +29,9 @@ class _SideBarWidgetState extends State<SideBarWidget> {
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting ||
               !snapshot.hasData) {
-            return const Drawer(child:Material(color:Colors.orange));
+            return const Drawer(child: Material(color: Colors.orange));
           }
-                    User userData = User.fromSnap(snapshot.data!);
+          User userData = User.fromSnap(snapshot.data!);
           urlImage = userData.avatarUrl;
           return Drawer(
             child: Material(
@@ -45,11 +45,12 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                       onClicked: () {
                         ImagePicker imagePicker = ImagePicker();
                         Future<XFile?> compressedImage = imagePicker.pickImage(
-                            source: ImageSource.gallery, maxWidth:200, maxHeight:200);
+                            source: ImageSource.gallery,
+                            maxWidth: 200,
+                            maxHeight: 200);
                         compressedImage.then((result) {
                           result?.readAsBytes().then((result) {
-                            FireStoreMethods
-                                .uploadAvatar(
+                            FireStoreMethods.uploadAvatar(
                                     result, AuthMethods().getUserUID())
                                 .then((value) {
                               setState(() {
@@ -65,7 +66,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                       children: [
                         const SizedBox(height: 16),
                         buildMenuItem(
-                            text: 'Wyloguj',
+                            text: 'Logout',
                             icon: Icons.logout,
                             onClicked: () => {
                                   AuthMethods().logout(),
@@ -75,12 +76,11 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                               const LoginScreen()),
                                       (route) => false)
                                 }),
-                        /*const SizedBox(height: 16),
-                  buildMenuItem(
-                    text: 'Wyloguj',
-                    icon: Icons.logout,
-                    onClicked: () => selectedItem(context, 1),
-                  ),*/
+                        buildMenuItem(
+                            text: "Your calendar",
+                            icon: Icons.calendar_today,
+                            onClicked: () =>
+                                (Navigator.pushNamed(context, 'event')))
                       ],
                     ),
                   ),
@@ -104,7 +104,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
               .add(const EdgeInsets.symmetric(vertical: 50, horizontal: 5)),
           child: Row(
             children: [
-              Avatar(radius: 40, image: urlImage==""?null:NetworkImage(urlImage), name: name),
+              Avatar(
+                  radius: 40,
+                  image: urlImage == "" ? null : NetworkImage(urlImage),
+                  name: name),
               const SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
