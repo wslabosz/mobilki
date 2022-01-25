@@ -38,22 +38,30 @@ class MyApp extends StatelessWidget {
     } else {
       firstScreen = 'start';
     }
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'BasketballAppka',
-        theme: ThemeData(
-            textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme)),
-        initialRoute: firstScreen,
-        routes: {
-          'start': (context) => const StartScreen(),
-          'register': (context) => const RegisterScreen(),
-          'login': (context) => const LoginScreen(),
-          'search': (context) => const SearchScreen(),
-          'home': (context) => const HomeScreen(),
-          'people': (context) => const SocialScreen(),
-          'invites': (context) => const InvitesScreen(),
-          'event': (context) => const CalendarScreen(),
-          'add': (context) => const AddScreen(),
-        });
+    return GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'BasketballAppka',
+            theme: ThemeData(
+                textTheme:
+                    GoogleFonts.interTextTheme(Theme.of(context).textTheme)),
+            initialRoute: firstScreen,
+            routes: {
+              'start': (context) => const StartScreen(),
+              'register': (context) => const RegisterScreen(),
+              'login': (context) => const LoginScreen(),
+              'search': (context) => const SearchScreen(),
+              'home': (context) => const HomeScreen(),
+              'people': (context) => const SocialScreen(),
+              'invites': (context) => const InvitesScreen(),
+              'event': (context) => const CalendarScreen(),
+              'add': (context) => const AddScreen(),
+            }));
   }
 }

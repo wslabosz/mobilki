@@ -13,6 +13,7 @@ class ResetScreen extends StatefulWidget {
 
 class _ResetScreenState extends State<ResetScreen> {
   final TextEditingController _emailController = TextEditingController();
+  String? _error;
 
   @override
   void dispose() {
@@ -21,8 +22,33 @@ class _ResetScreenState extends State<ResetScreen> {
   }
 
   void resetPassword() async {
-    await AuthMethods().resetPassword(email: _emailController.text);
-    Navigator.of(context).pop();
+    FocusManager.instance.primaryFocus?.unfocus();
+    String response =
+        await AuthMethods().resetPassword(email: _emailController.text);
+    if (response == 'success') {
+      Navigator.of(context).pop();
+    } else if (response == 'please enter the email') {
+      setState(() {
+        _error = response;
+      });
+    } else {
+      showDialog<void>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+                title: const Text(
+                    "If provided email exists, check your inbox"),
+                actions: [
+                  TextButton(
+                      child: const Text("Confirm",
+                          style: TextStyle(color: Colors.red)),
+                      onPressed: () => {
+                            Navigator.of(context)
+                              ..pop()
+                              ..pop()
+                          })
+                ],
+              ));
+    }
   }
 
   @override
@@ -44,6 +70,7 @@ class _ResetScreenState extends State<ResetScreen> {
             onChanged: (value) {},
             textInputType: TextInputType.emailAddress,
             textEditingController: _emailController,
+            errorText: _error,
           ),
           SizedBox(height: size.height * 0.02),
           Button(

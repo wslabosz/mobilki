@@ -72,10 +72,19 @@ class AuthMethods {
     return res;
   }
 
-  Future<void> resetPassword({required String email}) async {
-    if (email.isNotEmpty) {
-      await _auth.sendPasswordResetEmail(email: email);
+  Future<String> resetPassword({required String email}) async {
+    String res = "error occured";
+    try {
+      if (email.isNotEmpty) {
+        await _auth.sendPasswordResetEmail(email: email);
+        res = "success";
+      } else {
+        res = "please enter the email";
+      }
+    } catch (err) {
+      res = err.toString();
     }
+    return res;
   }
 
   Future<void> logout() async {
