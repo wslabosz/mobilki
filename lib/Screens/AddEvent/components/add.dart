@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mobilki/Screens/AddEvent/components/utils.dart';
@@ -24,9 +23,7 @@ class _NewEventFormState extends State<NewEventForm> {
   late String level;
   late GeoPoint location;
   late String currentAddress;
-
   final Completer<GoogleMapController> controller = Completer();
-
   static const initialCameraPosition =
       CameraPosition(target: LatLng(37.77, -122.43), zoom: 11.5);
 
@@ -42,6 +39,7 @@ class _NewEventFormState extends State<NewEventForm> {
     if (widget.event == null) {
       dateFrom = DateTime.now();
     }
+
     FirebaseFirestore.instance
         .collection('teams')
         .where('members', arrayContains: AuthMethods().getUserUID())
