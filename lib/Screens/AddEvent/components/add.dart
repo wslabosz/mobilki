@@ -28,8 +28,10 @@ class _NewEventFormState extends State<NewEventForm> {
   late GoogleMapController newGoogleMapController;
   //late Position position = _determinePosition() as Position;
   late GeoPoint currlocation;
-  final CameraPosition camera =
-      CameraPosition(target: LatLng(51.759445, 19.457216), zoom: 0);
+  static const LatLng lodz = LatLng(51.759445, 19.457216);
+  final CameraPosition camera = const CameraPosition(target: lodz, zoom: 0);
+  late Marker marker = Marker(markerId: const MarkerId('curr'), position: lodz);
+
   void _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -139,6 +141,10 @@ class _NewEventFormState extends State<NewEventForm> {
                         newGoogleMapController = controller;
                         _determinePosition();
                       },
+                      onLongPress: addMarker,
+                      markers: {
+                        marker,
+                      },
                     ),
                   )
                 ],
@@ -163,6 +169,9 @@ class _NewEventFormState extends State<NewEventForm> {
           //TODO: Walidacja długości
           if (value == null || value.isEmpty) {
             return 'Please enter event name';
+          }
+          if (value.length > 20) {
+            return 'Please enter shorter name';
           }
           return null;
         },
@@ -294,8 +303,17 @@ class _NewEventFormState extends State<NewEventForm> {
     }
     return items;
   }
+
+  void addMarker(LatLng pos) {
+    setState(() {
+      marker = Marker(
+        markerId: const MarkerId('location'),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
+        position: pos,
+      );
+    });
+  }
 }
 
-//TODO: lokalizacja
 //TODO: participants: z uczestnikiem tworzącym
 //TODO: zczytywanie fromularza i tworzenie obiektu Event i dodawanie nowego Eventu do bazy
