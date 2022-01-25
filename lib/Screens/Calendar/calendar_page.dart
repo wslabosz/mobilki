@@ -7,13 +7,8 @@ class CalendarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async {
-          return Navbar.navbarOnBack();
-        },
-        child: const Scaffold(
+    return const Scaffold(
           body: Calendar(),
-          bottomNavigationBar: Navbar(index: 1),
-        ));
+        );
   }
 }

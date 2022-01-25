@@ -49,18 +49,13 @@ class SocialScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async {
-          return Navbar.navbarOnBack();
-        },
-        child: Scaffold(
+    return Scaffold(
           body: const Body(),
-          bottomNavigationBar: const Navbar(index: 4),
           floatingActionButton: FloatingActionButton(
             onPressed: () => teamCreateDialog(context),
             backgroundColor: orange,
             child: const Icon(Icons.add),
           ),
-        ));
+        );
   }
 }

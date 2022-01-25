@@ -12,8 +12,6 @@ class Navbar extends StatelessWidget {
 
   static final _routeNames = [
     "home",
-    "event",
-    "add",
     "search",
     "people",
     "invites",
@@ -21,8 +19,6 @@ class Navbar extends StatelessWidget {
 
   static const _icons = [
     Icon(Icons.home),
-    Icon(Icons.event),
-    Icon(Icons.add_circle),
     Icon(Icons.search),
     Icon(Icons.people),
     Icon(Icons.mark_email_unread),
@@ -30,8 +26,6 @@ class Navbar extends StatelessWidget {
 
   static const _names = [
     "Home",
-    "Events",
-    "Add event",
     "Search",
     "Teams and friends",
     "Invites",
@@ -78,7 +72,7 @@ class Navbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<BottomNavigationBarItem> itemList = [];
-    for (var i = 0; i < 6; i++) {
+    for (var i = 0; i < 4; i++) {
       itemList.add(BottomNavigationBarItem(icon: _icons[i], label: _names[i]));
     }
     return BottomNavigationBar(
