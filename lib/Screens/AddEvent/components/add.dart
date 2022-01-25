@@ -29,8 +29,7 @@ class _NewEventFormState extends State<NewEventForm> {
   //late Position position = _determinePosition() as Position;
   late GeoPoint currlocation;
   final CameraPosition camera =
-      CameraPosition(target: LatLng(131, 27), zoom: 8);
-
+      CameraPosition(target: LatLng(51.759445, 19.457216), zoom: 0);
   void _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
