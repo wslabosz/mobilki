@@ -9,7 +9,7 @@ class SearchScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope (onWillPop: () async {return Navbar.navbarOnBack();}, child:const Scaffold(
       body: Body(),
-      bottomNavigationBar: Navbar(index:3),
+      bottomNavigationBar: Navbar(index:1),
     ));
   }
 }

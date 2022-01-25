@@ -251,6 +251,7 @@ class _BodyState extends State<Body> {
                       fontSize: 24, fontWeight: FontWeight.bold),
                 ),
               )),
+              
         ]));
   }
 }

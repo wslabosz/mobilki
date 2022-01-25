@@ -7,13 +7,8 @@ class AddScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async {
-          return Navbar.navbarOnBack();
-        },
-        child: const Scaffold(
+    return const Scaffold(
           body: NewEventForm(),
-          bottomNavigationBar: Navbar(index: 2),
-        ));
+        );
   }
 }

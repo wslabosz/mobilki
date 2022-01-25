@@ -9,7 +9,7 @@ class InvitesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope (onWillPop: () async {return Navbar.navbarOnBack();}, child:const Scaffold(
       body: Body(),
-      bottomNavigationBar: Navbar(index:5),
+      bottomNavigationBar: Navbar(index:3),
     ));
   }
 }
