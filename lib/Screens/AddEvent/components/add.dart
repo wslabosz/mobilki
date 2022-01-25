@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mobilki/Screens/AddEvent/components/utils.dart';
 import 'package:mobilki/models/event.dart';
 import 'package:mobilki/models/team.dart';
 import 'package:mobilki/resources/auth_methods.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class NewEventForm extends StatefulWidget {
   final Event? event;
@@ -19,7 +22,13 @@ class _NewEventFormState extends State<NewEventForm> {
   final nameController = TextEditingController();
   late DateTime dateFrom;
   late String level;
-  //late List<DropdownMenuItem<Team?>> dropDownMenuTeams;
+  late GeoPoint location;
+  late String currentAddress;
+
+  final Completer<GoogleMapController> controller = Completer();
+
+  static const initialCameraPosition =
+      CameraPosition(target: LatLng(37.77, -122.43), zoom: 11.5);
 
   @override
   void dispose() {
@@ -32,15 +41,15 @@ class _NewEventFormState extends State<NewEventForm> {
     super.initState();
     if (widget.event == null) {
       dateFrom = DateTime.now();
-      FirebaseFirestore.instance
-          .collection('teams')
-          .where('members', arrayContains: AuthMethods().getUserUID())
-          .snapshots()
-          .listen((snapshot) {
-        teamsList = snapshot.docs.map((doc) => (Team.fromSnap(doc))).toList();
-        setState(() {});
-      });
     }
+    FirebaseFirestore.instance
+        .collection('teams')
+        .where('members', arrayContains: AuthMethods().getUserUID())
+        .snapshots()
+        .listen((snapshot) {
+      teamsList = snapshot.docs.map((doc) => (Team.fromSnap(doc))).toList();
+      setState(() {});
+    });
   }
 
   @override
@@ -50,27 +59,42 @@ class _NewEventFormState extends State<NewEventForm> {
         backgroundColor: Colors.orange,
       ),
       body: SingleChildScrollView(
-          padding: EdgeInsets.all(12),
+          padding: const EdgeInsets.all(12),
           child: Form(
               key: _formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   buildName(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   buildDateTimePickers(),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   DropdownButtonFormField<int>(
+                    hint: const Text('Difficulty level'),
                     items: <int>[1, 2, 3].map((int value) {
                       return DropdownMenuItem(
                           value: value, child: Text('$value'));
                     }).toList(),
                     onChanged: (value) {},
                   ),
+                  const SizedBox(height: 12),
                   DropdownButtonFormField<String?>(
                     items: getDropDownTeams(),
+                    hint: const Text('Team'),
                     onChanged: (value) {},
                   ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'LOCATION',
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    child: const GoogleMap(
+                      initialCameraPosition: initialCameraPosition,
+                      myLocationButtonEnabled: true,
+                      zoomControlsEnabled: true,
+                    ),
+                  )
                 ],
               ))));
 
@@ -90,6 +114,7 @@ class _NewEventFormState extends State<NewEventForm> {
         decoration: const InputDecoration(hintText: 'Name'),
         onFieldSubmitted: (_) {},
         validator: (String? value) {
+          //TODO: Walidacja długości
           if (value == null || value.isEmpty) {
             return 'Please enter event name';
           }
@@ -220,8 +245,11 @@ class _NewEventFormState extends State<NewEventForm> {
     items.add(const DropdownMenuItem(value: '', child: Text('Public')));
     for (Team team in teamsList) {
       items.add(DropdownMenuItem(value: team.uid, child: Text(team.name)));
-      //TODO: error Null check operator used on a null value
     }
     return items;
   }
 }
+
+//TODO: lokalizacja
+//TODO: participants: z uczestnikiem tworzącym
+//TODO: zczytywanie fromularza i tworzenie obiektu Event i dodawanie nowego Eventu do bazy
