@@ -210,7 +210,7 @@ class _BodyState extends State<Body> {
                     source: ImageSource.gallery, maxWidth: 200, maxHeight: 200);
                 compressedImage.then((result) {
                   result?.readAsBytes().then((result) {
-                    FireStoreMethods()
+                    FireStoreMethods
                         .uploadAvatar(result, widget.team.uid!,
                             collection: 'teams')
                         .then((value) {

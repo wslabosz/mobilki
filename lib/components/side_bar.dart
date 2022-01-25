@@ -16,7 +16,7 @@ class SideBarWidget extends StatefulWidget {
 }
 
 class _SideBarWidgetState extends State<SideBarWidget> {
-  final padding = EdgeInsets.symmetric(horizontal: 20);
+  final padding = const EdgeInsets.symmetric(horizontal: 20);
   String urlImage = "";
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                             source: ImageSource.gallery, maxWidth:200, maxHeight:200);
                         compressedImage.then((result) {
                           result?.readAsBytes().then((result) {
-                            FireStoreMethods()
+                            FireStoreMethods
                                 .uploadAvatar(
                                     result, AuthMethods().getUserUID())
                                 .then((value) {
