@@ -180,15 +180,27 @@ class _NewEventFormState extends State<NewEventForm> {
                 List participants = [];
                 String user = AuthMethods().getUserUID();
                 participants.add(user);
-                final event = Event(
-                  title: nameController.text,
-                  eventDate: dateFrom.toString(),
-                  level: level,
-                  team: teamId,
-                  creator: user,
-                  participants: participants,
-                  location: location,
-                );
+                if (teamId.isNotEmpty) {
+                  final event = Event(
+                    title: nameController.text,
+                    eventDate: dateFrom.toString(),
+                    level: level,
+                    team: teamId,
+                    creator: user,
+                    participants: participants,
+                    location: location,
+                  );
+                } else {
+                  final event = Event(
+                    title: nameController.text,
+                    eventDate: dateFrom.toString(),
+                    level: level,
+                    team: null,
+                    creator: user,
+                    participants: participants,
+                    location: location,
+                  );
+                }
               }
             },
             icon: const Icon(Icons.done),
@@ -337,7 +349,7 @@ class _NewEventFormState extends State<NewEventForm> {
     List<DropdownMenuItem<String?>> items = [];
     items.add(const DropdownMenuItem(value: '', child: Text('Public')));
     for (Team team in teamsList) {
-      items.add(DropdownMenuItem(value: team.uid, child: Text(team.name)));
+      items.add(DropdownMenuItem(value: team.name, child: Text(team.name)));
     }
     return items;
   }
