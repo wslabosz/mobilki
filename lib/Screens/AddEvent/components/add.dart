@@ -229,7 +229,6 @@ class _NewEventFormState extends State<NewEventForm> {
         decoration: const InputDecoration(hintText: 'Name'),
         onFieldSubmitted: (_) {},
         validator: (String? value) {
-          //TODO: Walidacja długości
           if (value == null || value.isEmpty) {
             return 'Please enter event name';
           }
@@ -346,7 +345,7 @@ class _NewEventFormState extends State<NewEventForm> {
   }) =>
       ListTile(
         title: Text(text),
-        trailing: Icon(Icons.arrow_drop_down),
+        trailing: const Icon(Icons.arrow_drop_down),
         onTap: onClicked,
       );
 
@@ -357,7 +356,7 @@ class _NewEventFormState extends State<NewEventForm> {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(header, style: TextStyle(fontSize: 14)),
+          Text(header, style: const TextStyle(fontSize: 14)),
           child,
         ],
       );
@@ -383,3 +382,5 @@ class _NewEventFormState extends State<NewEventForm> {
     location = GeoPoint(pos.latitude, pos.longitude);
   }
 }
+
+//TODO: add event to user!

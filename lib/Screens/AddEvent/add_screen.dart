@@ -7,7 +7,7 @@ class AddScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-          body: NewEventForm(),
-        );
+      body: NewEventForm(),
+    );
   }
 }
