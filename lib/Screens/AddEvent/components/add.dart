@@ -161,7 +161,7 @@ class _NewEventFormState extends State<NewEventForm> {
                         newGoogleMapController = controller;
                         _determinePosition();
                       },
-                      onLongPress: addMarker,
+                      onTap: addMarker,
                       markers: {
                         if (markerSet) marker,
                       },
