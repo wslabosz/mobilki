@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:mobilki/Screens/Social/components/body.dart';
 import 'package:mobilki/components/input_field.dart';
 import 'package:mobilki/components/navbar.dart';
 import 'package:mobilki/constants.dart';
 import 'package:mobilki/resources/default_snackbar.dart';
 import 'package:mobilki/resources/firestore_methods.dart';
+import 'package:mobilki/screens/Social/components/body.dart';
 
 import '../../constants.dart';
 
-class SocialScreen extends StatelessWidget {
+class SocialScreen extends StatefulWidget {
   const SocialScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SocialScreen> createState() => _SocialScreenState();
+}
+
+class _SocialScreenState extends State<SocialScreen> {
+  bool _rightSegment = false;
+
+  void _switchSegment(bool right) {
+    setState(() {
+      _rightSegment = right;
+    });
+  }
 
   void teamCreateDialog(BuildContext context) {
     TextEditingController teamController = TextEditingController();
@@ -47,17 +60,28 @@ class SocialScreen extends StatelessWidget {
             )));
   }
 
+  FloatingActionButton? buildAddTeamButton(bool isRightSegment) {
+    if (isRightSegment) {
+      return FloatingActionButton(
+        onPressed: () => teamCreateDialog(context),
+        backgroundColor: orange,
+        child: const Icon(Icons.add),
+      );
+    } else {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return WillPopScope (onWillPop: () async {return Navbar.navbarOnBack();}, child:Scaffold(
-          body: const Body(),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () => teamCreateDialog(context),
-            backgroundColor: orange,
-            child: const Icon(Icons.add),
-          ),
-                bottomNavigationBar: const Navbar(index:2),
-
+    return WillPopScope(
+        onWillPop: () async {
+          return Navbar.navbarOnBack();
+        },
+        child: Scaffold(
+          body: Body(segment: _rightSegment, switchSegment: _switchSegment),
+          floatingActionButton: buildAddTeamButton(_rightSegment),
+          bottomNavigationBar: const Navbar(index: 2),
         ));
   }
 }
