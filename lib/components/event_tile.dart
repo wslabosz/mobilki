@@ -37,9 +37,8 @@ class EventTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                        height: 80,
-                        child: Row(children: <Widget>[
+                    IntrinsicHeight(
+                        child: Row(crossAxisAlignment: CrossAxisAlignment.start,children: <Widget>[
                           Expanded(
                               flex: 4,
                               child: Avatar(
@@ -88,7 +87,7 @@ class EventTile extends StatelessWidget {
                         ])),
                     SizedBox(
                         height: 20,
-                        child: Row(children: <Widget>[
+                        child: Row(crossAxisAlignment: CrossAxisAlignment.start,children: <Widget>[
                           const Spacer(flex: 3),
                           const Expanded(
                               flex: 1,

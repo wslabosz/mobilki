@@ -150,7 +150,7 @@ class Body extends StatelessWidget {
     return ListView.separated(
         shrinkWrap: true,
         separatorBuilder: (BuildContext context, int index) => Divider(
-              height: size.height * 0.025,
+              height: size.height * 0.04,
               thickness: 2,
               indent: size.width * 0.04,
               endIndent: size.width * 0.04,
