@@ -16,8 +16,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  //TODO: na inicie zczytac lokalizacje uzytkownika i sortowac po odleglosci
   GeoPoint? _userPosition;
+  String chosenLevel = "Any";
+  final TextEditingController _addressEditingController =
+      TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -27,7 +29,15 @@ class _HomeScreenState extends State<HomeScreen> {
   void getUserPosition() async {
     GeoPoint positon = await LocationMethods.determinePosition();
     setState(() {
-      _userPosition = positon; 
+      _userPosition = positon;
+    });
+  }
+
+  void _changeChosenLevel(String newLevel) {
+    setState(() {
+      if (newLevel != chosenLevel) {
+        chosenLevel = newLevel;
+      }
     });
   }
 
@@ -52,7 +62,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Body(
                     events: snapshot.data!.docs
                         .map((event) => (Event.fromSnap(event)))
-                        .toList(), location: _userPosition);
+                        .toList(),
+                    location: _userPosition,
+                    addressEditingController: _addressEditingController,
+                    chosenLevel: chosenLevel,
+                    changeChosenLevel: _changeChosenLevel);
               } else {
                 return const Text('no events');
               }
