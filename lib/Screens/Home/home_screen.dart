@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mobilki/constants.dart';
 import 'package:mobilki/models/event.dart';
@@ -22,20 +23,20 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Games'),
         backgroundColor: Colors.orange,
       ),
-      body: FutureBuilder<List<Event>>(
-        future: FireStoreMethods.getEvents(),
-        builder: (BuildContext context, AsyncSnapshot<List<Event>> snapshot) {
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FireStoreMethods.getEvents(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           switch (snapshot.connectionState) {
-            // TODO: popracuj nad stanami
             case ConnectionState.waiting:
-              return const Text('loading');
+              return const CircularProgressIndicator();
             default:
               if (snapshot.hasError) {
                 return const Text('occurred error');
               } else if (snapshot.hasData) {
                 return Body(
-                  events: snapshot.data!,
-                );
+                    events: snapshot.data!.docs
+                        .map((event) => (Event.fromSnap(event)))
+                        .toList());
               } else {
                 return const Text('no events');
               }

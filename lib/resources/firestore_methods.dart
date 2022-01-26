@@ -126,36 +126,24 @@ class FireStoreMethods {
     }
   }
 
-  static Future<List<Event>> getEvents() async {
-    QuerySnapshot<Map<String, dynamic>> eventsSnapshot = await _firestore
+  static Stream<QuerySnapshot> getEvents() {
+    Stream<QuerySnapshot> _eventsStream = _firestore
         .collection('events')
         .where('team', isNull: true)
-        .where('eventDate', isGreaterThan: DateTime.now()
-        .toString())
+        .where('eventDate', isGreaterThan: DateTime.now().toString())
         .orderBy('eventDate')
-        .get();
-    List<Event> events =
-        eventsSnapshot.docs.map((event) => (Event.fromSnap(event))).toList();
-    return events;
+        .snapshots();
+    return _eventsStream;
   }
 
-  //TODO: sprawdz listening na eventach
-  static Future<List<Event>?> getTeamEvents(String teamName) async {
-    User user = await AuthMethods.getUserDetails();
-    QuerySnapshot<Map<String, dynamic>>? teamEventsSnapshot;
-    List<Event>? teamEvents = [];
-    if (user.teams.isNotEmpty) {
-      teamEventsSnapshot = await _firestore
+  static Stream<QuerySnapshot> getTeamEvents(String teamName) {
+      Stream<QuerySnapshot> _teamEventsStream = _firestore
           .collection('events')
           .where('team', isEqualTo: teamName)
           .where('eventDate', isGreaterThan: DateTime.now().toString())
           .orderBy('eventDate')
-          .get();
-      teamEvents = teamEventsSnapshot.docs
-          .map((teamEventsSnapshot) => (Event.fromSnap(teamEventsSnapshot)))
-          .toList();
-    }
-    return teamEvents;
+          .snapshots();
+    return _teamEventsStream;
   }
 
   static Future<dynamic> getCurrentUserRequests(
