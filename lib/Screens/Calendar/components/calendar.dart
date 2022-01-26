@@ -126,7 +126,6 @@ class _CalendarState extends State<Calendar> {
         _selectedDay = selectedDay;
       });
       _selectedEvents.value = _getEventsForDay(selectedDay);
-      print(_selectedEvents.value);
     }
   }
 
