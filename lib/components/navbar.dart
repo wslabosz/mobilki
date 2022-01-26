@@ -33,7 +33,7 @@ class Navbar extends StatefulWidget {
     "Teams and friends",
     "Invites",
   ];
-  static final _visited = List.filled(6, false);
+  static final _visited = List.filled(4, false);
   static int _lastVisited = -1;
 
   static void init() {

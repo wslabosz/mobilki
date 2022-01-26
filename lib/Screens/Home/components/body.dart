@@ -152,8 +152,8 @@ class Body extends StatelessWidget {
         separatorBuilder: (BuildContext context, int index) => Divider(
               height: size.height * 0.025,
               thickness: 2,
-              indent: size.width * 0.08,
-              endIndent: size.width * 0.08,
+              indent: size.width * 0.04,
+              endIndent: size.width * 0.04,
               color: grey,
             ),
         padding: const EdgeInsets.all(8),

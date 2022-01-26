@@ -14,7 +14,7 @@ class InvitesScreen extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: false,
-            title: const Text('Events'),
+            title: const Text('Invite requests'),
             backgroundColor: Colors.orange,
           ),
           body: const Body(),

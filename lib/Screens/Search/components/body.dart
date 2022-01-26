@@ -155,13 +155,12 @@ class _BodyState extends State<Body> {
           const Align(
               alignment: Alignment.topCenter,
               child: Padding(
-                padding: EdgeInsets.only(top: 48),
+                padding: EdgeInsets.only(top: 24, bottom:12),
                 child: Text(
                   "Look for friends",
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
               )),
-          SizedBox(height: size.height * 0.03),
           InputField(
             hintText: "Name",
             textEditingController: _nameController,

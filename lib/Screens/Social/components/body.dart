@@ -197,22 +197,14 @@ class _BodyState extends State<Body> {
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-          const Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding: EdgeInsets.only(top: 48, bottom: 16),
-                child: Text(
-                  "Friends and teams",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-              )),
+
           Padding(
               child: SegControl(
                   nameLeft: 'Friends',
                   nameRight: 'Teams',
                   notifyParent: (bool right) => widget.switchSegment(right),
                   rightActive: widget.segment),
-              padding: const EdgeInsets.only(bottom: 24)),
+              padding: const EdgeInsets.symmetric(vertical:24)),
           widget.segment
               ? FutureBuilder(
                   future: _teamList(),

@@ -64,22 +64,13 @@ class _BodyState extends State<Body> {
     return Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.start, children: <
             Widget>[
-      const Align(
-          alignment: Alignment.topCenter,
-          child: Padding(
-            padding: EdgeInsets.only(top: 48, bottom: 16),
-            child: Text(
-              "Invite requests",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-          )),
       Padding(
           child: SegControl(
               nameLeft: 'Friends',
               nameRight: 'Teams',
               notifyParent: (bool right) => _switchSegment(right),
               rightActive: _rightSegment),
-          padding: const EdgeInsets.only(bottom: 24)),
+          padding: const EdgeInsets.symmetric(vertical: 24)),
       FutureBuilder<dynamic>(
         future: FireStoreMethods.getCurrentUserRequests(
             AuthMethods().getUserUID(), _rightSegment),
