@@ -7,6 +7,7 @@ import 'package:mobilki/models/team.dart';
 import 'package:mobilki/resources/auth_methods.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:mobilki/resources/default_snackbar.dart';
 import 'package:mobilki/resources/firestore_methods.dart';
 
 class NewEventForm extends StatefulWidget {
@@ -190,7 +191,15 @@ class _NewEventFormState extends State<NewEventForm> {
                     level: level,
                     location: location,
                     team: teamId,
-                  );
+                  ).then((res) {
+                    if (res == "success") {
+                      Snackbars.defaultSnackbar(
+                          context, "Your event is saved successfully!");
+                    } else {
+                      Snackbars.defaultSnackbar(context,
+                          "There was a problem! Check your internet connection and try again later.");
+                    }
+                  });
                 } else {
                   FireStoreMethods.createEvent(
                     creator: user,
@@ -198,8 +207,18 @@ class _NewEventFormState extends State<NewEventForm> {
                     eventDate: dateFrom.toString(),
                     level: level,
                     location: location,
-                  );
+                  ).then((res) {
+                    if (res == "success") {
+                      Snackbars.defaultSnackbar(
+                          context, "Your event is saved.");
+                    } else {
+                      Snackbars.defaultSnackbar(context,
+                          "There was a problem! Check your internet connection and try again later.");
+                    }
+                  }); //if res = "success"
                 }
+                //Snackbars.defaultSnackbar(context, "Your event is saved.");
+                Navigator.pop(context);
               }
             },
             icon: const Icon(Icons.done),
