@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mobilki/Screens/Team/components/body.dart';
-import 'package:mobilki/components/navbar.dart';
 import 'package:mobilki/models/team.dart';
 
 

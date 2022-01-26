@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobilki/Screens/Profile/profile_screen.dart';
@@ -211,7 +210,6 @@ class _BodyState extends State<Body> {
                             collection: 'teams')
                         .then((value) {
                       setState(() {
-                        print(value);
                         avatarUrl = value;
                       });
                     });

@@ -63,7 +63,6 @@ class _BodyState extends State<Body> {
                     .uploadAvatar(result, widget.profile.uid)
                     .then((value) {
                   setState(() {
-                    print(value);
                     avatarUrl = value;
                   });
                 });

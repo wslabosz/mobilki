@@ -218,7 +218,6 @@ class _NewEventFormState extends State<NewEventForm> {
                   });
                 }
                 Navigator.pop(context);
-                //TODO: add event to user!
               }
             },
             icon: const Icon(Icons.done),

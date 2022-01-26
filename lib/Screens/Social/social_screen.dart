@@ -56,7 +56,7 @@ class SocialScreen extends StatelessWidget {
             backgroundColor: orange,
             child: const Icon(Icons.add),
           ),
-                bottomNavigationBar: Navbar(index:2),
+                bottomNavigationBar: const Navbar(index:2),
 
         ));
   }
