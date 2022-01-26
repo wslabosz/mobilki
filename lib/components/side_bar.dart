@@ -98,8 +98,9 @@ class _SideBarWidgetState extends State<SideBarWidget> {
   }) =>
       Container(
         padding: padding
-            .add(const EdgeInsets.symmetric(vertical: 50, horizontal: 5)),
+            .add(const EdgeInsets.only(top: 35)),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
                 padding: const EdgeInsets.only(right: 10),
@@ -114,6 +115,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                 width: 160,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Flexible(
                         child: Text(
