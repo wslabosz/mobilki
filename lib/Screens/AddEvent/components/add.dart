@@ -218,6 +218,7 @@ class _NewEventFormState extends State<NewEventForm> {
                   });
                 }
                 Navigator.pop(context);
+                //TODO: add event to user!
               }
             },
             icon: const Icon(Icons.done),
@@ -382,5 +383,3 @@ class _NewEventFormState extends State<NewEventForm> {
     location = GeoPoint(pos.latitude, pos.longitude);
   }
 }
-
-//TODO: add event to user!
