@@ -5,12 +5,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mobilki/Screens/Profile/profile_screen.dart';
+import 'package:mobilki/components/action_text.dart';
 import 'package:mobilki/components/event_details.dart';
 import 'package:mobilki/components/member_list.dart';
 import 'package:mobilki/models/event.dart';
 import 'package:mobilki/models/user.dart';
 import 'package:mobilki/resources/auth_methods.dart';
 import 'package:mobilki/resources/default_snackbar.dart';
+import 'package:mobilki/resources/firestore_methods.dart';
 
 import '../../../constants.dart';
 
@@ -54,14 +56,22 @@ class _BodyState extends State<Body> {
     });
   }
 
-  void removeTeam() {
+  void addYourselfToEvent() {
+    FireStoreMethods.addParticipant(widget.event.docId!, AuthMethods().getUserUID()).then((result) {                          Snackbars.defaultSnackbar(
+                              context, "You have joined the event",
+                              positive: true);});
+  }
+
+  void removeEvent({bool removeYourself=false}) {
+    String dialogText = removeYourself?"Removing yourself from event will remove whole event!":"Are you sure you want to cancel the event?";
+    String approveText = removeYourself?"I understand, remove event":"Remove event";
     showDialog<void>(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => AlertDialog(
-                title: const Text(
-                    "Removing yourself from team will remove whole team!",
-                    style: TextStyle(color: Colors.red)),
+                title: Text(
+                    dialogText,
+                    style: const TextStyle(color: Colors.red)),
                 actions: [
                   TextButton(
                       child: const Text("Cancel",
@@ -71,19 +81,33 @@ class _BodyState extends State<Body> {
                                 .pop('dialog')
                           }),
                   TextButton(
-                      child: const Text('I understand, remove team',
+                      child: Text(approveText,
                           style: TextStyle(color: darkOrange)),
-                      onPressed: () {})
+                      onPressed: () {
+                        FireStoreMethods.deleteEvent(widget.event.docId!,
+                                List<String>.from(widget.event.participants))
+                            .then((result) {
+                          Navigator.of(context, rootNavigator: true)
+                              .pop('dialog');
+                          Navigator.of(context, rootNavigator: true).pop();
+                          Snackbars.defaultSnackbar(
+                              context, "Event has been cancelled",
+                              positive: true);
+                        });
+                      })
                 ]));
   }
 
-  void removeMember(String friend) {
+  void removeParticipant(String friend, {bool removeYourself=false}) {
+    String dialogText = removeYourself?"Are you sure that you want to leave the event":"Are you sure that you want to remove that participant?";
+    String approveText = removeYourself?"Leave":"Remove";
+    String snackbarText = removeYourself?"You have left the event":"Participant removed sucessfully";
     showDialog<void>(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => AlertDialog(
-              title: const Text(
-                  "Are you sure that you want to remove that member?"),
+              title: Text(
+                  dialogText),
               actions: [
                 TextButton(
                     child: const Text("Cancel",
@@ -94,11 +118,11 @@ class _BodyState extends State<Body> {
                         }),
                 TextButton(
                   child:
-                      const Text('Remove', style: TextStyle(color: darkOrange)),
+                      Text(approveText, style: TextStyle(color: darkOrange)),
                   onPressed: () {
                     Navigator.of(context, rootNavigator: true).pop('dialog');
                     Snackbars.defaultSnackbar(
-                        context, "Member has been removed",
+                        context, snackbarText,
                         positive: true);
                   },
                 )
@@ -113,23 +137,27 @@ class _BodyState extends State<Body> {
             icon: const Icon(Icons.remove, color: Colors.red),
             onPressed: () => {
                   ((friend == AuthMethods().getUserUID())
-                      ? removeTeam()
-                      : removeMember(friend))
+                      ? removeEvent(removeYourself: true)
+                      : removeParticipant(friend))
                 }));
   }
 
   Widget _participantList() {
     if (participantList.isEmpty) {
-      return const Text("No participants found",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold));
+      return const Center(
+          child: Padding(
+              padding: EdgeInsets.only(top: 12),
+              child: Text("Something went wrong!",
+                  style:
+                      TextStyle(fontSize: 24, fontWeight: FontWeight.bold))));
     }
     if (participantList[0] == null) {
       return const CircularProgressIndicator();
     }
     return ListView.separated(
-          physics:const NeverScrollableScrollPhysics(),
-      shrinkWrap:true,
-      itemCount: 10,
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: participantList.length,
       separatorBuilder: (BuildContext context, int index) => const Divider(),
       padding: const EdgeInsets.all(8),
       itemBuilder: (BuildContext context, int index) {
@@ -139,15 +167,29 @@ class _BodyState extends State<Body> {
                 context,
                 MaterialPageRoute(
                     builder: (BuildContext context) =>
-                        ProfileScreen(profile: participantList[0]!)))),
-            image: participantList[0]!.avatarUrl != ""
-                ? NetworkImage(participantList[0]!.avatarUrl)
+                        ProfileScreen(profile: participantList[index]!)))),
+            image: participantList[index]!.avatarUrl != ""
+                ? NetworkImage(participantList[index]!.avatarUrl)
                 : null,
             rightIcon: (AuthMethods().getUserUID() == widget.event.creator)
-                ? removeIcon(participantList[0]!.uid)
+                ? removeIcon(participantList[index]!.uid)
                 : Expanded(child: Container()));
       },
     );
+  }
+
+  Widget determineAction() {
+    String myUid = AuthMethods().getUserUID();
+    if(myUid==widget.event.creator) {
+      return ActionText(icon: const Icon(Icons.delete, color:Colors.red),text:"Delete event",color:Colors.red,action:()=>(removeEvent()));
+    } else if (widget.event.participants.contains(myUid)) {
+      return ActionText(icon: const Icon(Icons.person_remove, color:Colors.red),text:"Leave event",color:Colors.red,action:()=>(removeParticipant(myUid,removeYourself: true)));
+    } else if (widget.event.participants.length<10) {
+      return ActionText(icon: const Icon(Icons.person_add, color:Colors.green),text:"Join event",color:Colors.green,action:()=>(addYourselfToEvent()));
+    } else {
+      return const SizedBox.shrink();
+    }
+    
   }
 
   @override
@@ -177,8 +219,10 @@ class _BodyState extends State<Body> {
                   onMapCreated: (GoogleMapController controller) {
                     _mapController.complete(controller);
                   })),
-          SizedBox(height:MediaQuery.of(context).size.height*0.7,child:ListView(
-              primary: true,
+          SizedBox(
+              height: MediaQuery.of(context).size.height * 0.7,
+              child: ListView(
+                primary: true,
                 children: [
                   Align(
                       alignment: Alignment.topCenter,
@@ -192,18 +236,20 @@ class _BodyState extends State<Body> {
                       )),
                   (widget.event.team == null
                       ? const SizedBox(height: 0, width: 0)
-                      : Align( alignment:Alignment.topCenter, child:Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: Text(
-                            widget.event.team!,
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          )))),
+                      : Align(
+                          alignment: Alignment.topCenter,
+                          child: Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: Text(
+                                widget.event.team!,
+                                style: const TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              )))),
                   EventDetails(
                       event: widget.event, locationName: widget.locationName),
-                  Padding(
-                      padding: const EdgeInsets.only(top: 16),
-                      child: _participantList())
+                  Padding(padding:const EdgeInsets.only(top:12),child:determineAction()),
+                  _participantList(),
+                  
                 ],
               ))
         ]));

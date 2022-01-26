@@ -48,9 +48,12 @@ class FireStoreMethods {
             participants: [creator],
             creator: creator,
             team: team);
-        DocumentReference<Map<String, dynamic>> newEvent = _firestore.collection('events').doc();
+        DocumentReference<Map<String, dynamic>> newEvent =
+            _firestore.collection('events').doc();
         await newEvent.set(_event.toJson());
-        await _firestore.collection('users').doc(creator).update({'events':FieldValue.arrayUnion([newEvent.id])});
+        await _firestore.collection('users').doc(creator).update({
+          'events': FieldValue.arrayUnion([newEvent.id])
+        });
         res = "success";
       } else {
         res = "Please enter all the needed fields";
@@ -139,12 +142,12 @@ class FireStoreMethods {
   }
 
   static Stream<QuerySnapshot> getTeamEvents(String teamName) {
-      Stream<QuerySnapshot> _teamEventsStream = _firestore
-          .collection('events')
-          .where('team', isEqualTo: teamName)
-          .where('eventDate', isGreaterThan: DateTime.now().toString())
-          .orderBy('eventDate')
-          .snapshots();
+    Stream<QuerySnapshot> _teamEventsStream = _firestore
+        .collection('events')
+        .where('team', isEqualTo: teamName)
+        .where('eventDate', isGreaterThan: DateTime.now().toString())
+        .orderBy('eventDate')
+        .snapshots();
     return _teamEventsStream;
   }
 
@@ -314,5 +317,35 @@ class FireStoreMethods {
     User admin = User.fromSnap(adminData);
     returnData.add(admin.avatarUrl);
     return returnData;
+  }
+
+  static Future<void> addParticipant(
+      String eventDocID, String participantUid) async {
+    await _firestore.collection('events').doc(eventDocID).update({
+      'participant': FieldValue.arrayUnion([participantUid])
+    });
+    await _firestore.collection('users').doc(participantUid).update({
+      'events': FieldValue.arrayUnion([eventDocID])
+    });
+  }
+
+  static Future<void> deleteParticipant(
+      String eventDocID, String participantUid) async {
+    await _firestore.collection('events').doc(eventDocID).update({
+      'participant': FieldValue.arrayRemove([participantUid])
+    });
+    await _firestore.collection('users').doc(participantUid).update({
+      'events': FieldValue.arrayRemove([eventDocID])
+    });
+  }
+
+  static Future<void> deleteEvent(
+      String eventDocID, List<String> participants) async {
+    await _firestore.collection('events').doc(eventDocID).delete();
+    for (var participant in participants) {
+      _firestore.collection('users').doc(participant).update({
+        'events': FieldValue.arrayRemove([eventDocID])
+      });
+    }
   }
 }
