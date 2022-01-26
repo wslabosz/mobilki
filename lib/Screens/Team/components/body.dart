@@ -145,7 +145,7 @@ class _BodyState extends State<Body> {
                 }));
   }
 
-  Widget _friendList() {
+  Widget _memberList() {
     if (memberList.isEmpty) {
       return const Text("No members found",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold));
@@ -246,7 +246,7 @@ class _BodyState extends State<Body> {
               notifyParent: (bool right) => _switchSegment(right),
               rightActive: _rightSegment),
           padding: const EdgeInsets.only(bottom: 24)),
-      _rightSegment ? _eventList() : _friendList()
+      _rightSegment ? _eventList() : _memberList()
     ]));
   }
 }
