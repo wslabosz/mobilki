@@ -37,67 +37,111 @@ class Body extends StatelessWidget {
     setUserLocation(GeoPoint(location[0].latitude, location[0].longitude));
   }
 
-  void sortEvents(GeoPoint locationToDetermine) {
-    events.sort((a, b) => Geolocator.distanceBetween(
-            a.location.latitude,
-            a.location.longitude,
-            locationToDetermine.latitude,
-            locationToDetermine.longitude)
-        .compareTo(Geolocator.distanceBetween(
-            b.location.latitude,
-            b.location.longitude,
-            locationToDetermine.latitude,
-            locationToDetermine.longitude)));
+  List<Event> sortEvents(
+      GeoPoint? locationToDetermine, String? level, DateTime? chosenDate) {
+    List<Event> sortedEvents = events;
+
+    if (chosenDate != null) {
+      sortedEvents = sortedEvents
+          .where(
+              (e) => DateTime.parse(e.eventDate.substring(0, 10)) == chosenDate)
+          .toList();
+    }
+    switch (level) {
+      case 'Beginner':
+        sortedEvents = sortedEvents.where((e) => e.level == 1).toList();
+        break;
+      case 'Advanced':
+        sortedEvents = sortedEvents.where((e) => e.level == 2).toList();
+        break;
+      case 'Professional':
+        sortedEvents = sortedEvents.where((e) => e.level == 3).toList();
+        break;
+      default:
+        break;
+    }
+    if (locationToDetermine != null) {
+      sortedEvents.sort((a, b) => Geolocator.distanceBetween(
+              a.location.latitude,
+              a.location.longitude,
+              locationToDetermine.latitude,
+              locationToDetermine.longitude)
+          .compareTo(Geolocator.distanceBetween(
+              b.location.latitude,
+              b.location.longitude,
+              locationToDetermine.latitude,
+              locationToDetermine.longitude)));
+    }
+
+    return sortedEvents;
   }
 
   @override
   Widget build(BuildContext context) {
     if (location != null) {
-      sortEvents(location!);
+      sortEvents(location!, chosenLevel, chosenDate);
     }
     Size size = MediaQuery.of(context).size;
     FirebaseMessaging.instance
         .getToken()
         .then((value) => FireStoreMethods.saveTokenToDatabase(value!));
-    return Center(child:Column(children: [
-      Row(children: [Expanded(child: Padding(
-          padding: EdgeInsets.only(top: size.height * 0.02,left:size.width*0.08,right:size.width*0.1),
-          child: InputField(
-            hintText: 'Address',
-            onChanged: (value) {},
-            inputAction: TextInputAction.search,
-            textInputType: TextInputType.streetAddress,
-            textEditingController: addressEditingController,
-            onSubmitFunction: onSubmitAddress,
-          )))]),
-Row(children: [
-        Expanded(child: Padding(padding:EdgeInsets.only(left:size.width*0.08,right:size.width*0.02),child: DateDayPicker(
-          date: chosenDate,
-          selectDate: setChosenDate,
-        ))),
-        Expanded(child: Padding(padding:EdgeInsets.only(right:size.width*0.10,left:size.width*0.02),child:DropdownButton<String>(
-          hint: const Text("Proficency level"),
-          value: chosenLevel,
-          icon: const Icon(Icons.arrow_downward),
-          elevation: 16,
-          style: const TextStyle(color: black),
-          underline: Container(
-            height: 2,
-            color: orange,
-          ),
-          onChanged: (String? newValue) {
-            setChosenLevel(newValue!);
-          },
-          items: <String>['Any', 'Beginner', 'Advanced', 'Professional']
-              .map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-        )))
+    return Center(
+        child: Column(children: [
+      Row(children: [
+        Expanded(
+            child: Padding(
+                padding: EdgeInsets.only(
+                    top: size.height * 0.02,
+                    left: size.width * 0.08,
+                    right: size.width * 0.1),
+                child: InputField(
+                  hintText: 'Address',
+                  onChanged: (value) {},
+                  inputAction: TextInputAction.search,
+                  textInputType: TextInputType.streetAddress,
+                  textEditingController: addressEditingController,
+                  onSubmitFunction: onSubmitAddress,
+                )))
       ]),
-      Expanded(child: _eventListView(context, events))
+      Row(children: [
+        Expanded(
+            child: Padding(
+                padding: EdgeInsets.only(
+                    left: size.width * 0.08, right: size.width * 0.02),
+                child: DateDayPicker(
+                  date: chosenDate,
+                  selectDate: setChosenDate,
+                ))),
+        Expanded(
+            child: Padding(
+                padding: EdgeInsets.only(
+                    right: size.width * 0.10, left: size.width * 0.02),
+                child: DropdownButton<String>(
+                  hint: const Text("Proficency level"),
+                  value: chosenLevel,
+                  icon: const Icon(Icons.arrow_downward),
+                  elevation: 16,
+                  style: const TextStyle(color: black),
+                  underline: Container(
+                    height: 2,
+                    color: orange,
+                  ),
+                  onChanged: (String? newValue) {
+                    setChosenLevel(newValue!);
+                    sortEvents(location!, chosenLevel, chosenDate);
+                  },
+                  items: <String>['Any', 'Beginner', 'Advanced', 'Professional']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                )))
+      ]),
+      Expanded(
+          child: _eventListView(
+              context, sortEvents(location, chosenLevel, chosenDate)))
     ]));
   }
 
