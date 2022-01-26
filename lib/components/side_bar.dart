@@ -97,6 +97,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     required String email,
     required VoidCallback onClicked,
   }) =>
+      // TODO: NIECH PRZYCISK NIE BEDZIE NA CALEGO INKWELLA!
       InkWell(
         onTap: onClicked,
         child: Container(
