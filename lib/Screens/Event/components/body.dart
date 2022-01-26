@@ -4,18 +4,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:mobilki/Screens/Profile/profile_screen.dart';
-import 'package:mobilki/components/circle_avatar.dart';
 import 'package:mobilki/components/event_details.dart';
-import 'package:mobilki/components/event_tile.dart';
 import 'package:mobilki/components/member_list.dart';
-import 'package:mobilki/components/segmeneted_control.dart';
 import 'package:mobilki/models/event.dart';
 import 'package:mobilki/models/user.dart';
 import 'package:mobilki/resources/auth_methods.dart';
 import 'package:mobilki/resources/default_snackbar.dart';
-import 'package:mobilki/resources/firestore_methods.dart';
 
 import '../../../constants.dart';
 
@@ -207,7 +202,7 @@ class _BodyState extends State<Body> {
                   EventDetails(
                       event: widget.event, locationName: widget.locationName),
                   Padding(
-                      padding: EdgeInsets.only(top: 16),
+                      padding: const EdgeInsets.only(top: 16),
                       child: _participantList())
                 ],
               ))

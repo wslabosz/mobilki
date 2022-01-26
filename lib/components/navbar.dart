@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:io';
-import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:mobilki/constants.dart';
-import 'package:mobilki/models/invite_request.dart';
 import 'package:mobilki/resources/auth_methods.dart';
 import 'package:mobilki/resources/default_snackbar.dart';
 
@@ -61,7 +58,6 @@ class Navbar extends StatefulWidget {
 
 class _NavbarState extends State<Navbar> {
   static late StreamSubscription inviteListener;
-  static final Random gen = Random();
   late bool localInvitesPending;
 
   @override
