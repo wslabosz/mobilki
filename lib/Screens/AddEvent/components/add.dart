@@ -21,7 +21,8 @@ class _NewEventFormState extends State<NewEventForm> {
   final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   late DateTime dateFrom;
-  late String level;
+  late int level;
+  late String teamId;
   //location
   late GeoPoint location;
   final Completer<GoogleMapController> _mapController = Completer();
@@ -30,7 +31,8 @@ class _NewEventFormState extends State<NewEventForm> {
   late GeoPoint currlocation;
   static const LatLng lodz = LatLng(51.759445, 19.457216);
   final CameraPosition camera = const CameraPosition(target: lodz, zoom: 0);
-  late Marker marker = Marker(markerId: const MarkerId('curr'), position: lodz);
+  late Marker marker = Marker(markerId: const MarkerId('lodz'), position: lodz);
+  bool markerSet = false;
 
   void _determinePosition() async {
     bool serviceEnabled;
@@ -119,14 +121,30 @@ class _NewEventFormState extends State<NewEventForm> {
                       return DropdownMenuItem(
                           value: value, child: Text('$value'));
                     }).toList(),
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      level = value!;
+                    },
+                    validator: (int? value) {
+                      if (value == null) {
+                        return 'Please enter event difficulty';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<String?>(
-                    items: getDropDownTeams(),
-                    hint: const Text('Team'),
-                    onChanged: (value) {},
-                  ),
+                      items: getDropDownTeams(),
+                      hint: const Text('Team'),
+                      onChanged: (value) {
+                        teamId = value!;
+                      },
+                      validator: (String? value) {
+                        if (value == null) {
+                          //value.isEmpty => "" czyli Public
+                          return 'Please enter event team';
+                        }
+                        return null;
+                      }),
                   const SizedBox(height: 20),
                   const Text(
                     'LOCATION',
@@ -143,7 +161,7 @@ class _NewEventFormState extends State<NewEventForm> {
                       },
                       onLongPress: addMarker,
                       markers: {
-                        marker,
+                        if (markerSet) marker,
                       },
                     ),
                   )
@@ -156,7 +174,23 @@ class _NewEventFormState extends State<NewEventForm> {
               primary: Colors.orange,
               shadowColor: Colors.transparent,
             ),
-            onPressed: () {},
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                // Process data.
+                List participants = [];
+                String user = AuthMethods().getUserUID();
+                participants.add(user);
+                final event = Event(
+                  title: nameController.text,
+                  eventDate: dateFrom.toString(),
+                  level: level,
+                  team: teamId,
+                  creator: user,
+                  participants: participants,
+                  location: location,
+                );
+              }
+            },
             icon: const Icon(Icons.done),
             label: const Text('SAVE'))
       ];
@@ -172,6 +206,9 @@ class _NewEventFormState extends State<NewEventForm> {
           }
           if (value.length > 20) {
             return 'Please enter shorter name';
+          }
+          if (!markerSet) {
+            return 'Please choose the location of the event';
           }
           return null;
         },
@@ -203,7 +240,8 @@ class _NewEventFormState extends State<NewEventForm> {
       ));
 
   Future pickFromDateTime({required bool pickDate}) async {
-    final date = await pickDateTime(dateFrom, pickDate: pickDate);
+    final date = await pickDateTime(dateFrom,
+        pickDate: pickDate, firstDate: DateTime.now());
     if (date == null) return;
     setState(() => dateFrom = date);
   }
@@ -312,6 +350,8 @@ class _NewEventFormState extends State<NewEventForm> {
         position: pos,
       );
     });
+    markerSet = true;
+    location = GeoPoint(pos.latitude, pos.longitude);
   }
 }
 
