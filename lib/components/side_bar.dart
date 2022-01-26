@@ -64,7 +64,6 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     padding: padding,
                     child: Column(
                       children: [
-                        const SizedBox(height: 16),
                         buildMenuItem(
                             text: 'Logout',
                             icon: Icons.logout,
@@ -96,36 +95,39 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     required String name,
     required String email,
     required VoidCallback onClicked,
-    
   }) =>
-      // TODO: NIECH PRZYCISK NIE BEDZIE NA CALEGO INKWELLA!
-      InkWell(
-        onTap: onClicked,
-        child: Container(
-          padding: padding
-              .add(const EdgeInsets.symmetric(vertical: 50, horizontal: 5)),
-          child: Row(
-            children: [
-              Padding(padding:const EdgeInsets.only(right:10), child: Avatar(
-                  radius: 40,
-                  image: urlImage == "" ? null : NetworkImage(urlImage),
-                  name: name)),
-              SizedBox(height:120,width:160,child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                
-                children: [
-                  Flexible(child: Text(
-                    name,
-                    style: const TextStyle(fontSize: 18, color: Colors.white),
-                  )),
-                  Flexible(child: Text(
-                    email,
-                    style: const TextStyle(fontSize: 12, color: Colors.white),
-                  )),
-                ],
-              )),
-            ],
-          ),
+      Container(
+        padding: padding
+            .add(const EdgeInsets.symmetric(vertical: 50, horizontal: 5)),
+        child: Row(
+          children: [
+            Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: InkWell(
+                    onTap: onClicked,
+                    child: Avatar(
+                        radius: 40,
+                        image: urlImage == "" ? null : NetworkImage(urlImage),
+                        name: name))),
+            SizedBox(
+                height: 120,
+                width: 160,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Flexible(
+                        child: Text(
+                      name,
+                      style: const TextStyle(fontSize: 18, color: Colors.white),
+                    )),
+                    Flexible(
+                        child: Text(
+                      email,
+                      style: const TextStyle(fontSize: 12, color: Colors.white),
+                    )),
+                  ],
+                )),
+          ],
         ),
       );
 
