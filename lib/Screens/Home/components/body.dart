@@ -59,27 +59,23 @@ class Body extends StatelessWidget {
     FirebaseMessaging.instance
         .getToken()
         .then((value) => FireStoreMethods.saveTokenToDatabase(value!));
-    return Column(children: [
-      SizedBox(
-          child: Expanded(
-        child: Padding(
-            padding: EdgeInsets.only(top: size.height * 0.02),
-            child: InputField(
-              hintText: 'Address',
-              onChanged: (value) {},
-              inputAction: TextInputAction.search,
-              textInputType: TextInputType.streetAddress,
-              textEditingController: addressEditingController,
-              onSubmitFunction: onSubmitAddress,
-            )),
-      )),
-      Expanded(
-          child: Row(children: [
-        DateDayPicker(
+    return Center(child:Column(children: [
+      Row(children: [Expanded(child: Padding(
+          padding: EdgeInsets.only(top: size.height * 0.02,left:size.width*0.08,right:size.width*0.1),
+          child: InputField(
+            hintText: 'Address',
+            onChanged: (value) {},
+            inputAction: TextInputAction.search,
+            textInputType: TextInputType.streetAddress,
+            textEditingController: addressEditingController,
+            onSubmitFunction: onSubmitAddress,
+          )))]),
+Row(children: [
+        Expanded(child: Padding(padding:EdgeInsets.only(left:size.width*0.08,right:size.width*0.02),child: DateDayPicker(
           date: chosenDate,
           selectDate: setChosenDate,
-        ),
-        DropdownButton<String>(
+        ))),
+        Expanded(child: Padding(padding:EdgeInsets.only(right:size.width*0.10,left:size.width*0.02),child:DropdownButton<String>(
           hint: const Text("Proficency level"),
           value: chosenLevel,
           icon: const Icon(Icons.arrow_downward),
@@ -99,10 +95,10 @@ class Body extends StatelessWidget {
               child: Text(value),
             );
           }).toList(),
-        )
-      ])),
+        )))
+      ]),
       Expanded(child: _eventListView(context, events))
-    ]);
+    ]));
   }
 
   Widget _eventListView(BuildContext context, List<Event> events) {
