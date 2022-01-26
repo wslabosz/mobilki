@@ -11,9 +11,14 @@ class SearchScreen extends StatelessWidget {
         onWillPop: () async {
           return Navbar.navbarOnBack();
         },
-        child: const Scaffold(
-          body: Body(),
-          bottomNavigationBar: Navbar(index: 1),
+        child:  Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            title: const Text('Search'),
+            backgroundColor: Colors.orange,
+          ),
+          body: const Body(),
+          bottomNavigationBar: const Navbar(index: 1),
         ));
   }
 }

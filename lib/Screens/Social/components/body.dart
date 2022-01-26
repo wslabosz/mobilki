@@ -17,7 +17,10 @@ import 'package:mobilki/resources/firestore_methods.dart';
 import '../../../constants.dart';
 
 class Body extends StatefulWidget {
-  const Body({Key? key}) : super(key: key);
+  final bool segment;
+  final void Function(bool) switchSegment;
+  const Body({Key? key, required this.segment, required this.switchSegment})
+      : super(key: key);
 
   @override
   State<Body> createState() => _BodyState();
@@ -52,13 +55,13 @@ class _BodyState extends State<Body> {
     });
   }
 
-  bool _rightSegment = false;
+  // bool _rightSegment = false;
 
-  void _switchSegment(bool right) {
-    setState(() {
-      _rightSegment = right;
-    });
-  }
+  // void _switchSegment(bool right) {
+  //   setState(() {
+  //     _rightSegment = right;
+  //   });
+  // }
 
   void removeFriend(String friend) {
     showDialog<void>(
@@ -207,10 +210,10 @@ class _BodyState extends State<Body> {
               child: SegControl(
                   nameLeft: 'Friends',
                   nameRight: 'Teams',
-                  notifyParent: (bool right) => _switchSegment(right),
-                  rightActive: _rightSegment),
+                  notifyParent: (bool right) => widget.switchSegment(right),
+                  rightActive: widget.segment),
               padding: const EdgeInsets.only(bottom: 24)),
-          _rightSegment
+          widget.segment
               ? FutureBuilder(
                   future: _teamList(),
                   builder:
