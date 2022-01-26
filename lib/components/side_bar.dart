@@ -65,6 +65,11 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     child: Column(
                       children: [
                         buildMenuItem(
+                            text: "Your calendar",
+                            icon: Icons.calendar_today,
+                            onClicked: () =>
+                                (Navigator.pushNamed(context, 'event'))),
+                        buildMenuItem(
                             text: 'Logout',
                             icon: Icons.logout,
                             onClicked: () => {
@@ -75,11 +80,6 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                               const LoginScreen()),
                                       (route) => false)
                                 }),
-                        buildMenuItem(
-                            text: "Your calendar",
-                            icon: Icons.calendar_today,
-                            onClicked: () =>
-                                (Navigator.pushNamed(context, 'event')))
                       ],
                     ),
                   ),
@@ -97,8 +97,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     required VoidCallback onClicked,
   }) =>
       Container(
-        padding: padding
-            .add(const EdgeInsets.only(top: 35)),
+        padding: padding.add(const EdgeInsets.only(top: 35)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

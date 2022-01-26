@@ -156,7 +156,7 @@ class Body extends StatelessWidget {
               endIndent: size.width * 0.04,
               color: grey,
             ),
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.only(left: 8, right: 8),
         itemCount: events.length,
         itemBuilder: (context, index) {
           if (index < events.length) {
