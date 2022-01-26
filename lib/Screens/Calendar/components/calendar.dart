@@ -75,7 +75,9 @@ class _CalendarState extends State<Calendar> {
                       color: Colors.orangeAccent, shape: BoxShape.circle),
                   // ignore: prefer_const_constructors
                   todayDecoration: BoxDecoration(
-                      color: Colors.deepOrangeAccent, shape: BoxShape.circle),
+                      color: Colors.amber, shape: BoxShape.circle),
+                  markerDecoration: const BoxDecoration(
+                      color: Colors.deepOrange, shape: BoxShape.circle),
                 ),
                 calendarFormat: format,
                 onFormatChanged: (CalendarFormat _format) {
