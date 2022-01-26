@@ -33,7 +33,7 @@ class _NewEventFormState extends State<NewEventForm> {
   late GeoPoint currlocation;
   static const LatLng lodz = LatLng(51.759445, 19.457216);
   final CameraPosition camera = const CameraPosition(target: lodz, zoom: 0);
-  late Marker marker = Marker(markerId: const MarkerId('lodz'), position: lodz);
+  late Marker marker = const Marker(markerId: MarkerId('lodz'), position: lodz);
   bool markerSet = false;
 
   void _determinePosition() async {
@@ -215,9 +215,8 @@ class _NewEventFormState extends State<NewEventForm> {
                       Snackbars.defaultSnackbar(context,
                           "There was a problem! Check your internet connection and try again later.");
                     }
-                  }); //if res = "success"
+                  });
                 }
-                //Snackbars.defaultSnackbar(context, "Your event is saved.");
                 Navigator.pop(context);
               }
             },
@@ -384,6 +383,3 @@ class _NewEventFormState extends State<NewEventForm> {
     location = GeoPoint(pos.latitude, pos.longitude);
   }
 }
-
-//TODO: participants: z uczestnikiem tworzącym
-//TODO: zczytywanie fromularza i tworzenie obiektu Event i dodawanie nowego Eventu do bazy
