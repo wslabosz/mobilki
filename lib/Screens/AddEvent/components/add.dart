@@ -7,6 +7,7 @@ import 'package:mobilki/models/team.dart';
 import 'package:mobilki/resources/auth_methods.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:mobilki/resources/firestore_methods.dart';
 
 class NewEventForm extends StatefulWidget {
   final Event? event;
@@ -180,24 +181,22 @@ class _NewEventFormState extends State<NewEventForm> {
                 List participants = [];
                 String user = AuthMethods().getUserUID();
                 participants.add(user);
+
                 if (teamId.isNotEmpty) {
-                  final event = Event(
+                  FireStoreMethods.createEvent(
+                    creator: user,
                     title: nameController.text,
                     eventDate: dateFrom.toString(),
                     level: level,
-                    team: teamId,
-                    creator: user,
-                    participants: participants,
                     location: location,
+                    team: teamId,
                   );
                 } else {
-                  final event = Event(
+                  FireStoreMethods.createEvent(
+                    creator: user,
                     title: nameController.text,
                     eventDate: dateFrom.toString(),
                     level: level,
-                    team: null,
-                    creator: user,
-                    participants: participants,
                     location: location,
                   );
                 }
