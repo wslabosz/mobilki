@@ -96,6 +96,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     required String name,
     required String email,
     required VoidCallback onClicked,
+    
   }) =>
       // TODO: NIECH PRZYCISK NIE BEDZIE NA CALEGO INKWELLA!
       InkWell(
@@ -105,25 +106,24 @@ class _SideBarWidgetState extends State<SideBarWidget> {
               .add(const EdgeInsets.symmetric(vertical: 50, horizontal: 5)),
           child: Row(
             children: [
-              Avatar(
+              Padding(padding:const EdgeInsets.only(right:10), child: Avatar(
                   radius: 40,
                   image: urlImage == "" ? null : NetworkImage(urlImage),
-                  name: name),
-              const SizedBox(width: 10),
-              Column(
+                  name: name)),
+              SizedBox(height:120,width:160,child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                
                 children: [
-                  Text(
+                  Flexible(child: Text(
                     name,
                     style: const TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
+                  )),
+                  Flexible(child: Text(
                     email,
                     style: const TextStyle(fontSize: 12, color: Colors.white),
-                  ),
+                  )),
                 ],
-              ),
+              )),
             ],
           ),
         ),
