@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mobilki/Screens/Calendar/components/utils.dart';
@@ -71,7 +70,6 @@ class _CalendarState extends State<Calendar> {
                   setState(() {
                     _selectedDay = selectedDay;
                     _focusedDay = focusedDay;
-                    // update `_focusedDay` here as well
                   });
                 },
                 // ignore: prefer_const_constructors
@@ -93,7 +91,6 @@ class _CalendarState extends State<Calendar> {
               child: ValueListenableBuilder<List<Event>>(
                 valueListenable: _selectedEvents,
                 builder: (context, value, _) {
-                  //pusty _selected
                   return ListView.separated(
                       separatorBuilder: (BuildContext context, int index) =>
                           const Divider(),
@@ -112,18 +109,14 @@ class _CalendarState extends State<Calendar> {
   List<Event> _getEventsForDay(DateTime day) {
     final groupedByDate = UtilsCalendar.groupBy(
         events, (Event event) => (event.eventDate.substring(0, 10)));
-    //print(groupedByDate); //to jest good
     final _kEventSource = {
       for (var key in groupedByDate.keys)
         DateTime.parse(key): groupedByDate[key] ?? []
     };
-    //for (var k in groupedByDate.keys) print(k);
-    //print(_kEventSource);
     final kEvents = LinkedHashMap<DateTime, List<Event>>(
       equals: isSameDay,
       hashCode: getHashCode,
     )..addAll(_kEventSource);
-    //print(kEvents);
     return kEvents[day] ?? [];
   }
 
