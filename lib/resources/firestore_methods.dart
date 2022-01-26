@@ -48,7 +48,9 @@ class FireStoreMethods {
             participants: [creator],
             creator: creator,
             team: team);
-        await _firestore.collection('events').doc().set(_event.toJson());
+        DocumentReference<Map<String, dynamic>> newEvent = _firestore.collection('events').doc();
+        await newEvent.set(_event.toJson());
+        await _firestore.collection('users').doc(creator).update({'events':FieldValue.arrayUnion([newEvent.id])});
         res = "success";
       } else {
         res = "Please enter all the needed fields";
