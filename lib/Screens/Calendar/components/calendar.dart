@@ -49,6 +49,7 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
+    _selectedEvents.value = _getEventsForDay(_selectedDay!);
     return Scaffold(
         appBar: AppBar(
           title: const Text("Calendar"),
@@ -66,11 +67,7 @@ class _CalendarState extends State<Calendar> {
                   return isSameDay(_selectedDay, day);
                 },
                 onDaySelected: (selectedDay, focusedDay) {
-                  _onDaySelected(selectedDay);
-                  setState(() {
-                    _selectedDay = selectedDay;
-                    _focusedDay = focusedDay;
-                  });
+                  _onDaySelected(selectedDay, focusedDay);
                 },
                 // ignore: prefer_const_constructors
                 calendarStyle: CalendarStyle(
@@ -78,7 +75,9 @@ class _CalendarState extends State<Calendar> {
                       color: Colors.orangeAccent, shape: BoxShape.circle),
                   // ignore: prefer_const_constructors
                   todayDecoration: BoxDecoration(
-                      color: Colors.deepOrangeAccent, shape: BoxShape.circle),
+                      color: Colors.amber, shape: BoxShape.circle),
+                  markerDecoration: const BoxDecoration(
+                      color: Colors.deepOrange, shape: BoxShape.circle),
                 ),
                 calendarFormat: format,
                 onFormatChanged: (CalendarFormat _format) {
@@ -120,10 +119,11 @@ class _CalendarState extends State<Calendar> {
     return kEvents[day] ?? [];
   }
 
-  void _onDaySelected(DateTime selectedDay) {
+  void _onDaySelected(DateTime selectedDay, focusedDay) {
     if (!isSameDay(_selectedDay, selectedDay)) {
       setState(() {
         _selectedDay = selectedDay;
+        _focusedDay = focusedDay;
       });
       _selectedEvents.value = _getEventsForDay(selectedDay);
     }
