@@ -7,9 +7,18 @@ class InvitesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope (onWillPop: () async {return Navbar.navbarOnBack();}, child:const Scaffold(
-      body: Body(),
-      bottomNavigationBar: Navbar(index:3),
-    ));
+    return WillPopScope(
+        onWillPop: () async {
+          return Navbar.navbarOnBack();
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            title: const Text('Events'),
+            backgroundColor: Colors.orange,
+          ),
+          body: const Body(),
+          bottomNavigationBar: const Navbar(index: 3),
+        ));
   }
 }

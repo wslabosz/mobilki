@@ -79,6 +79,11 @@ class _SocialScreenState extends State<SocialScreen> {
           return Navbar.navbarOnBack();
         },
         child: Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            title: const Text('Social'),
+            backgroundColor: Colors.orange,
+          ),
           body: Body(segment: _rightSegment, switchSegment: _switchSegment),
           floatingActionButton: buildAddTeamButton(_rightSegment),
           bottomNavigationBar: const Navbar(index: 2),
