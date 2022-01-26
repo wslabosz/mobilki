@@ -57,21 +57,26 @@ class _BodyState extends State<Body> {
   }
 
   void addYourselfToEvent() {
-    FireStoreMethods.addParticipant(widget.event.docId!, AuthMethods().getUserUID()).then((result) {                          Snackbars.defaultSnackbar(
-                              context, "You have joined the event",
-                              positive: true);});
+    FireStoreMethods.addParticipant(
+            widget.event.docId!, AuthMethods().getUserUID())
+        .then((result) {
+      Snackbars.defaultSnackbar(context, "You have joined the event",
+          positive: true);
+    });
   }
 
-  void removeEvent({bool removeYourself=false}) {
-    String dialogText = removeYourself?"Removing yourself from event will remove whole event!":"Are you sure you want to cancel the event?";
-    String approveText = removeYourself?"I understand, remove event":"Remove event";
+  void removeEvent({bool removeYourself = false}) {
+    String dialogText = removeYourself
+        ? "Removing yourself from event will remove whole event!"
+        : "Are you sure you want to cancel the event?";
+    String approveText =
+        removeYourself ? "I understand, remove event" : "Remove event";
     showDialog<void>(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => AlertDialog(
-                title: Text(
-                    dialogText,
-                    style: const TextStyle(color: Colors.red)),
+                title:
+                    Text(dialogText, style: const TextStyle(color: Colors.red)),
                 actions: [
                   TextButton(
                       child: const Text("Cancel",
@@ -98,16 +103,19 @@ class _BodyState extends State<Body> {
                 ]));
   }
 
-  void removeParticipant(String friend, {bool removeYourself=false}) {
-    String dialogText = removeYourself?"Are you sure that you want to leave the event":"Are you sure that you want to remove that participant?";
-    String approveText = removeYourself?"Leave":"Remove";
-    String snackbarText = removeYourself?"You have left the event":"Participant removed sucessfully";
+  void removeParticipant(String friend, {bool removeYourself = false}) {
+    String dialogText = removeYourself
+        ? "Are you sure that you want to leave the event"
+        : "Are you sure that you want to remove that participant?";
+    String approveText = removeYourself ? "Leave" : "Remove";
+    String snackbarText = removeYourself
+        ? "You have left the event"
+        : "Participant removed sucessfully";
     showDialog<void>(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => AlertDialog(
-              title: Text(
-                  dialogText),
+              title: Text(dialogText),
               actions: [
                 TextButton(
                     child: const Text("Cancel",
@@ -117,13 +125,15 @@ class _BodyState extends State<Body> {
                               .pop('dialog')
                         }),
                 TextButton(
-                  child:
-                      Text(approveText, style: TextStyle(color: darkOrange)),
+                  child: Text(approveText, style: TextStyle(color: darkOrange)),
                   onPressed: () {
-                    Navigator.of(context, rootNavigator: true).pop('dialog');
-                    Snackbars.defaultSnackbar(
-                        context, snackbarText,
-                        positive: true);
+                    FireStoreMethods.deleteParticipant(
+                            widget.event.docId!, friend)
+                        .then((value) {
+                      Navigator.of(context, rootNavigator: true).pop('dialog');
+                      Snackbars.defaultSnackbar(context, snackbarText,
+                          positive: true);
+                    });
                   },
                 )
               ],
@@ -162,7 +172,7 @@ class _BodyState extends State<Body> {
       padding: const EdgeInsets.all(8),
       itemBuilder: (BuildContext context, int index) {
         return MemberList(
-            name: participantList[0]!.name,
+            name: participantList[index]!.name,
             inkWell: () => (Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -180,16 +190,29 @@ class _BodyState extends State<Body> {
 
   Widget determineAction() {
     String myUid = AuthMethods().getUserUID();
-    if(myUid==widget.event.creator) {
-      return ActionText(icon: const Icon(Icons.delete, color:Colors.red),text:"Delete event",color:Colors.red,action:()=>(removeEvent()));
-    } else if (widget.event.participants.contains(myUid)) {
-      return ActionText(icon: const Icon(Icons.person_remove, color:Colors.red),text:"Leave event",color:Colors.red,action:()=>(removeParticipant(myUid,removeYourself: true)));
-    } else if (widget.event.participants.length<10) {
-      return ActionText(icon: const Icon(Icons.person_add, color:Colors.green),text:"Join event",color:Colors.green,action:()=>(addYourselfToEvent()));
+    print(widget.event.participants);
+    print(myUid);
+    if (myUid == widget.event.creator) {
+      return ActionText(
+          icon: const Icon(Icons.delete, color: Colors.red),
+          text: "Delete event",
+          color: Colors.red,
+          action: () => (removeEvent()));
+    } else if (participantList.any((user)=>(user!.uid==myUid))) {
+      return ActionText(
+          icon: const Icon(Icons.person_remove, color: Colors.red),
+          text: "Leave event",
+          color: Colors.red,
+          action: () => (removeParticipant(myUid, removeYourself: true)));
+    } else if (participantList.length < 10) {
+      return ActionText(
+          icon: const Icon(Icons.person_add, color: Colors.green),
+          text: "Join event",
+          color: Colors.green,
+          action: () => (addYourselfToEvent()));
     } else {
       return const SizedBox.shrink();
     }
-    
   }
 
   @override
@@ -246,10 +269,13 @@ class _BodyState extends State<Body> {
                                     fontSize: 16, fontWeight: FontWeight.bold),
                               )))),
                   EventDetails(
-                      event: widget.event, locationName: widget.locationName),
-                  Padding(padding:const EdgeInsets.only(top:12),child:determineAction()),
+                      event: widget.event,
+                      locationName: widget.locationName,
+                      noOfParticipants: participantList.length),
+                  Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: determineAction()),
                   _participantList(),
-                  
                 ],
               ))
         ]));

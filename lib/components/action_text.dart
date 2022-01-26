@@ -21,7 +21,7 @@ class ActionText extends StatelessWidget {
         onPressed: action,
         child: RichText(
             text: TextSpan(children: [
-          TextSpan(text: text, style: TextStyle(fontSize: 28, color: color)),WidgetSpan(child: icon)
+          TextSpan(text: text+" ", style: TextStyle(fontSize: 24, color: color)),WidgetSpan(child: icon)
         ])));
   }
 }

@@ -5,8 +5,9 @@ import 'package:mobilki/models/event.dart';
 class EventDetails extends StatelessWidget {
   final Event event;
   final String locationName;
+  final int noOfParticipants;
   const EventDetails(
-      {Key? key, required this.event, required this.locationName})
+      {Key? key, required this.event, required this.locationName, required this.noOfParticipants})
       : super(key: key);
 
   @override
@@ -28,7 +29,7 @@ class EventDetails extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 8),
                   child: EventIconGrid(
                       level: event.level,
-                      participantCount: event.participants.length.toString()))
+                      participantCount: noOfParticipants.toString()))
             ]));
   }
 }
@@ -42,7 +43,7 @@ class EventDetailTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 40,
+      height: 45,
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Flexible(
             child: Text(name,

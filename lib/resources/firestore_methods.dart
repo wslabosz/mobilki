@@ -322,7 +322,7 @@ class FireStoreMethods {
   static Future<void> addParticipant(
       String eventDocID, String participantUid) async {
     await _firestore.collection('events').doc(eventDocID).update({
-      'participant': FieldValue.arrayUnion([participantUid])
+      'participants': FieldValue.arrayUnion([participantUid])
     });
     await _firestore.collection('users').doc(participantUid).update({
       'events': FieldValue.arrayUnion([eventDocID])
@@ -332,7 +332,7 @@ class FireStoreMethods {
   static Future<void> deleteParticipant(
       String eventDocID, String participantUid) async {
     await _firestore.collection('events').doc(eventDocID).update({
-      'participant': FieldValue.arrayRemove([participantUid])
+      'participants': FieldValue.arrayRemove([participantUid])
     });
     await _firestore.collection('users').doc(participantUid).update({
       'events': FieldValue.arrayRemove([eventDocID])
