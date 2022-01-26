@@ -52,8 +52,6 @@ class _BodyState extends State<Body> {
       eventList = snapshot.docs.map((doc) => (Event.fromSnap(doc))).toList();
       setState(() {});
     });
-
-
   }
 
   bool _rightSegment = false;

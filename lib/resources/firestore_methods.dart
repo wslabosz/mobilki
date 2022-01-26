@@ -126,22 +126,45 @@ class FireStoreMethods {
     }
   }
 
-  // static Future<List<Event>> getEvents() async {
-  //   User user = await AuthMethods.getUserDetails();
-  //   QuerySnapshot<Map<String, dynamic>> eventsSnapshot = await _firestore
-  //       .collection('events')
-  //       .where('team', arrayContainsAny: user.teams)
-  //       .get();
-  // }
+  static Future<List<Event>> getEvents() async {
+    QuerySnapshot<Map<String, dynamic>> eventsSnapshot = await _firestore
+        .collection('events')
+        .where('team', isNull: true)
+        .where('eventDate', isGreaterThan: DateTime.now()
+        .toString())
+        .orderBy('eventDate')
+        .get();
+    List<Event> events =
+        eventsSnapshot.docs.map((event) => (Event.fromSnap(event))).toList();
+    return events;
+  }
+
+  //TODO: sprawdz listening na eventach
+  static Future<List<Event>?> getTeamEvents(String teamName) async {
+    User user = await AuthMethods.getUserDetails();
+    QuerySnapshot<Map<String, dynamic>>? teamEventsSnapshot;
+    List<Event>? teamEvents = [];
+    if (user.teams.isNotEmpty) {
+      teamEventsSnapshot = await _firestore
+          .collection('events')
+          .where('team', isEqualTo: teamName)
+          .where('eventDate', isGreaterThan: DateTime.now().toString())
+          .orderBy('eventDate')
+          .get();
+      teamEvents = teamEventsSnapshot.docs
+          .map((teamEventsSnapshot) => (Event.fromSnap(teamEventsSnapshot)))
+          .toList();
+    }
+    return teamEvents;
+  }
 
   static Future<dynamic> getCurrentUserRequests(
       String receiverUid, bool team) async {
-    QuerySnapshot<Map<String, dynamic>> requestSnapshot =
-        await _firestore
-            .collection('invite_requests')
-            .where('isTeam', isEqualTo: team)
-            .where('receiver', isEqualTo: receiverUid)
-            .get();
+    QuerySnapshot<Map<String, dynamic>> requestSnapshot = await _firestore
+        .collection('invite_requests')
+        .where('isTeam', isEqualTo: team)
+        .where('receiver', isEqualTo: receiverUid)
+        .get();
     List<InviteRequest> inviteData =
         requestSnapshot.docs.map((y) => (InviteRequest.fromSnap(y))).toList();
     if (inviteData.isEmpty) {
@@ -149,11 +172,10 @@ class FireStoreMethods {
     } else {
       List<String> senderData =
           inviteData.map((invite) => (invite.sender)).toList();
-      QuerySnapshot<Map<String, dynamic>> senderSnapshot =
-          await _firestore
-              .collection(team ? 'teams' : 'users')
-              .where(team ? "name" : "uid", whereIn: senderData)
-              .get();
+      QuerySnapshot<Map<String, dynamic>> senderSnapshot = await _firestore
+          .collection(team ? 'teams' : 'users')
+          .where(team ? "name" : "uid", whereIn: senderData)
+          .get();
       List<dynamic> returnData = [true, inviteData, senderSnapshot];
       if (team) {
         List<String> adminNames = [];
@@ -176,38 +198,25 @@ class FireStoreMethods {
 
   static Future<void> processInviteRequest(
       String senderDocId, InviteRequest request, bool accept) async {
-    await _firestore
-        .collection('invite_requests')
-        .doc(request.id)
-        .delete();
+    await _firestore.collection('invite_requests').doc(request.id).delete();
     if (accept) {
       if (request.isTeam) {
         _firestore.collection('teams').doc(senderDocId).update({
           'members': FieldValue.arrayUnion([request.receiver])
         });
-        _firestore
-            .collection('users')
-            .doc(request.receiver)
-            .update({
+        _firestore.collection('users').doc(request.receiver).update({
           'teams': FieldValue.arrayUnion([request.sender])
         });
         DocumentSnapshot<Map<String, dynamic>> teamData =
-            await _firestore
-                .collection('teams')
-                .doc(senderDocId)
-                .get();
+            await _firestore.collection('teams').doc(senderDocId).get();
         Team teamInstance = Team.fromSnap(teamData);
-        DocumentSnapshot<Map<String, dynamic>> adminData =
-            await _firestore
-                .collection('users')
-                .doc(teamInstance.adminUid)
-                .get();
+        DocumentSnapshot<Map<String, dynamic>> adminData = await _firestore
+            .collection('users')
+            .doc(teamInstance.adminUid)
+            .get();
         User adminInstance = User.fromSnap(adminData);
         DocumentSnapshot<Map<String, dynamic>> receiverData =
-            await _firestore
-                .collection('users')
-                .doc(request.receiver)
-                .get();
+            await _firestore.collection('users').doc(request.receiver).get();
         User receiverInstance = User.fromSnap(receiverData);
         HttpMethods.sendFCMMessage(
             adminInstance.token,
@@ -215,33 +224,24 @@ class FireStoreMethods {
             receiverInstance.name.toTitleCase() +
                 " has accepted your invitation.");
       } else {
-      _firestore.collection('users').doc(senderDocId).update({
-        'friends': FieldValue.arrayUnion([request.receiver])
-      });
-      _firestore
-          .collection('users')
-          .doc(request.receiver)
-          .update({
-        'friends': FieldValue.arrayUnion([request.sender])
-      });
-      DocumentSnapshot<Map<String, dynamic>> senderData =
-          await _firestore
-              .collection('users')
-              .doc(request.sender)
-              .get();
-      User senderInstance = User.fromSnap(senderData);
-      DocumentSnapshot<Map<String, dynamic>> receiverData =
-          await _firestore
-              .collection('users')
-              .doc(request.receiver)
-              .get();
-      User receiverInstance = User.fromSnap(receiverData);
-      HttpMethods.sendFCMMessage(
-          senderInstance.token,
-          "You have a new friend!",
-          receiverInstance.name.toTitleCase() +
-              " has accepted your friend request.");
-    }
+        _firestore.collection('users').doc(senderDocId).update({
+          'friends': FieldValue.arrayUnion([request.receiver])
+        });
+        _firestore.collection('users').doc(request.receiver).update({
+          'friends': FieldValue.arrayUnion([request.sender])
+        });
+        DocumentSnapshot<Map<String, dynamic>> senderData =
+            await _firestore.collection('users').doc(request.sender).get();
+        User senderInstance = User.fromSnap(senderData);
+        DocumentSnapshot<Map<String, dynamic>> receiverData =
+            await _firestore.collection('users').doc(request.receiver).get();
+        User receiverInstance = User.fromSnap(receiverData);
+        HttpMethods.sendFCMMessage(
+            senderInstance.token,
+            "You have a new friend!",
+            receiverInstance.name.toTitleCase() +
+                " has accepted your friend request.");
+      }
     }
   }
 
@@ -271,11 +271,10 @@ class FireStoreMethods {
     if (name.length > 30) {
       return ['Team name is too long', false];
     }
-    QuerySnapshot<Map<String, dynamic>> teamsWithSameName =
-        await _firestore
-            .collection('teams')
-            .where('name', isEqualTo: name)
-            .get();
+    QuerySnapshot<Map<String, dynamic>> teamsWithSameName = await _firestore
+        .collection('teams')
+        .where('name', isEqualTo: name)
+        .get();
     if (teamsWithSameName.docs.isNotEmpty) {
       return ['Team with that name already exists', false];
     }
@@ -285,10 +284,7 @@ class FireStoreMethods {
         avatarUrl: "",
         members: [AuthMethods().getUserUID()],
         events: [""]).toJson());
-    _firestore
-        .collection('users')
-        .doc(AuthMethods().getUserUID())
-        .update({
+    _firestore.collection('users').doc(AuthMethods().getUserUID()).update({
       'teams': FieldValue.arrayUnion([name])
     });
     return ['Successfuly added the team!', true];
@@ -323,10 +319,8 @@ class FireStoreMethods {
     List<Placemark> placemarkList =
         await placemarkFromCoordinates(geopoint.latitude, geopoint.longitude);
     returnData.add(placemarkList[0].street!);
-    DocumentSnapshot<Map<String, dynamic>> adminData = await _firestore
-        .collection('users')
-        .doc(adminUid)
-        .get();
+    DocumentSnapshot<Map<String, dynamic>> adminData =
+        await _firestore.collection('users').doc(adminUid).get();
     User admin = User.fromSnap(adminData);
     returnData.add(admin.avatarUrl);
     return returnData;

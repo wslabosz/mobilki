@@ -30,10 +30,10 @@ class EventTile extends StatelessWidget {
           String avatarUrl = snapshotData[1];
           return InkWell(
               onTap: () => (Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        EventScreen(event:event,locationName:resolvedLocation)))),
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => EventScreen(
+                          event: event, locationName: resolvedLocation)))),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -44,7 +44,9 @@ class EventTile extends StatelessWidget {
                           Expanded(
                               flex: 4,
                               child: Avatar(
-                                  image: NetworkImage(avatarUrl),
+                                  image: avatarUrl == ""
+                                      ? null
+                                      : NetworkImage(avatarUrl),
                                   name: event.title)),
                           Expanded(
                               flex: 11,
@@ -68,26 +70,27 @@ class EventTile extends StatelessWidget {
                               child: RichText(
                                   textAlign: TextAlign.right,
                                   text: TextSpan(
-                                      text: event.eventDate.substring(11,16),
+                                      text: event.eventDate.substring(11, 16),
                                       style: const TextStyle(
                                           color: orange,
                                           fontWeight: FontWeight.w600,
                                           fontSize: 18),
                                       children: [
-                                    TextSpan(
-                                        text: "\n"+event.eventDate.substring(0,10),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w300,
-                                            fontSize: 16,
-                                            color: Colors.grey[600]))
-                                  ]))),
-                                  const Spacer()
-                          
+                                        TextSpan(
+                                            text: "\n" +
+                                                event.eventDate
+                                                    .substring(0, 10),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w300,
+                                                fontSize: 16,
+                                                color: Colors.grey[600]))
+                                      ]))),
+                          const Spacer()
                         ])),
                     SizedBox(
                         height: 20,
                         child: Row(children: <Widget>[
-                          const Spacer(flex:3),
+                          const Spacer(flex: 3),
                           const Expanded(
                               flex: 1,
                               child: Icon(Icons.sports_basketball,
@@ -104,7 +107,7 @@ class EventTile extends StatelessWidget {
                                   color: event.level == 3
                                       ? darkOrange
                                       : Colors.grey[400])),
-                          const Spacer(flex:6),
+                          const Spacer(flex: 6),
                           Expanded(
                               flex: 2,
                               child: Text(
@@ -113,8 +116,10 @@ class EventTile extends StatelessWidget {
                                       color: darkOrange,
                                       fontWeight: FontWeight.w600,
                                       fontSize: 18))),
-                          const Expanded(flex: 1, child: Icon(Icons.people,color:darkOrange)),
-                          const Spacer(flex:1)
+                          const Expanded(
+                              flex: 1,
+                              child: Icon(Icons.people, color: darkOrange)),
+                          const Spacer(flex: 1)
                         ]))
                   ]));
         });
