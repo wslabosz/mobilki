@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:mobilki/components/day_picker.dart';
 import 'package:mobilki/components/event_tile.dart';
 import 'package:mobilki/components/input_field.dart';
 import 'package:mobilki/constants.dart';
@@ -11,17 +13,29 @@ import 'package:mobilki/resources/firestore_methods.dart';
 class Body extends StatelessWidget {
   final List<Event> events;
   final GeoPoint? location;
+  final void Function(GeoPoint) setUserLocation;
   final TextEditingController addressEditingController;
-  final String chosenLevel;
-  final void Function(String) changeChosenLevel;
+  final String? chosenLevel;
+  final void Function(String) setChosenLevel;
+  final DateTime? chosenDate;
+  final Future<void> Function(BuildContext) setChosenDate;
   const Body(
       {Key? key,
       this.location,
+      required this.setUserLocation,
       required this.events,
       required this.addressEditingController,
       required this.chosenLevel,
-      required this.changeChosenLevel})
+      required this.setChosenLevel,
+      required this.chosenDate,
+      required this.setChosenDate})
       : super(key: key);
+
+  void onSubmitAddress(String address) async {
+    List<Location> location = await locationFromAddress(address);
+    // nie mam zamiaru sie zastanawiac nad ta lista, biore pierwszy element
+    setUserLocation(GeoPoint(location[0].latitude, location[0].longitude));
+  }
 
   void sortEvents(GeoPoint locationToDetermine) {
     events.sort((a, b) => Geolocator.distanceBetween(
@@ -46,38 +60,47 @@ class Body extends StatelessWidget {
         .getToken()
         .then((value) => FireStoreMethods.saveTokenToDatabase(value!));
     return Column(children: [
-      Row(
-        children: [
-          Padding(
-              padding: EdgeInsets.only(
-                  left: size.width * 0.05, top: size.height * 0.02, right: size.width * 0.02),
-              child: InputField(
-                  hintText: 'Address',
-                  onChanged: (value) {},
-                  textInputType: TextInputType.streetAddress,
-                  textEditingController: addressEditingController)),
-          DropdownButton<String>(
-            value: chosenLevel,
-            icon: const Icon(Icons.arrow_downward),
-            elevation: 16,
-            style: const TextStyle(color: black),
-            underline: Container(
-              height: 2,
-              color: orange,
-            ),
-            onChanged: (String? newValue) {
-              changeChosenLevel(newValue!);
-            },
-            items: <String>['Any', 'Two', 'Free', 'Four']
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-          )
-        ],
-      ),
+      SizedBox(
+          child: Expanded(
+        child: Padding(
+            padding: EdgeInsets.only(top: size.height * 0.02),
+            child: InputField(
+              hintText: 'Address',
+              onChanged: (value) {},
+              inputAction: TextInputAction.search,
+              textInputType: TextInputType.streetAddress,
+              textEditingController: addressEditingController,
+              onSubmitFunction: onSubmitAddress,
+            )),
+      )),
+      Expanded(
+          child: Row(children: [
+        DateDayPicker(
+          date: chosenDate,
+          selectDate: setChosenDate,
+        ),
+        DropdownButton<String>(
+          hint: const Text("Proficency level"),
+          value: chosenLevel,
+          icon: const Icon(Icons.arrow_downward),
+          elevation: 16,
+          style: const TextStyle(color: black),
+          underline: Container(
+            height: 2,
+            color: orange,
+          ),
+          onChanged: (String? newValue) {
+            setChosenLevel(newValue!);
+          },
+          items: <String>['Any', 'Beginner', 'Advanced', 'Professional']
+              .map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+        )
+      ])),
       Expanded(child: _eventListView(context, events))
     ]);
   }

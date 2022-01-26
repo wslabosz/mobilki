@@ -23,6 +23,7 @@ class DateField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFieldContainer(
+        width: 0.75,
         child: TextButton(
       style: TextButton.styleFrom(
           shape: RoundedRectangleBorder(

@@ -17,13 +17,44 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   GeoPoint? _userPosition;
-  String chosenLevel = "Any";
+  String? chosenLevel;
+  DateTime? chosenDate;
   final TextEditingController _addressEditingController =
       TextEditingController();
   @override
   void initState() {
     super.initState();
     getUserPosition();
+  }
+
+  Future<void> _setChosenDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: const ColorScheme.light(
+                primary: Colors.orange, // header background color
+                onPrimary: Colors.black, // header text color
+                onSurface: Colors.black, // body text color
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  primary: Colors.red, // button text color
+                ),
+              ),
+            ),
+            child: child!,
+          );
+        },
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime.now(),
+        lastDate: DateTime(2040));
+    if (picked != null || picked != chosenDate) {
+      setState(() {
+        chosenDate = picked;
+      });
+    }
   }
 
   void getUserPosition() async {
@@ -33,10 +64,18 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _changeChosenLevel(String newLevel) {
+  void _setChosenLevel(String newLevel) {
     setState(() {
       if (newLevel != chosenLevel) {
         chosenLevel = newLevel;
+      }
+    });
+  }
+
+  void _setUserLocation(GeoPoint newLocation) {
+    setState(() {
+      if (newLocation != _userPosition) {
+        _userPosition = newLocation;
       }
     });
   }
@@ -60,13 +99,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 return const Text('occurred error');
               } else if (snapshot.hasData) {
                 return Body(
-                    events: snapshot.data!.docs
-                        .map((event) => (Event.fromSnap(event)))
-                        .toList(),
-                    location: _userPosition,
-                    addressEditingController: _addressEditingController,
-                    chosenLevel: chosenLevel,
-                    changeChosenLevel: _changeChosenLevel);
+                  events: snapshot.data!.docs
+                      .map((event) => (Event.fromSnap(event)))
+                      .toList(),
+                  location: _userPosition,
+                  addressEditingController: _addressEditingController,
+                  chosenLevel: chosenLevel,
+                  setChosenLevel: _setChosenLevel,
+                  setUserLocation: _setUserLocation,
+                  setChosenDate: _setChosenDate,
+                  chosenDate: chosenDate,
+                );
               } else {
                 return const Text('no events');
               }

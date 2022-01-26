@@ -36,6 +36,7 @@ class _PasswordFieldState extends State<PasswordField> {
   Widget build(BuildContext context) {
     return TextFieldContainer(
       error: widget.errorText,
+      width: 0.75,
       child: TextField(
         controller: widget.textEditingController,
         keyboardType: TextInputType.text,

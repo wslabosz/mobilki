@@ -8,24 +8,31 @@ class InputField extends StatelessWidget {
   final TextEditingController textEditingController;
   final TextInputType textInputType;
   final String? errorText;
+  final TextInputAction? inputAction;
+  final void Function(String)? onSubmitFunction;
   const InputField(
       {Key? key,
       required this.hintText,
       required this.onChanged,
       required this.textInputType,
       required this.textEditingController,
-      this.errorText})
+      this.onSubmitFunction,
+      this.errorText,
+      this.inputAction})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFieldContainer(
       error: errorText,
+      width: 0.75,
       child: TextField(
         controller: textEditingController,
         keyboardType: textInputType,
         onChanged: onChanged,
         cursorColor: orange,
+        textInputAction: inputAction,
+        onSubmitted: onSubmitFunction,
         decoration: InputDecoration(
             hintText: hintText,
             errorText: errorText,
