@@ -11,19 +11,35 @@ import 'package:mobilki/resources/firestore_methods.dart';
 class Body extends StatelessWidget {
   final List<Event> events;
   final GeoPoint? location;
-  const Body({
-    Key? key,
-    this.location,
-    required this.events,
-  }) : super(key: key);
+  final TextEditingController addressEditingController;
+  final String chosenLevel;
+  final void Function(String) changeChosenLevel;
+  const Body(
+      {Key? key,
+      this.location,
+      required this.events,
+      required this.addressEditingController,
+      required this.chosenLevel,
+      required this.changeChosenLevel})
+      : super(key: key);
+
+  void sortEvents(GeoPoint locationToDetermine) {
+    events.sort((a, b) => Geolocator.distanceBetween(
+            a.location.latitude,
+            a.location.longitude,
+            locationToDetermine.latitude,
+            locationToDetermine.longitude)
+        .compareTo(Geolocator.distanceBetween(
+            b.location.latitude,
+            b.location.longitude,
+            locationToDetermine.latitude,
+            locationToDetermine.longitude)));
+  }
 
   @override
   Widget build(BuildContext context) {
     if (location != null) {
-      events.sort((a, b) => Geolocator.distanceBetween(a.location.latitude,
-              a.location.longitude, location!.latitude, location!.longitude)
-          .compareTo(Geolocator.distanceBetween(b.location.latitude,
-              b.location.longitude, location!.latitude, location!.longitude)));
+      sortEvents(location!);
     }
     Size size = MediaQuery.of(context).size;
     FirebaseMessaging.instance
@@ -33,12 +49,33 @@ class Body extends StatelessWidget {
       Row(
         children: [
           Padding(
-              padding: EdgeInsets.only(top: size.height * 0.02),
+              padding: EdgeInsets.only(
+                  left: size.width * 0.05, top: size.height * 0.02, right: size.width * 0.02),
               child: InputField(
                   hintText: 'Address',
                   onChanged: (value) {},
                   textInputType: TextInputType.streetAddress,
-                  textEditingController: TextEditingController()))
+                  textEditingController: addressEditingController)),
+          DropdownButton<String>(
+            value: chosenLevel,
+            icon: const Icon(Icons.arrow_downward),
+            elevation: 16,
+            style: const TextStyle(color: black),
+            underline: Container(
+              height: 2,
+              color: orange,
+            ),
+            onChanged: (String? newValue) {
+              changeChosenLevel(newValue!);
+            },
+            items: <String>['Any', 'Two', 'Free', 'Four']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          )
         ],
       ),
       Expanded(child: _eventListView(context, events))
