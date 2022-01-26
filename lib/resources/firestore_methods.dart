@@ -313,6 +313,4 @@ class FireStoreMethods {
     returnData.add(admin.avatarUrl);
     return returnData;
   }
-
-  //TODO: dodwanie do drużyny, dodawanie do przyjaciół, dodawanie do eventu (manipulacja stanem)
 }

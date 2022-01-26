@@ -3,7 +3,6 @@ import 'package:mobilki/Screens/Event/event_screen.dart';
 import 'package:mobilki/components/circle_avatar.dart';
 import 'package:mobilki/constants.dart';
 import 'package:mobilki/models/event.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:mobilki/resources/firestore_methods.dart';
 
 class EventTile extends StatelessWidget {

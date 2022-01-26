@@ -115,7 +115,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           dateOfBirth: (_dateOfBirth?.toString() != null)
               ? _dateOfBirth.toString()
               : "");
-      // TODO: RESPONSE NA STRINGU DO ZMIANY
       if (res == "success") {
         setState(() {
           _buttonController.success();

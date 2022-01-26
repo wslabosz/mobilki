@@ -31,7 +31,6 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     String res = await AuthMethods().loginUser(
         email: _emailController.text, password: _passwordController.text);
-    //TODO: RESPONSE NA STRINGU
     if (res == "success") {
       setState(() {
         _buttonController.success();

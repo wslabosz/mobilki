@@ -74,7 +74,6 @@ class Body extends StatelessWidget {
             errorText: validationErrors?['password'],
             textEditingController: passwordController,
           ),
-          // TODO: SUBSCRIBING TO NEWSLETTER
           SizedBox(height: size.height * 0.03),
           LoadingButton(
               buttonController: buttonController,

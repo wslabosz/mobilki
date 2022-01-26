@@ -17,7 +17,7 @@ class TextFieldContainer extends StatelessWidget {
       padding: error != null
           ? const EdgeInsets.only(bottom: 10.0)
           : const EdgeInsets.all(0.0),
-      width: size.width * 0.85,
+      width: size.width * 0.8,
       decoration: BoxDecoration(
           border: Border.all(color: Colors.grey.shade300),
           borderRadius: BorderRadius.circular(12.0)),

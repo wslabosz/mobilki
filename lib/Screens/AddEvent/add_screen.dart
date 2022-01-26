@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mobilki/components/navbar.dart';
 import 'components/add.dart';
 
 class AddScreen extends StatelessWidget {
