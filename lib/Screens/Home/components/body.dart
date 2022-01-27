@@ -13,6 +13,7 @@ import 'package:mobilki/resources/firestore_methods.dart';
 class Body extends StatelessWidget {
   final List<Event> events;
   final GeoPoint? location;
+  final GeoPoint? userPosition;
   final void Function(GeoPoint) setUserLocation;
   final TextEditingController addressEditingController;
   final String? chosenLevel;
@@ -23,6 +24,7 @@ class Body extends StatelessWidget {
       {Key? key,
       this.location,
       required this.setUserLocation,
+      required this.userPosition,
       required this.events,
       required this.addressEditingController,
       required this.chosenLevel,
@@ -60,7 +62,8 @@ class Body extends StatelessWidget {
       default:
         break;
     }
-    if (locationToDetermine != null) {
+    if (locationToDetermine != null &&
+        addressEditingController.text.isNotEmpty) {
       sortedEvents.sort((a, b) => Geolocator.distanceBetween(
               a.location.latitude,
               a.location.longitude,
@@ -71,6 +74,17 @@ class Body extends StatelessWidget {
               b.location.longitude,
               locationToDetermine.latitude,
               locationToDetermine.longitude)));
+    } else if (userPosition != null) {
+      sortedEvents.sort((a, b) => Geolocator.distanceBetween(
+              a.location.latitude,
+              a.location.longitude,
+              userPosition!.latitude,
+              userPosition!.longitude)
+          .compareTo(Geolocator.distanceBetween(
+              b.location.latitude,
+              b.location.longitude,
+              userPosition!.latitude,
+              userPosition!.longitude)));
     }
 
     return sortedEvents;

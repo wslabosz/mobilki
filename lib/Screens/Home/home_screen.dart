@@ -17,6 +17,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   GeoPoint? _userPosition;
+  GeoPoint? location;
   String? chosenLevel;
   DateTime? chosenDate;
   final TextEditingController _addressEditingController =
@@ -74,8 +75,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _setUserLocation(GeoPoint newLocation) {
     setState(() {
-      if (newLocation != _userPosition) {
-        _userPosition = newLocation;
+      if (newLocation != location) {
+        location = newLocation;
       }
     });
   }
@@ -102,13 +103,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   events: snapshot.data!.docs
                       .map((event) => (Event.fromSnap(event)))
                       .toList(),
-                  location: _userPosition,
+                  userPosition: _userPosition,
                   addressEditingController: _addressEditingController,
                   chosenLevel: chosenLevel,
                   setChosenLevel: _setChosenLevel,
                   setUserLocation: _setUserLocation,
                   setChosenDate: _setChosenDate,
                   chosenDate: chosenDate,
+                  location: location
                 );
               } else {
                 return const Text('no events');
