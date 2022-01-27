@@ -109,7 +109,7 @@ class _BodyState extends State<Body> {
 
   Future<Widget> _teamList() async {
     if (teamList.isEmpty) {
-      return const Text("No friends found",
+      return const Text("No teams found",
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold));
     }
     if (teamList[0] == null) {
