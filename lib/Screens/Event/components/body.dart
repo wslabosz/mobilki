@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mobilki/Screens/EventInvite/event_invite.dart';
 import 'package:mobilki/Screens/Profile/profile_screen.dart';
 import 'package:mobilki/components/action_text.dart';
 import 'package:mobilki/components/event_details.dart';
@@ -87,7 +88,7 @@ class _BodyState extends State<Body> {
                           }),
                   TextButton(
                       child: Text(approveText,
-                          style: TextStyle(color: darkOrange)),
+                          style: const TextStyle(color: darkOrange)),
                       onPressed: () {
                         FireStoreMethods.deleteEvent(widget.event.docId!,
                                 List<String>.from(widget.event.participants))
@@ -125,7 +126,8 @@ class _BodyState extends State<Body> {
                               .pop('dialog')
                         }),
                 TextButton(
-                  child: Text(approveText, style: TextStyle(color: darkOrange)),
+                  child: Text(approveText,
+                      style: const TextStyle(color: darkOrange)),
                   onPressed: () {
                     FireStoreMethods.deleteParticipant(
                             widget.event.docId!, friend)
@@ -188,23 +190,23 @@ class _BodyState extends State<Body> {
     );
   }
 
-  Widget determineAction() {
+  Widget determineMainAction() {
     String myUid = AuthMethods().getUserUID();
-    print(widget.event.participants);
-    print(myUid);
-    if (myUid == widget.event.creator) {
+    if (DateTime.now().isAfter(DateTime.parse(widget.event.eventDate))||participantList[0]==null) {
+      return const SizedBox.shrink();
+    } else if (myUid == widget.event.creator) {
       return ActionText(
           icon: const Icon(Icons.delete, color: Colors.red),
           text: "Delete event",
           color: Colors.red,
           action: () => (removeEvent()));
-    } else if (participantList.any((user)=>(user!.uid==myUid))) {
+    } else if (participantList.any((user) => (user!.uid == myUid))) {
       return ActionText(
           icon: const Icon(Icons.person_remove, color: Colors.red),
           text: "Leave event",
           color: Colors.red,
           action: () => (removeParticipant(myUid, removeYourself: true)));
-    } else if (participantList.length < 10) {
+    } else if (participantList.length < 2) {
       return ActionText(
           icon: const Icon(Icons.person_add, color: Colors.green),
           text: "Join event",
@@ -212,6 +214,25 @@ class _BodyState extends State<Body> {
           action: () => (addYourselfToEvent()));
     } else {
       return const SizedBox.shrink();
+    }
+  }
+
+  Widget determineSecondaryAction() {
+    if (DateTime.now().isAfter(DateTime.parse(widget.event.eventDate)) ||
+        participantList.length >= 10 || participantList[0]==null||
+        !participantList
+            .any((user) => (user!.uid == AuthMethods().getUserUID()))) {
+      return const SizedBox.shrink();
+    } else {
+      return ActionText(
+          icon: const Icon(Icons.person_add, color: Colors.green),
+          text: "Invite a friend",
+          color: Colors.green,
+          action: () => (Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        EventInvite(event:widget.event,participantList: List<User>.from(participantList),)))));
     }
   }
 
@@ -274,7 +295,10 @@ class _BodyState extends State<Body> {
                       noOfParticipants: participantList.length),
                   Padding(
                       padding: const EdgeInsets.only(top: 12),
-                      child: determineAction()),
+                      child: determineMainAction()),
+                                    Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: determineSecondaryAction()),
                   _participantList(),
                 ],
               ))

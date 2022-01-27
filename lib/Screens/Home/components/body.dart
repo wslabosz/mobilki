@@ -117,7 +117,7 @@ class Body extends StatelessWidget {
                 padding: EdgeInsets.only(
                     right: size.width * 0.10, left: size.width * 0.02),
                 child: DropdownButton<String>(
-                  hint: const Text("Proficency level"),
+                  hint: const Text("Proficiency level"),
                   value: chosenLevel,
                   icon: const Icon(Icons.arrow_downward),
                   elevation: 16,

@@ -114,7 +114,14 @@ class _BodyState extends State<Body> {
           Text(
             "Age " + widget.profile.getAge().toString(),
             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),_eventList()
+          ),
+                    const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16),
+              child: 
+          Text(
+            "Recent events",
+            style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                    )),_eventList()
         ]));
   }
 }

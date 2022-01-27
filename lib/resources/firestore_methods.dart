@@ -39,7 +39,9 @@ class FireStoreMethods {
       String? team}) async {
     String res = "error occurred";
     try {
-      if (title.isNotEmpty || eventDate.isNotEmpty || creator.isNotEmpty) {
+      if(DateTime.parse(eventDate).isBefore(DateTime.now())) {
+        res="You cannot create an event before current date";
+      } else if (title.isNotEmpty || eventDate.isNotEmpty || creator.isNotEmpty) {
         Event _event = Event(
             title: title,
             location: location,

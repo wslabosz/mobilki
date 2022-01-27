@@ -118,7 +118,7 @@ class _NewEventFormState extends State<NewEventForm> {
                   buildDateTimePickers(),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<int>(
-                    hint: const Text('Difficulty level'),
+                    hint: const Text('Proficiency level'),
                     items: <int>[1, 2, 3].map((int value) {
                       return DropdownMenuItem(
                           value: value, child: Text('$value'));
@@ -194,10 +194,10 @@ class _NewEventFormState extends State<NewEventForm> {
                   ).then((res) {
                     if (res == "success") {
                       Snackbars.defaultSnackbar(
-                          context, "Your event is saved successfully!");
+                          context, "Event has been created");
+                      Navigator.pop(context);
                     } else {
-                      Snackbars.defaultSnackbar(context,
-                          "There was a problem! Check your internet connection and try again later.");
+                      Snackbars.defaultSnackbar(context, res, positive: false);
                     }
                   });
                 } else {
@@ -210,14 +210,13 @@ class _NewEventFormState extends State<NewEventForm> {
                   ).then((res) {
                     if (res == "success") {
                       Snackbars.defaultSnackbar(
-                          context, "Your event is saved.");
+                          context, "Event has been created");
+                      Navigator.pop(context);
                     } else {
-                      Snackbars.defaultSnackbar(context,
-                          "There was a problem! Check your internet connection and try again later.");
+                      Snackbars.defaultSnackbar(context, res, positive: false);
                     }
                   });
                 }
-                Navigator.pop(context);
               }
             },
             icon: const Icon(Icons.done),

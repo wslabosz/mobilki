@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mobilki/constants.dart';
 
 class Snackbars {
   static void defaultSnackbar(BuildContext context, String message,
