@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
    <application
         android:name="${applicationName}"
-        android:label="mobilki"
+        android:label="Basketmeet"
         android:icon="@mipmap/ic_launcher">
                         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyD5KryHK1WgkC9putl-ZOmUpHYUC4g7f8A"/>
