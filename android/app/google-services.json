@@ -33,6 +33,35 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1034547196378:android:085cb0b361e0f6e5d790e3",
+        "android_client_info": {
+          "package_name": "com.swirki.basketmeet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1034547196378-f2ba4qrq012a0egb83e0b2255si5err3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwMIy7xkR8EkU0IbqTe8OnuL2OuNdvsXM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1034547196378-f2ba4qrq012a0egb83e0b2255si5err3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

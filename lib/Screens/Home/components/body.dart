@@ -80,7 +80,6 @@ class Body extends StatelessWidget {
               locationToDetermine.latitude,
               locationToDetermine.longitude)));
     } else if (userPosition != null) {
-      print(userPosition);
       sortedEvents.sort((a, b) => Geolocator.distanceBetween(
               a.location.latitude,
               a.location.longitude,

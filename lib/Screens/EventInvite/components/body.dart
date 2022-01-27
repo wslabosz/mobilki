@@ -1,10 +1,6 @@
-import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:mobilki/components/circle_avatar.dart';
-import 'package:mobilki/components/event_tile.dart';
 import 'package:mobilki/components/member_list.dart';
 import 'package:mobilki/models/event.dart';
 import 'package:mobilki/models/user.dart';
@@ -12,7 +8,6 @@ import 'package:mobilki/resources/auth_methods.dart';
 import 'package:mobilki/resources/default_snackbar.dart';
 import 'package:mobilki/resources/firestore_methods.dart';
 
-import '../../../constants.dart';
 
 class Body extends StatefulWidget {
   final Event event;
