@@ -33,10 +33,15 @@ class Body extends StatelessWidget {
       required this.setChosenDate})
       : super(key: key);
 
-  void onSubmitAddress(String address) async {
-    List<Location> location = await locationFromAddress(address);
-    // nie mam zamiaru sie zastanawiac nad ta lista, biore pierwszy element
-    setUserLocation(GeoPoint(location[0].latitude, location[0].longitude));
+  void onSubmitAddress() async {
+    if (addressEditingController.text.isNotEmpty) {
+      List<Location> location =
+          await locationFromAddress(addressEditingController.text);
+      // nie mam zamiaru sie zastanawiac nad ta lista, biore pierwszy element
+      setUserLocation(GeoPoint(location[0].latitude, location[0].longitude));
+    } else if (userPosition != null) {
+      setUserLocation(userPosition!);
+    }
   }
 
   List<Event> sortEvents(
@@ -75,6 +80,7 @@ class Body extends StatelessWidget {
               locationToDetermine.latitude,
               locationToDetermine.longitude)));
     } else if (userPosition != null) {
+      print(userPosition);
       sortedEvents.sort((a, b) => Geolocator.distanceBetween(
               a.location.latitude,
               a.location.longitude,
@@ -153,13 +159,12 @@ class Body extends StatelessWidget {
                   }).toList(),
                 )))
       ]),
-      Expanded(
-          child: _eventListView(
-              context, sortEvents(location, chosenLevel, chosenDate)))
+      Expanded(child: _eventListView(context))
     ]));
   }
 
-  Widget _eventListView(BuildContext context, List<Event> events) {
+  Widget _eventListView(BuildContext context) {
+    List<Event> events = sortEvents(location, chosenLevel, chosenDate);
     Size size = MediaQuery.of(context).size;
     return ListView.separated(
         shrinkWrap: true,

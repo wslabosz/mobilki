@@ -9,7 +9,7 @@ class InputField extends StatelessWidget {
   final TextInputType textInputType;
   final String? errorText;
   final TextInputAction? inputAction;
-  final void Function(String)? onSubmitFunction;
+  final void Function()? onSubmitFunction;
   const InputField(
       {Key? key,
       required this.hintText,
@@ -32,7 +32,7 @@ class InputField extends StatelessWidget {
         onChanged: onChanged,
         cursorColor: orange,
         textInputAction: inputAction,
-        onSubmitted: onSubmitFunction,
+        onEditingComplete: onSubmitFunction,
         decoration: InputDecoration(
             hintText: hintText,
             errorText: errorText,
